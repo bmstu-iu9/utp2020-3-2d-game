@@ -5,6 +5,8 @@ let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
 let mouseMove = null;
+let needResize = false;
+let resized = false;
 
 let keyUpHandler = (e) => {
   if(e.keyCode == 68) {     //d
@@ -36,11 +38,16 @@ let keyDownHandler = (e) => {
 
 let mouseMoveHandler = (e) => {
   mouseMove = e;
-  
+
 }
 
+let resizeHandler = (e) => {
+  needResize = true;
+  resized = false;
+}
 
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
+window.addEventListener("resize", resizeHandler, false);
