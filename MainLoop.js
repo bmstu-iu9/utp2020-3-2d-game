@@ -17,6 +17,12 @@ img.src = "map.png";
 let camera = new Camera(cameraStartX, cameraStartY);
 let sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
+// let setCanvasSize(w, h) {
+//   if (w > h) {
+//
+//   }
+// }
+
 let worldToCanvas = (x, y) => {
   return {x: x - camera.x, y: y - camera.y};
 }
@@ -26,8 +32,16 @@ let canvasToWorld = (x, y) => {
 }
 
 let update = () => {
+  if (needResize) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    needResize = false;
+    resized = true;
+  }
+
   camera.updateCoordinates();
   sight.updateCoordinates();
+
 
 }
 
