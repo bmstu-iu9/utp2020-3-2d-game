@@ -13,6 +13,14 @@ img.src = "map.png";
 
 let camera = new Camera(cameraStartX, cameraStartY);
 
+let worldToCanvas = (x, y) => {
+  return {x: x - camera.x, y: y - camera.y};
+}
+
+let canvasToWorld = (x, y) => {
+  return {x: x + camera.x, y: y + camera.y};
+}
+
 let update = () => {
   camera.updateCoordinates();
 
