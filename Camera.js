@@ -20,9 +20,24 @@ class Camera {
       this.x++;
     }
 
+    if (downPressed){
+      this.y++;
+    } else if (upPressed) {
+      this.y--;
+    }
+
     if (this.x < 0) {
       this.x = 0;
-    } else if (this.x + 200 > img.naturalWidth)
-      this.x = img.naturalWidth-200;;
+    } else if (this.x + 200 > img.naturalWidth) {
+      this.x = img.naturalWidth - 200;
+    }
+
+    if (this.y < 0) {
+      this.y = 0;
+    } else if (this.y + 200 > img.naturalHeight){
+      this.y = img.naturalHeight - 200;
+    }
+
   }
+
 }
