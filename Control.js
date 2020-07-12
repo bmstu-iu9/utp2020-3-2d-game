@@ -1,7 +1,10 @@
+'use strict';
+
 let rightPressed = false;
 let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
+let mouseMove = null;
 
 let keyUpHandler = (e) => {
   if(e.keyCode == 68) {     //d
@@ -14,9 +17,10 @@ let keyUpHandler = (e) => {
   } else if (e.keyCode == 87){ //w
       upPressed = false;
     }
+
 }
 
-function keyDownHandler(e) {
+let keyDownHandler = (e) => {
   if(e.keyCode == 68) {     //d
       rightPressed = true;
   }
@@ -27,7 +31,16 @@ function keyDownHandler(e) {
   } else if (e.keyCode == 87){ //w
       upPressed = true;
     }
+
 }
+
+let mouseMoveHandler = (e) => {
+  mouseMove = e;
+  
+}
+
+
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
