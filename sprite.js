@@ -54,3 +54,24 @@ class SpriteSheet {
   }
 
 }
+class CharacterSheet extends SpriteSheet{
+  constructor({imgName}){
+    super({
+      imgName : imgName,
+      imgW : 832,
+      imgH : 1344
+    });
+    this.seq=this.getSeq();
+  }
+  getSeq(){
+    const data=require('./person.json');
+    const seq = {};
+    data.layers.forEach((layer) => {
+      seq[layer.name] = layer.data.filter(i => i>0);
+    });
+    return seq;
+  }
+  getAnime(imgName,speed=100,repeat=true,auto=true){
+    return super.getAnime(this.seq[imgName],speed,repeat,auto);
+  }
+}
