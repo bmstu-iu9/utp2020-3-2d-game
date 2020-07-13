@@ -3,7 +3,7 @@
 let ctx = canvas.getContext("2d");
 
 canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+canvas.width = window.innerHeigth;
 
 let cameraStartX = 20;
 let cameraStartY = 20;
