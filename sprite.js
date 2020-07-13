@@ -64,7 +64,7 @@ class CharacterSheet extends SpriteSheet{
     this.seq=this.getSeq();
   }
   getSeq(){
-    const data=require('./person.json');
+    const data=require('./playeranime.json');
     const seq = {};
     data.layers.forEach((layer) => {
       seq[layer.name] = layer.data.filter(i => i>0);
