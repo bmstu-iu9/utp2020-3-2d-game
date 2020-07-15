@@ -1,18 +1,18 @@
 'use strict'
-import {ImageLoader} from './ImageLoader'
-import {GamePlayer} from './GamePlayer'
-import {ControlState} from './GamePlayer'
-let images = {};
-let loadImages = (imageFiles) => {
-  const loader = new ImageLoader(imageFiles);
-  loader.load().then((names) => {
-      images = Object.assign(images,loader.images);
-  })
-}
-let Player = new GamePlayer(new ControlState(),new ControlState);
-Player.x=100;
-Player.y=100;
-let ctx = canvas.getContext("2d");
+// import {ImageLoader} from './ImageLoader'
+// import {GamePlayer} from './GamePlayer'
+// import {ControlState} from './GamePlayer'
+// let images = {};
+// let loadImages = (imageFiles) => {
+//   const loader = new ImageLoader(imageFiles);
+//   loader.load().then((names) => {
+//       images = Object.assign(images,loader.images);
+//   })
+// }
+// let Player = new GamePlayer(new ControlState(),new ControlState);
+// Player.x=100;
+// Player.y=100;
+const ctx = canvas.getContext("2d");
 
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
@@ -23,27 +23,24 @@ let cameraStartY = 20;
 let sightWidth = 8;
 let sightHeight = 2;
 
-let img = new Image();
-img.src = "map.png";
+const map = new Image();
+map.src = "map.png";
 
-let camera = new Camera(cameraStartX, cameraStartY);
-let sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
+const images = new Array();
+images.push(map);
 
-// let setCanvasSize(w, h) {
-//   if (w > h) {
-//
-//   }
-// }
+const camera = new Camera(cameraStartX, cameraStartY, map);
+const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
-let worldToCanvas = (x, y) => {
+const worldToCanvas = (x, y) => {
   return {x: x - camera.x, y: y - camera.y};
 }
 
-let canvasToWorld = (x, y) => {
+const canvasToWorld = (x, y) => {
   return {x: x + camera.x, y: y + camera.y};
 }
 
-let update = () => {
+const update = () => {
   if (needResize) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -57,7 +54,7 @@ let update = () => {
 
 }
 
-let draw = () => {
+const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   camera.drawVisibleMap();
@@ -65,7 +62,7 @@ let draw = () => {
 
 }
 
-let loop = () => {
+const loop = () => {
   draw();
 
   update();
@@ -73,6 +70,27 @@ let loop = () => {
   requestAnimationFrame(loop);
 }
 
-img.addEventListener("load", () => {
-  requestAnimationFrame(loop);
-}, false);
+const onImagesLoaded = (images) => {
+  let notLoaded = images.length;
+
+  for (let i = 0; i < images.length; i++) {
+    if (images[i].complete) {
+      notLoaded--;
+    } else {
+      images[i].addEventListener("load", () => {
+        notLoaded--;
+        if (notLoaded == 0){
+          notLoaded = -1;
+          loop();
+        }
+      });
+
+      if (notLoaded == 0) {
+        notLoaded = -1;
+        loop();
+      }
+    }
+  }
+}
+
+onImagesLoaded(images);
