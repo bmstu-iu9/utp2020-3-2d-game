@@ -1,5 +1,7 @@
 'use strict'
 import {ImageLoader} from './ImageLoader'
+import {GamePlayer} from './GamePlayer'
+import {ControlState} from './GamePlayer'
 let images = {};
 let loadImages = (imageFiles) => {
   const loader = new ImageLoader(imageFiles);
@@ -7,6 +9,9 @@ let loadImages = (imageFiles) => {
       images = Object.assign(images,loader.images);
   })
 }
+let Player = new GamePlayer(new ControlState(),new ControlState);
+Player.x=100;
+Player.y=100;
 let ctx = canvas.getContext("2d");
 
 canvas.height = window.innerHeight;
