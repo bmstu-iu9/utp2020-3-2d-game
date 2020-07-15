@@ -1,5 +1,12 @@
 'use strict'
-
+import {ImageLoader} from './ImageLoader'
+let images = {};
+let loadImages = (imageFiles) => {
+  const loader = new ImageLoader(imageFiles);
+  loader.load().then((names) => {
+      images = Object.assign(images,loader.images);
+  })
+}
 let ctx = canvas.getContext("2d");
 
 canvas.height = window.innerHeight;
