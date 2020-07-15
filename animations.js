@@ -1,6 +1,6 @@
 'use strict'
 import {Sprite} from './sprite';
-class Anime extends Sprite{
+export class Anime extends Sprite{
   constructor({imgName,frames,speed,repeat=true,auto=true,w=64,h=64}){
     super({
       imgName : imgName,
