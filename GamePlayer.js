@@ -1,5 +1,6 @@
 'use strict'
-class Vector {
+import {CharacterSheet} from "./sprite"
+export class Vector {
   constructor(direction,speed){
     this.setDirection(direction, speed);
   }
@@ -9,23 +10,23 @@ class Vector {
     this.x=0;
     this.y=0;
     switch (direction) {
-      case "up":
+      case "Up":
           this.y=-speed;
         break;
-       case "down" :
+       case "Down" :
           this.y=speed;
         break;
-       case "left" :
+       case "Left" :
             this.x=-speed;
           break;
-        case "right" :
+        case "Right" :
             this.x=speed;
           break;
 
     }
   }
 }
-class ControlState{
+export class ControlState{
   constructor(){
     this.up=false;
     this.down=false;
@@ -33,7 +34,7 @@ class ControlState{
     this.right=false;
     this.fire=false;
     this.keyMap = new Map([
-      [37 ,'left'],[38,'up'],[39,'right'],[40,'down']
+      [37 ,'Left'],[38,'Up'],[39,'Right'],[40,'Down']
     ]);
     this.fire= new Map([
       [0,'fireLeft']
@@ -58,33 +59,43 @@ class ControlState{
       }
     }
 }
-class BasicPlayer {
+export class BasicPlayer {
   constructor({imgName,speed}) {
     this.x=0;
     this.y=0;
     this.speed=speed;
-    this.vec=new Vector("down",0);
+    this.vec=new Vector("Down",0);
     this.lastTime=0;
     this.animations={};
     this.isFiring=false;
+    const anime = new CharacterSheet({imgName : imgName});
+    "walkDown,walkUp,walkLeft,walkRight".split(",").forEach(name => {
+      this.animations[name] = anime.getAnime(name);
+    })
   }
   walk(direction){
     this.vec.setDirection(direction,this.speed);
+    this.view=this.animations["walk" + direction];
+    this.view.run();
   }
   stand(direction){
     this.vec.setDirection(direction,0);
+    this.view = this.animations("walk" + direction);
+    this.view.stop();
   }
   update(time){
     if (this.lastTime===0){
       this.lastTime=time;
       return;
     }
+    this.x += (time - this.lastTime) * (this.vec.x / 1000);
+    this.y += (time - this.lastTime) * (this.vec.y / 1000);
     this.lastTime=time;
     this.view.setXY(Math.trunc(this.x),Math.trunc(this.y));
     this.view.update(time);
   }
 }
-class GamePlayer extends BasicPlayer{
+export class GamePlayer extends BasicPlayer{
   constructor(control1,control2){
     super({imgName :"player",speed:50});
       this.control1=control1;
@@ -92,13 +103,13 @@ class GamePlayer extends BasicPlayer{
     }
     update(time){
       if(this.control1.up) {
-            this.walk("up");
+            this.walk("Up");
         } else if(this.control1.down) {
-            this.walk("down");
+            this.walk("Down");
         } else if(this.control1.left) {
-            this.walk("left");
+            this.walk("Left");
         } else if(this.control1.right) {
-            this.walk("right");
+            this.walk("Right");
         } else this.stand(this.velocity.direction);
 
         super.update(time);
