@@ -1,6 +1,6 @@
 'use strict'
 import {Anime} from './animations';
-class Sprite{
+export class Sprite{
   constructor({imgName,sX,sY,w=64,h=64}){
     this.imgName=imgName;
     this.sX=sX;
@@ -15,7 +15,7 @@ class Sprite{
     this.y=y;
   }
 }
-class SpriteSheet {
+export class SpriteSheet {
   constructor({imgName,imgW,imgH,spriteW=64,spriteH=64}){
     this.imgName=imgName;
     this.imgW=imgW;
@@ -54,7 +54,7 @@ class SpriteSheet {
   }
 
 }
-class CharacterSheet extends SpriteSheet{
+export class CharacterSheet extends SpriteSheet{
   constructor({imgName}){
     super({
       imgName : imgName,
