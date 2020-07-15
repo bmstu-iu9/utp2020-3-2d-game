@@ -4,7 +4,6 @@ let rightPressed = false;
 let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
-let mouseMove = null;
 
 let keyUpHandler = (e) => {
   if(e.keyCode == 68) {     //d
@@ -35,9 +34,12 @@ let keyDownHandler = (e) => {
 }
 
 let mouseMoveHandler = (e) => {
-  mouseMove = null;
-  sight.x = e.clientX - canvas.offsetLeft;
-  sight.y = e.clientY - canvas.offsetTop;
+  const tmpx = e.clientX - canvas.offsetLeft;
+  const tmpy = e.clientY - canvas.offsetTop;
+  if(tmpx > 0 && tmpx < canvas.width && tmpy > 0 && tmpy < canvas.height) {
+      sight.x = tmpx;
+      sight.y = tmpy;
+    }
 }
 
 document.addEventListener("keydown", keyDownHandler, false);
