@@ -1,18 +1,5 @@
 'use strict'
-// import {ImageLoader} from './ImageLoader'
-// import {GamePlayer} from './GamePlayer'
-// import {ControlState} from './GamePlayer'
-// let images = {};
-// let loadImages = (imageFiles) => {
-//   const loader = new ImageLoader(imageFiles);
-//   loader.load().then((names) => {
-//       images = Object.assign(images,loader.images);
-//   })
-// }
-//loadImages(player : './player.jpg');
-// let Player = new GamePlayer(new ControlState(),new ControlState());
-// Player.x=100;
-// Player.y=100;
+let frames=4;
 const ctx = canvas.getContext("2d");
 
 canvas.height = window.innerHeight;
@@ -57,7 +44,6 @@ const update = () => {
 
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //ctx.drawImage(images[player],100,100);
   camera.drawVisibleMap();
   sight.draw();
 
