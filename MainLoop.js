@@ -14,8 +14,8 @@ let sightHeight = 2;
 const map = new Image();
 map.src = "map.png";
 
-const images = new Array();
-images.push(map);
+const images = {};
+images["map"] = map;
 
 const camera = new Camera(cameraStartX, cameraStartY, map);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
@@ -29,15 +29,7 @@ const canvasToWorld = (x, y) => {
 }
 
 const update = () => {
-  if (needResize) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    needResize = false;
-    resized = true;
-  }
-
   camera.updateCoordinates();
-  sight.updateCoordinates();
 
 
 }
@@ -58,13 +50,13 @@ const loop = () => {
 }
 
 const onImagesLoaded = (images) => {
-  let notLoaded = images.length;
+  let notLoaded = Object.keys(images).length;
 
-  for (let i = 0; i < images.length; i++) {
-    if (images[i].complete) {
+  for (let x in images) {
+    if (images[x].complete) {
       notLoaded--;
     } else {
-      images[i].addEventListener("load", () => {
+      images[x].addEventListener("load", () => {
         notLoaded--;
         if (notLoaded == 0){
           notLoaded = -1;

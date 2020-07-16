@@ -5,13 +5,8 @@ class Camera {
     this.x = initX;
     this.y = initY;
     this.map = img;
-    if (canvas.width > canvas.height) {
-      this.dx = canvas.height/canvas.width;
-      this.dy = 1;
-    } else {
-      this.dy = canvas.width/canvas.height;
-      this.dx = 1;
-    }
+    this.dx = 1;
+    this.dy = 1;
   }
 
   drawVisibleMap() {
@@ -22,18 +17,6 @@ class Camera {
   }
 
   updateCoordinates(){
-    if (resized) {
-      resized = false;
-
-      if (canvas.width > canvas.height) {
-        this.dx = canvas.height/canvas.width;
-        this.dy = 1;
-      } else {
-        this.dy = canvas.width/canvas.height;
-        this.dx = 1;
-      }
-
-    }
 
     if (leftPressed) {
       this.x -= this.dx;

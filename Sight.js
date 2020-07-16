@@ -40,19 +40,4 @@ class Sight {
     ctx.closePath();
   }
 
-  updateCoordinates() {
-    if (mouseMove !== null) {
-      if (
-        mouseMove.clientX >= (window.innerWidth - canvas.width) / 2 &&
-        mouseMove.clientX <= (window.innerWidth - canvas.width) / 2 + canvas.width &&
-        mouseMove.clientY >= (window.innerHeight - canvas.height) / 2 &&
-        mouseMove.clientY <= (window.innerHeight - canvas.height) / 2 + canvas.height
-      ) {
-        this.x = mouseMove.clientX - (window.innerWidth - canvas.width) / 2;
-        this.y = mouseMove.clientY - (window.innerHeight - canvas.height) / 2;
-      }
-      mouseMove = null;
-    }
-
-  }
 }

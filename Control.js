@@ -4,9 +4,6 @@ let rightPressed = false;
 let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
-let mouseMove = null;
-let needResize = false;
-let resized = false;
 
 let keyUpHandler = (e) => {
   if(e.keyCode == 68) {     //d
@@ -37,17 +34,14 @@ let keyDownHandler = (e) => {
 }
 
 let mouseMoveHandler = (e) => {
-  mouseMove = e;
-
+  const tmpx = e.clientX - canvas.offsetLeft;
+  const tmpy = e.clientY - canvas.offsetTop;
+  if(tmpx > 0 && tmpx < canvas.width && tmpy > 0 && tmpy < canvas.height) {
+      sight.x = tmpx;
+      sight.y = tmpy;
+    }
 }
-
-let resizeHandler = (e) => {
-  needResize = true;
-  resized = false;
-}
-
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
-window.addEventListener("resize", resizeHandler, false);
