@@ -25,7 +25,13 @@ class Vector {
     }
   }
 }
-
+var pl=new Player(100,100,0.5,
+sprite{
+  up : new Sprite(gpImage,0,64*8,64,64,pl.x,pl.y,8),
+  down : new Sprite(gpImage,0,64*10,64,64,pl.x,pl.y,10),
+  left : new Sprite(gpImage,0,64*9,64,64,pl.x,pl.y,9),
+  right : new Sprite(gpImage,0,64*11,64,64,pl.x,pl.y,11),
+})
 class Player {
   constructor(x, y, speed,sprite) {
     this.x=x;
@@ -38,12 +44,24 @@ class Player {
   }
   move(){
     if (this.direction == "Down"){
-      this.sprite.down.start();
-      this.sprite.run=true;
+      ctx.drawImage(
+          this.sprite.down.image,
+          this.sprite.down.srcX,
+          this.sprite.down.srcY,
+          this.sprite.down.width,
+          this.sprite.down.height,
+          this.x,
+          this.y,
+          this.sprite.down.width,
+          this.sprite.down.height
+      );
+      //this.sprite.down.start();
+      //this.sprite.run=true;
     } else{
       if (downPressed){
         this.y+=speed;
         this.sprite.down.y=this.y;
+        if (this.sprite.down.run == true) this.sprite.down.run=false;
         this.sprite.down.start();
       } else{
         if (downPressed===false){
@@ -53,6 +71,7 @@ class Player {
         if (upPressed){
           this.y-=speed;
           this.sprite.up.y=this.y;
+          if (this.sprite.up.run == true) this.sprite.up.run=false;
           this.sprite.up.start();
         } else{
           if (upPressed===false){
@@ -62,6 +81,7 @@ class Player {
           if (rightPressed){
             this.x+=speed;
             this.sprite.right.x=this.x;
+            if (this.sprite.right.run == true) this.sprite.right.run=false;
             this.sprite.right.start();
           } else{
             if (rightPressed===false){
@@ -70,6 +90,7 @@ class Player {
           } if (leftPressed){
             this.x-=speed;
             this.sprite.left.x=x;
+            if (this.sprite.left.run == true) this.sprite.left.run=false;
             this.sprite.left.start();
           } else{
             if (leftPressed===false){
