@@ -52,16 +52,16 @@ class Sprite {
 
 
 
-let gpImage = new Image();
+var gpImage = new Image();
 gpImage.src = 'playeranimation.jpg';
 
-let sprite = new Sprite({
-  image: gpImage,
-  srcX : 0,
-  srcY : 0,
-  srcW: 64,
-  srcH: 64,
-  x : 0,
-  y : 0,
-  framesY : 0
-})
+//let sprite = new Sprite({
+  //image: gpImage,
+  //srcX : 0,
+  //srcY : 0,
+  //srcW: 64,
+  //srcH: 64,
+  //x : 0,
+  //y : 0,
+  //framesY : 0
+//})
