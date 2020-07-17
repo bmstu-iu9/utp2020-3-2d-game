@@ -4,8 +4,9 @@ let rightPressed = false;
 let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
+let clicked = false;
 
-let keyUpHandler = (e) => {
+const keyUpHandler = (e) => {
   if(e.keyCode == 68) {     //d
       rightPressed = false;
   }
@@ -19,7 +20,7 @@ let keyUpHandler = (e) => {
 
 }
 
-let keyDownHandler = (e) => {
+const keyDownHandler = (e) => {
   if(e.keyCode == 68) {     //d
       rightPressed = true;
   }
@@ -33,15 +34,25 @@ let keyDownHandler = (e) => {
 
 }
 
-let mouseMoveHandler = (e) => {
-  const tmpx = e.clientX - canvas.offsetLeft;
-  const tmpy = e.clientY - canvas.offsetTop;
-  if(tmpx > 0 && tmpx < canvas.width && tmpy > 0 && tmpy < canvas.height) {
-      sight.x = tmpx;
-      sight.y = tmpy;
+const mouseMoveHandler = (e) => {
+  const tmpX = e.clientX - canvas.offsetLeft;
+  const tmpY = e.clientY - canvas.offsetTop;
+  if(tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
+      sight.x = tmpX;
+      sight.y = tmpY;
     }
 }
+
+const mouseClickHandler = (e) => {
+  const tmpX = e.clientX - canvas.offsetLeft;
+  const tmpY = e.clientY - canvas.offsetTop;
+  if(tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
+      clicked = true;
+    }
+}
+
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
+document.addEventListener("click", mouseClickHandler, false);

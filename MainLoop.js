@@ -11,6 +11,11 @@ let cameraStartY = 20;
 let sightWidth = 8;
 let sightHeight = 2;
 
+//test
+let bulletSpeed = 50;
+let testBullet = null;
+//test
+
 const map = new Image();
 map.src = "map.png";
 
@@ -31,13 +36,24 @@ const canvasToWorld = (x, y) => {
 const update = () => {
   camera.updateCoordinates();
 
-
+  //test
+  if (testBullet != null) testBullet.updateCoordinates();
+  //test
 }
 
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   camera.drawVisibleMap();
   sight.draw();
+
+  //test, пишется в теле класса персонажей?
+  if (clicked) {
+    clicked = false;
+    testBullet = new Bullet(50, 50, sight.x, sight.y, bulletSpeed);
+  }
+
+  if (testBullet != null) testBullet.draw();
+  //test
 
 }
 
