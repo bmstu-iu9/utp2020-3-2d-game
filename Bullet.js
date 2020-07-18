@@ -23,7 +23,7 @@
 //или строку с типом оружия, что даже предпочтительнее
 //это будем реализовывать позже
 
-class Bullet {
+class Bullet {      //передаются координаты карты, а не канваса
   constructor(x, y, sightX, sightY, speed){ //возможно еще bulletType
     this.x = x;     //center
     this.y = y;
@@ -53,7 +53,7 @@ class Bullet {
             Math.random() > 0.5) {
           ctx.beginPath();
           ctx.fillStyle = "yellow";
-          ctx.fillRect(pxX, pxY, 1, 1);
+          ctx.fillRect(worldToCanvas(pxX, 0), worldToCanvas(pxY, 1), 1, 1);
           ctx.closePath();
         }
       }
@@ -70,9 +70,9 @@ class Bullet {
     let unitDx = this.dx / this.speed;  //орт главного направления
     let unitDy = this.dy / this.speed;
 
-    let probability = 0.2
-    let normLen = 5;
-    let gap = 0.4;
+    let probability = 0.5
+    let normLen = 1;
+    let gap = 0.8;
 
     while (Math.abs(dx) < Math.abs(this.dx * gap) &&  //поменять gap, чтобы увеличить расстояние
           Math.abs(dy) < Math.abs(this.dy * gap)) {
@@ -82,7 +82,7 @@ class Bullet {
               if (Math.random() < probability) {
                 ctx.beginPath();
                 ctx.fillStyle = "yellow";
-                ctx.fillRect(this.x + pxX + dx, this.y + pxY + dy, 1, 1);
+                ctx.fillRect(worldToCanvas(this.x + pxX + dx, 0), worldToCanvas(this.y + pxY + dy, 1), 1, 1);
                 ctx.closePath();
               }
             }
@@ -92,7 +92,7 @@ class Bullet {
               if (Math.random() < probability) {
                 ctx.beginPath();
                 ctx.fillStyle = "yellow";
-                ctx.fillRect(this.x + pxX + dx, this.y + pxY + dy, 1, 1);
+                ctx.fillRect(worldToCanvas(this.x + pxX + dx, 0), worldToCanvas(this.y + pxY + dy, 1), 1, 1);
                 ctx.closePath();
               }
             }
