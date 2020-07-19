@@ -30,7 +30,7 @@ class Bullet {      //передаются координаты карты, а �
     this.flies = false;
     this.shooted = false;
     this.justShooted = true;
-    this.bulletRadius = 5;           //нормирование и умножение на скорость \/
+    this.bulletRadius = 2.5;           //нормирование и умножение на скорость \/
     this.dx = speed * (sightX - x) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.dy = speed * (sightY - y) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.speed = speed;

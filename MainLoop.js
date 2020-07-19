@@ -15,6 +15,7 @@ let sightHeight = 2;
 //test
 let bulletSpeed = 10;
 let testBullet = null;
+let bullets = new Set();
 //test
 
 let playerStartX = canvas.width / 2;
@@ -38,7 +39,7 @@ const sprite = {
   left : new Sprite(im, 0, 64*9, 64, 64, playerStartX, playerStartY, 9),
   right : new Sprite(im, 0, 64*11, 64, 64, playerStartX, playerStartY, 11),
 };
-const pl = new Player(canvas.width / 2, canvas.height / 2, 64, 64, 1, sprite);
+const pl = new Player(canvas.width / 2, canvas.height / 2, 64, 64, 0.2, sprite);
 
 const worldToCanvas = (t, type) => {  //0 для x
   if (type == 0) return (t - camera.x) / camera.scaleX;
@@ -65,10 +66,10 @@ const update = () => {
   camera.updateCoordinates();
 
   //test
-  if (testBullet != null) {
-    testBullet.updateCoordinates();
+  for (let bullet of bullets){
+    bullet.updateCoordinates();
     for (let i = 0; i < 8; i++) {
-      if (testBullet.collide(targets[i].x, targets[i].y, targets[i].r)) {
+      if (bullet.collide(targets[i].x, targets[i].y, targets[i].r)) {
         targets[i].shooted = false;
       }
     }
@@ -85,14 +86,16 @@ const draw = () => {
   //test, пишется в теле класса персонажей?
   if (clicked) {
     clicked = false;
-    testBullet = new Bullet(canvasToWorld(canvas.width / 2, 0), canvasToWorld(canvas.height / 2, 1),
+    bullets.add(new Bullet(canvasToWorld(canvas.width / 2, 0), canvasToWorld(canvas.height / 2, 1),
                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
-                            bulletSpeed);
+                            bulletSpeed));
 
   }
 
-  if (testBullet != null) testBullet.draw();
+  for (let bullet of bullets) bullet.draw();
+
   //test
+
   for (let i = 0; i < 8; i++) {
     targets[i].draw(1 / camera.scaleX);
   }
