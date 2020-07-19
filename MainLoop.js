@@ -45,12 +45,29 @@ const canvasToWorld = (t, type) => {
   else return t * camera.scaleY + camera.y;
 }
 
+const targets = [];
+targets.push(new Target(10, 10, 5));
+targets.push(new Target(50, 100, 5));
+targets.push(new Target(100, 100, 5));
+targets.push(new Target(200, 100, 5));
+targets.push(new Target(150, 300, 5));
+targets.push(new Target(10, 200, 5));
+targets.push(new Target(200, 10, 5));
+targets.push(new Target(200, 200, 5));
+
 const update = () => {
   pl.move();
   camera.updateCoordinates();
 
   //test
-  if (testBullet != null) testBullet.updateCoordinates();
+  if (testBullet != null) {
+    testBullet.updateCoordinates();
+    for (let i = 0; i < 8; i++) {
+      if (testBullet.collide(targets[i].x, targets[i].y, targets[i].r)) {
+        targets[i].shooted = false;
+      }
+    }
+  }
   //test
 }
 
@@ -58,7 +75,7 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   camera.drawVisibleMap();
   pl.drawDirection();
-  sight.draw();
+  
 
   //test, пишется в теле класса персонажей?
   if (clicked) {
@@ -71,7 +88,10 @@ const draw = () => {
 
   if (testBullet != null) testBullet.draw();
   //test
-
+  for (let i = 0; i < 8; i++) {
+    targets[i].draw(1 / camera.scaleX);
+  }
+  sight.draw();
 }
 
 const loop = () => {

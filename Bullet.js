@@ -106,4 +106,13 @@ class Bullet {      //передаются координаты карты, а �
     this.x += this.dx;
     this.y += this.dy;
   }
+
+  collide(tX, tY, tR) {
+    const dist = Math.sqrt(Math.pow(this.x - tX, 2) + Math.pow(this.y - tY, 2));
+    if (dist < tR) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
