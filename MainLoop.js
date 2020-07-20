@@ -6,6 +6,10 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
+let speedRatio = 0.65 / 0.2 //pl / cam
+let cameraSpeed = 1;
+let playerSpeed = cameraSpeed * speedRatio;
+
 let cameraStartX = 0;
 let cameraStartY = 0;
 
@@ -21,6 +25,7 @@ let bullets = new Set();
 let playerStartX = canvas.width / 2;
 let playerStartY = canvas.height / 2;
 
+
 const map = new Image();
 map.src = "map.png";
 const im = new Image();
@@ -30,7 +35,7 @@ const images = {};
 images["map"] = map;
 images["player"] = im;
 
-const camera = new Camera(cameraStartX, cameraStartY, map, 200, 200);
+const camera = new Camera(cameraStartX, cameraStartY, map, 200, 200, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const sprite = {
@@ -39,7 +44,7 @@ const sprite = {
   left : new Sprite(im, 0, 64*9, 64, 64, playerStartX, playerStartY, 9),
   right : new Sprite(im, 0, 64*11, 64, 64, playerStartX, playerStartY, 11),
 };
-const pl = new Player(canvas.width / 2, canvas.height / 2, 64, 64, 0.2, sprite);
+const pl = new Player(canvas.width / 2, canvas.height / 2, 64, 64, playerSpeed, sprite);
 
 const worldToCanvas = (t, type) => {  //0 для x
   if (type == 0) return (t - camera.x) / camera.scaleX;
@@ -81,7 +86,6 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   camera.drawVisibleMap();
   pl.drawDirection();
-
 
   //test, пишется в теле класса персонажей?
   if (clicked) {

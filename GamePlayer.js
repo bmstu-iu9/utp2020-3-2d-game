@@ -38,28 +38,31 @@ class Player {
   move() {
 
       if (downPressed) {
-        this.y += this.speed;
+        if (camera.isFixedY)
+            this.y += this.speed;
         this.sprite.down.x = this.x;
         this.sprite.down.y = this.y;
         this.direction = "Down";
         this.sprite.down.update();
       } else if (upPressed) {
-          this.y -= this.speed;
+          if (camera.isFixedY)
+              this.y -= this.speed;
           this.sprite.up.x = this.x;
           this.sprite.up.y = this.y;
           this.direction = "Up";
           this.sprite.up.update();
         }
 
-
       if (rightPressed) {
-        this.x += this.speed;
+        if (camera.isFixedX)
+          this.x += this.speed;
         this.sprite.right.x = this.x;
         this.sprite.right.y = this.y;
         this.direction = "Right";
         this.sprite.right.update();
       } else if (leftPressed) {
-          this.x -= this.speed;
+          if (camera.isFixedX)
+            this.x -= this.speed;
           this.sprite.left.x = this.x;
           this.sprite.left.y = this.y;
           this.direction = "Left";
