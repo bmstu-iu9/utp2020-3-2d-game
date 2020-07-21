@@ -90,13 +90,26 @@ const draw = () => {
   //test, пишется в теле класса персонажей?
   if (clicked) {
     clicked = false;
-    bullets.add(new Bullet(canvasToWorld(canvas.width / 2, 0), canvasToWorld(canvas.height / 2, 1),
-                            canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
-                            bulletSpeed));
+    //pl.bulletsInMagazine--;
+    if (pl.bulletsInMagazine === 0) {
+      this.reload = true;
+      if (pl.magazine != 0) {
+        pl.bulletsInMagazine = 30;
+        pl.magazine--;
+        this.reload = false;
+      } else {
+        this.reload = false;
+      }
+    } else {
+      pl.bulletsInMagazine--;
+      bullets.add(new Bullet(canvasToWorld(canvas.width / 2, 0), canvasToWorld(canvas.height / 2, 1),
+                              canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
+                              bulletSpeed));
+    }
 
   }
 
-  for (let bullet of bullets) bullet.draw();
+  if (pl.bulletsInMagazine != 0 || pl.magazine != 0) for (let bullet of bullets) bullet.draw();
 
   //test
 
