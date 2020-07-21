@@ -11,7 +11,9 @@ class Player {
     this.sprite = sprite;
     this.speed = speed;
     this.direction = "Down";
-    this.isFiring = false;
+    this.bulletsInMagazine = 30;
+    this.magazine = 1;
+    this.reload = false;
 
   }
 
