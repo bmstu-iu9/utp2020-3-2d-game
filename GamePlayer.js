@@ -40,33 +40,37 @@ class Player {
   move() {
 
       if (downPressed) {
-        if (camera.isFixedY)
+        if (this.y !== 320) {
             this.y += this.speed;
-        this.sprite.down.x = this.x;
-        this.sprite.down.y = this.y;
+        }
+        this.sprite.down.x = worldToCanvas(this.x - 8, 0);
+        this.sprite.down.y = worldToCanvas(this.y - 10, 1);
         this.direction = "Down";
         this.sprite.down.update();
       } else if (upPressed) {
-          if (camera.isFixedY)
+          if (this.y !== 0) {
               this.y -= this.speed;
-          this.sprite.up.x = this.x;
-          this.sprite.up.y = this.y;
+          }
+          this.sprite.up.x = worldToCanvas(this.x - 8, 0);
+          this.sprite.up.y = worldToCanvas(this.y - 10, 1);
           this.direction = "Up";
           this.sprite.up.update();
         }
 
       if (rightPressed) {
-        if (camera.isFixedX)
+        if (this.x !== 400) {
           this.x += this.speed;
-        this.sprite.right.x = this.x;
-        this.sprite.right.y = this.y;
+        }
+        this.sprite.right.x = worldToCanvas(this.x - 8, 0);
+        this.sprite.right.y = worldToCanvas(this.y - 10, 1);
         this.direction = "Right";
         this.sprite.right.update();
       } else if (leftPressed) {
-          if (camera.isFixedX)
+          if (this.x !== 0) {
             this.x -= this.speed;
-          this.sprite.left.x = this.x;
-          this.sprite.left.y = this.y;
+          }
+          this.sprite.left.x = worldToCanvas(this.x - 8, 0);
+          this.sprite.left.y = worldToCanvas(this.y - 10, 1);
           this.direction = "Left";
           this.sprite.left.update();
           }

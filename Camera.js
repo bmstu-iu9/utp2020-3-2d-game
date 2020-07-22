@@ -11,8 +11,6 @@ class Camera {
     this.visibleHeight = visibleHeight;
     this.scaleX = visibleWidth / canvas.width;
     this.scaleY = visibleHeight / canvas.height;
-    this.isFixedX = false;
-    this.isFixedY = false;
   }
 
   drawVisibleMap() {
@@ -24,37 +22,28 @@ class Camera {
 
   updateCoordinates(){
 
-    if (this.isFixedX && pl.x == canvas.width / 2)
-      this.isFixedX = false;
-    if (this.isFixedY && pl.y == canvas.height / 2)
-      this.isFixedY = false;
-
-    if (leftPressed && !this.isFixedX) {
+    if (leftPressed && worldToCanvas(pl.x, 0) <= 150) {
       this.x -= this.dx;
-    } else if (rightPressed && !this.isFixedX) {
+    } else if (rightPressed && worldToCanvas(pl.x, 0) >= canvas.width - 150) {
       this.x += this.dx;
     }
 
-    if (downPressed && !this.isFixedY){
+    if (downPressed && worldToCanvas(pl.y, 1) >= canvas.height - 150){
       this.y += this.dy;
-    } else if (upPressed && !this.isFixedY) {
+    } else if (upPressed && worldToCanvas(pl.y, 1) <= 150) {
       this.y -= this.dy;
     }
 
     if (this.x < 0) {
       this.x = 0;
-      this.isFixedX = true;
     } else if (this.x + this.visibleWidth > this.map.naturalWidth) {
       this.x = this.map.naturalWidth - this.visibleWidth;
-      this.isFixedX = true;
     }
 
     if (this.y < 0) {
       this.y = 0;
-      this.isFixedY = true;
     } else if (this.y + this.visibleHeight > this.map.naturalHeight){
       this.y = this.map.naturalHeight - this.visibleHeight;
-      this.isFixedY = true;
     }
 
   }

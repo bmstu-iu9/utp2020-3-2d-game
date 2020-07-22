@@ -6,9 +6,9 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
-let speedRatio = 0.65 / 0.2 //pl / cam
+//let speedRatio = 0.65 / 0.2 //pl / cam
 let cameraSpeed = 1;
-let playerSpeed = cameraSpeed * speedRatio;
+let playerSpeed = cameraSpeed; //* speedRatio;
 
 let cameraStartX = 0;
 let cameraStartY = 0;
@@ -22,8 +22,8 @@ let testBullet = null;
 let bullets = new Set();
 //test
 
-let playerStartX = canvas.width / 2;
-let playerStartY = canvas.height / 2;
+let playerStartX = 100;
+let playerStartY = 120;
 
 
 const map = new Image();
@@ -38,23 +38,23 @@ images["player"] = im;
 const camera = new Camera(cameraStartX, cameraStartY, map, 200, 200, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
-const sprite = {
-  up : new Sprite(im, 0,64*8, 64, 64, playerStartX, playerStartY, 8),
-  down : new Sprite(im, 0, 64*10, 64, 64, playerStartX, playerStartY, 10),
-  left : new Sprite(im, 0, 64*9, 64, 64, playerStartX, playerStartY, 9),
-  right : new Sprite(im, 0, 64*11, 64, 64, playerStartX, playerStartY, 11),
-};
-const pl = new Player(canvas.width / 2, canvas.height / 2, 64, 64, playerSpeed, sprite);
-
 const worldToCanvas = (t, type) => {  //0 для x
-  if (type == 0) return (t - camera.x) / camera.scaleX;
-  else return (t - camera.y) / camera.scaleY;
+  if (type == 0) return Math.round((t - camera.x) / camera.scaleX);
+  else return Math.round((t - camera.y) / camera.scaleY);
 }
 
 const canvasToWorld = (t, type) => {
-  if (type == 0) return t * camera.scaleX + camera.x;
-  else return t * camera.scaleY + camera.y;
+  if (type == 0) return Math.round(t * camera.scaleX + camera.x);
+  else return Math.round(t * camera.scaleY + camera.y);
 }
+
+const sprite = {
+  up : new Sprite(im, 0,64*8, 64, 64, worldToCanvas(playerStartX - 8, 0), worldToCanvas(playerStartY - 10, 1), 8),
+  down : new Sprite(im, 0, 64*10, 64, 64, worldToCanvas(playerStartX - 8, 0), worldToCanvas(playerStartY - 10, 1), 10),
+  left : new Sprite(im, 0, 64*9, 64, 64, worldToCanvas(playerStartX - 8, 0), worldToCanvas(playerStartY - 10, 1), 9),
+  right : new Sprite(im, 0, 64*11, 64, 64, worldToCanvas(playerStartX - 8, 0), worldToCanvas(playerStartY - 10, 1), 11),
+};
+const pl = new Player(playerStartX, playerStartY, 64, 64, playerSpeed, sprite);
 
 const targets = [];
 targets.push(new Target(10, 10, 5));
@@ -82,6 +82,12 @@ const update = () => {
   //test
 }
 
+const drawScore = () => {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("x: " + worldToCanvas(pl.x, 0) + " y: " + worldToCanvas(pl.y, 1) + " / " + canvas.height, 20, 20);
+}
+
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   camera.drawVisibleMap();
@@ -102,7 +108,7 @@ const draw = () => {
       }
     } else {
       pl.bulletsInMagazine--;
-      bullets.add(new Bullet(canvasToWorld(canvas.width / 2, 0), canvasToWorld(canvas.height / 2, 1),
+      bullets.add(new Bullet(pl.x, pl.y,
                               canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
                               bulletSpeed));
     }
@@ -117,6 +123,7 @@ const draw = () => {
     targets[i].draw(1 / camera.scaleX);
   }
   sight.draw();
+  drawScore();
 }
 
 const loop = () => {
