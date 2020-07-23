@@ -20,8 +20,47 @@ const drawPosit = () => {
   ctx.fillText("x: " + pl.x + " y: " + pl.y + " / " + canvas.height, 20, 20);
 }
 
+const drawTileTypes = () => {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "red";
+
+  let minX = Math.floor(camera.x / worldTileSize);
+  let maxX = Math.ceil((camera.x + camera.visibleWidth) / worldTileSize);
+  let minY = Math.floor(camera.y / worldTileSize);
+  let maxY = Math.ceil((camera.y + camera.visibleHeight) / worldTileSize);
+
+  for (let i = minY; i < maxY; i++) {
+    for (let j = minX; j < maxX; j++) {
+      switch (tileMap[i][j]) {
+        case "sand":
+          ctx.fillText("s", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "dark ocean":
+          ctx.fillText("do", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "ocean":
+          ctx.fillText("o", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "grass":
+          ctx.fillText("g", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "dark grass":
+          ctx.fillText("g", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "cobblestone":
+          ctx.fillText("c", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "dark cobblestone":
+          ctx.fillText("dc", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+      }
+    }
+  }
+}
+
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
   pl.drawDirection();
 

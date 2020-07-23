@@ -35,7 +35,7 @@ class Player {
 
   move() {
     if (downPressed) {
-      if (this.y < map.naturalHeight) {
+      if (this.y < mapImg.naturalHeight) {
         this.y += this.speed;
       }
       this.sprite.down.x = worldToCanvas(this.x - spriteWKoef, 0);
@@ -53,7 +53,7 @@ class Player {
     }
 
     if (rightPressed) {
-      if (this.x < map.naturalWidth) {
+      if (this.x < mapImg.naturalWidth) {
         this.x += this.speed;
       }
       this.sprite.right.x = worldToCanvas(this.x - spriteWKoef, 0);
