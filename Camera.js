@@ -21,16 +21,15 @@ class Camera {
   }
 
   updateCoordinates(){
-
-    if (leftPressed && worldToCanvas(pl.x, 0) <= 150) {
+    if (leftPressed && worldToCanvas(pl.x, 0) <= moveBorder) {
       this.x -= this.dx;
-    } else if (rightPressed && worldToCanvas(pl.x, 0) >= canvas.width - 150) {
+    } else if (rightPressed && worldToCanvas(pl.x, 0) >= canvas.width - moveBorder) {
       this.x += this.dx;
     }
 
-    if (downPressed && worldToCanvas(pl.y, 1) >= canvas.height - 150){
+    if (downPressed && worldToCanvas(pl.y, 1) >= canvas.height - moveBorder){
       this.y += this.dy;
-    } else if (upPressed && worldToCanvas(pl.y, 1) <= 150) {
+    } else if (upPressed && worldToCanvas(pl.y, 1) <= moveBorder) {
       this.y -= this.dy;
     }
 
@@ -45,7 +44,5 @@ class Camera {
     } else if (this.y + this.visibleHeight > this.map.naturalHeight){
       this.y = this.map.naturalHeight - this.visibleHeight;
     }
-
   }
-
 }
