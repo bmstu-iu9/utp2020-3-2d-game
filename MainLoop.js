@@ -1,7 +1,7 @@
 'use strict'
 
 const update = () => {
-  pl.move();
+  player.move();
   camera.updateCoordinates();
 
   for (let bullet of bullets) {
@@ -17,34 +17,34 @@ const update = () => {
 const drawPosit = () => {
   ctx.font = "16px Arial";
   ctx.fillStyle = "#0095DD";
-  ctx.fillText("x: " + pl.x + " y: " + pl.y + " / " + canvas.height, 20, 20);
+  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + canvas.height, 20, 20);
 }
 
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   camera.drawVisibleMap();
-  pl.drawDirection();
+  player.drawDirection();
 
   if (clicked) {
     clicked = false;
-    if (pl.bulletsInMagazine === 0) {
+    if (player.bulletsInMagazine === 0) {
       this.reload = true;
-      if (pl.magazine !== 0) {
-        pl.bulletsInMagazine = 30;
-        pl.magazine--;
+      if (player.magazine !== 0) {
+        player.bulletsInMagazine = 30;
+        player.magazine--;
         this.reload = false;
       } else {
         this.reload = false;
       }
     } else {
-      pl.bulletsInMagazine--;
-      bullets.add(new Bullet(pl.x, pl.y,
+      player.bulletsInMagazine--;
+      bullets.add(new Bullet(player.x, player.y,
                              canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
                              bulletSpeed));
     }
   }
 
-  if (pl.bulletsInMagazine !== 0 || pl.magazine !== 0) for (let bullet of bullets) bullet.draw();
+  if (player.bulletsInMagazine !== 0 || player.magazine !== 0) for (let bullet of bullets) bullet.draw();
 
   for (let i = 0; i < targets.length; i++) {
     targets[i].draw(1 / camera.scaleX);
@@ -54,10 +54,23 @@ const draw = () => {
   drawPosit();
 }
 
+let lastTime = performance.now();
+let now = 0;
+let dt = 0;
+let fps = 1 / 60;
+
 const loop = () => {
+  now = performance.now();
+  dt += (now - lastTime) / 1000;
+
+  while (dt > fps) {
+    dt -= fps;
+    update();
+  }
+
   draw();
 
-  update();
+  lastTime = now;
 
   requestAnimationFrame(loop);
 }
