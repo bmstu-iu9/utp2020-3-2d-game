@@ -12,19 +12,18 @@ class Sprite {
     this.width = srcW;
     this.height = srcH;
     this.run = false;
-    this.speed = 7;
-    this.count = 0;
+    this.speed = 5;
+    this.counter = 0;
   }
 
   update() {
-    if (this.count === this.speed) {
+      if (this.counter === (this.speed - 1)) {
       this.currentFrame = ++this.currentFrame % this.tickCount;
       this.srcX = this.currentFrame * this.width;
       this.srcY = this.framesY * this.height;
-      this.count = 0;
-    } else {
-      this.count++;
     }
+
+      this.counter = (this.counter + 1) % this.speed;
   }
 
   drawSprite() {
