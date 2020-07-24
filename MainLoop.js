@@ -64,8 +64,8 @@ const draw = () => {
   camera.drawVisibleMap();
   player.drawDirection();
 
-  if (clicked) {
-    clicked = false;
+  if (mouseDown) {
+    
     if (player.bulletsInMagazine === 0) {
       this.reload = true;
       if (player.magazine !== 0) {

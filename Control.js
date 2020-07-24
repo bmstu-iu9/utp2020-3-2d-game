@@ -5,6 +5,7 @@ let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
 let clicked = false;
+let mouseDown = false;
 
 const keyUpHandler = (e) => {
   if (e.keyCode === 68) {     //d
@@ -39,15 +40,20 @@ const mouseMoveHandler = (e) => {
   }
 }
 
-const mouseClickHandler = (e) => {
+const mouseDownHandler = (e) => {
   const tmpX = e.clientX - canvas.offsetLeft;
   const tmpY = e.clientY - canvas.offsetTop;
   if (tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
-    clicked = true;
+    mouseDown = true;
   }
+}
+
+const mouseUpHandler = (e) => {
+  mouseDown = false;
 }
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
-document.addEventListener("click", mouseClickHandler, false);
+document.addEventListener("mousedown", mouseDownHandler, false);
+document.addEventListener("mouseup", mouseUpHandler, false);
