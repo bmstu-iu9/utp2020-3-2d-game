@@ -96,14 +96,15 @@ const draw = () => {
 let lastTime = performance.now();
 let now = 0;
 let dt = 0;
-let fps = 1 / 60;
+let fps = 60;
+let step = 1 / fps;
 
 const loop = () => {
   now = performance.now();
-  dt += (now - lastTime) / 1000;
+  dt += Math.min(1, (now - lastTime) / 1000);
 
-  while (dt > fps) {
-    dt -= fps;
+  while (dt > step) {
+    dt -= step;
     update();
   }
 
