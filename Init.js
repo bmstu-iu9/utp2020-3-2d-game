@@ -34,6 +34,9 @@ let bullets = new Set();
 let playerStartX = 100;
 let playerStartY = 120;
 let playerSpeed = cameraSpeed;
+let spriteIndex = [8,9,10,11];
+let spritePlW = 64;
+let spritePlH = 64;
 const spriteWKoef = 8;
 const spriteHKoef = 10;
 
@@ -50,14 +53,14 @@ images["player"] = playerImg;
 const camera = new Camera(cameraStartX, cameraStartY, mapImg, visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
-const sprite = {
-  up : new Sprite(playerImg, 0,64*8, 64, 64, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), 8),
-  down : new Sprite(playerImg, 0, 64*10, 64, 64, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), 10),
-  left : new Sprite(playerImg, 0, 64*9, 64, 64, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), 9),
-  right : new Sprite(playerImg, 0, 64*11, 64, 64, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), 11),
+const spritePl = {
+  up : new Sprite(playerImg, 0,spritePlH*spriteIndex[0], spritePlW, spritePlH, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), spriteIndex[0]),
+  down : new Sprite(playerImg, 0, spritePlH*spriteIndex[2], spritePlW, spritePlH, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), spriteIndex[2]),
+  left : new Sprite(playerImg, 0, spritePlH*spriteIndex[1], spritePlW, spritePlH, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), spriteIndex[1]),
+  right : new Sprite(playerImg, 0, spritePlH*spriteIndex[3], spritePlW, spritePlH, worldToCanvas(playerStartX - spriteWKoef, 0), worldToCanvas(playerStartY - spriteHKoef, 1), spriteIndex[3]),
 };
 
-const pl = new Player(playerStartX, playerStartY, 64, 64, playerSpeed, sprite);
+const player = new Player(playerStartX, playerStartY, 64, 64, playerSpeed, spritePl);
 
 const targets = [];
 targets.push(new Target(10, 10, 5));
