@@ -21,15 +21,15 @@ class Camera {
   }
 
   updateCoordinates(){
-    if (leftPressed && worldToCanvas(pl.x, 0) <= moveBorder) {
+    if (leftPressed && worldToCanvas(player.x, 0) <= moveBorder) {
       this.x -= this.dx;
-    } else if (rightPressed && worldToCanvas(pl.x, 0) >= canvas.width - moveBorder) {
+    } else if (rightPressed && worldToCanvas(player.x, 0) >= canvas.width - moveBorder) {
       this.x += this.dx;
     }
 
-    if (downPressed && worldToCanvas(pl.y, 1) >= canvas.height - moveBorder){
+    if (downPressed && worldToCanvas(player.y, 1) >= canvas.height - moveBorder){
       this.y += this.dy;
-    } else if (upPressed && worldToCanvas(pl.y, 1) <= moveBorder) {
+    } else if (upPressed && worldToCanvas(player.y, 1) <= moveBorder) {
       this.y -= this.dy;
     }
 
