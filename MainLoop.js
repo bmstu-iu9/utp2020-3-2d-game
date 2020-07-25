@@ -78,14 +78,14 @@ let lastTime = performance.now();
 let now = 0;
 let dt = 0;
 let fps = 60;
-let step = 1 / fps;
+let gameStep = 1 / fps;
 
 const loop = () => {
   now = performance.now();
   dt += Math.min(1, (now - lastTime) / 1000);
 
-  while (dt > step) {
-    dt -= step;
+  while (dt > gameStep) {
+    dt -= gameStep;
     update();
   }
 

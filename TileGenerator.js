@@ -2,8 +2,8 @@
 const generateTileMap = () => {
   const map = [];
 
-  let blockRealWidth = canvasToWorld(20, 0)
-  let blockRealHeight = canvasToWorld(20, 1);
+  let blockRealWidth = 20 * camera.scaleX;
+  let blockRealHeight = 20 * camera.scaleY;
 
   let row = images["map"].height / blockRealHeight;
   let col = images["map"].width / blockRealWidth;
@@ -65,8 +65,7 @@ const generateTileMap = () => {
     }
   }
 
-  let str = JSON.stringify(map);
-  str = JSON.stringify(map, null, 4);
+  let str = JSON.stringify(map, null, 4);
   console.log(str);
 
   return map;
