@@ -16,8 +16,8 @@ const update = () => {
 
 const drawPosit = () => {
   ctx.font = "16px Arial";
-  ctx.fillStyle = "#0095DD";
-  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + canvas.height, 20, 20);
+ctx.fillStyle = "#0095DD";
+  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + canvas.height + " / " + bullets.size, 20, 20);
 }
 
 const drawTileTypes = () => {
@@ -65,21 +65,25 @@ const draw = () => {
   player.drawDirection();
 
   if (mouseDown) {
-    
-    if (player.bulletsInMagazine === 0) {
-      this.reload = true;
-      if (player.magazine !== 0) {
-        player.bulletsInMagazine = 30;
-        player.magazine--;
-        this.reload = false;
+    if (shootEnable) {
+      if (player.bulletsInMagazine === 0) {
+        this.reload = true;
+        if (player.magazine !== 0) {
+          player.bulletsInMagazine = 30;
+          player.magazine--;
+          this.reload = false;
+        } else {
+          this.reload = false;
+        }
       } else {
-        this.reload = false;
+        player.bulletsInMagazine--;
+        bullets.add(new Bullet(player.x, player.y,
+                               canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
+                               bulletSpeed));
+        if (singleShoot) {
+          shootEnable = false;
+        }
       }
-    } else {
-      player.bulletsInMagazine--;
-      bullets.add(new Bullet(player.x, player.y,
-                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
-                             bulletSpeed));
     }
   }
 
@@ -109,7 +113,6 @@ const loop = () => {
   }
 
   draw();
-
   lastTime = now;
 
   requestAnimationFrame(loop);

@@ -44,12 +44,21 @@ const mouseDownHandler = (e) => {
   const tmpX = e.clientX - canvas.offsetLeft;
   const tmpY = e.clientY - canvas.offsetTop;
   if (tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
-    mouseDown = true;
+    if (e.which === 1) {
+      mouseDown = true;
+    }
+    if (e.which === 2) {
+      singleShoot = !singleShoot;
+      shootEnable = true;
+    }
   }
 }
 
 const mouseUpHandler = (e) => {
   mouseDown = false;
+  if (singleShoot) {
+    shootEnable = true;
+  }
 }
 
 document.addEventListener("keydown", keyDownHandler, false);
