@@ -4,7 +4,6 @@ let rightPressed = false;
 let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
-let clicked = false;
 let mouseDown = false;
 
 const keyUpHandler = (e) => {
