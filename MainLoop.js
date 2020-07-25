@@ -64,30 +64,7 @@ const draw = () => {
   camera.drawVisibleMap();
   player.drawDirection();
 
-  if (mouseDown) {
-    if (shootEnable) {
-      if (player.bulletsInMagazine === 0) {
-        this.reload = true;
-        if (player.magazine !== 0) {
-          player.bulletsInMagazine = 30;
-          player.magazine--;
-          this.reload = false;
-        } else {
-          this.reload = false;
-        }
-      } else {
-        player.bulletsInMagazine--;
-        bullets.add(new Bullet(player.x, player.y,
-                               canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
-                               bulletSpeed));
-        if (singleShoot) {
-          shootEnable = false;
-        }
-      }
-    }
-  }
-
-  if (player.bulletsInMagazine !== 0 || player.magazine !== 0) for (let bullet of bullets) bullet.draw();
+  if (player.checkBullets()) for (let bullet of bullets) bullet.draw();
 
   for (let i = 0; i < targets.length; i++) {
     targets[i].draw(1 / camera.scaleX);
