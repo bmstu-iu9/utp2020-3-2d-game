@@ -92,7 +92,7 @@ const loop = () => {
   draw();
   lastTime = now;
 
-  requestAnimationFrame(loop);
+  RFA(loop);
 }
 
 const onImagesLoaded = (images) => {
@@ -109,13 +109,14 @@ const onImagesLoaded = (images) => {
           loop();
         }
       });
-
-      if (notLoaded === 0) {
-        notLoaded = -1;
-        loop();
-      }
     }
   }
+
+  if (notLoaded === 0) {
+    notLoaded = -1;
+    loop();
+  }
+
 }
 
 onImagesLoaded(images);

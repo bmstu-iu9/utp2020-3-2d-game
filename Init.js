@@ -1,4 +1,10 @@
 'use strict'
+let RFA =
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function(callback){ window.setTimeout(callback, 1000 / 60) };
 
 const worldToCanvas = (t, type) => {
   if (type == 0) return (t - camera.x) / camera.scaleX;
