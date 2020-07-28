@@ -1,5 +1,5 @@
 class Target {
-  constructor(X, Y, R) {
+  constructor(X, Y, R, r) {
     this.x = X;
     this.y = Y;
     this.r = R;
