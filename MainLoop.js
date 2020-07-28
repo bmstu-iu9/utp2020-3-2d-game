@@ -1,9 +1,6 @@
 'use strict'
 
 const update = () => {
-  player.move();
-  camera.updateCoordinates();
-
   for (let bullet of bullets) {
     bullet.updateCoordinates();
     for (let i = 0; i < targets.length; i++) {
@@ -12,12 +9,23 @@ const update = () => {
       }
     }
   }
+
+  bullets.forEach(b => (b.x < 0 ||
+                        b.x > mapImg.naturalHeight ||
+                        b.y < 0 ||
+                        b.y > mapImg.naturalWidth) ? bullets.delete(b) : b );
+
+  player.move();
+  for (let i = 0; i < targets.length; i++) {
+    targets[i].update();
+  }
+  camera.updateCoordinates();
 }
 
 const drawPosit = () => {
   ctx.font = "16px Arial";
 ctx.fillStyle = "#0095DD";
-  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + canvas.height + " / " + bullets.size, 20, 20);
+  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + "x: " + sight.x + " y: " + sight.y + " / " + bullets.size, 20, 20);
 }
 
 const drawTileTypes = () => {
@@ -64,7 +72,7 @@ const draw = () => {
   camera.drawVisibleMap();
   player.drawDirection();
 
-  if (player.checkBullets()) for (let bullet of bullets) bullet.draw();
+  for (let bullet of bullets) bullet.draw();
 
   for (let i = 0; i < targets.length; i++) {
     targets[i].draw(1 / camera.scaleX);

@@ -42,8 +42,8 @@ class Player {
         this.y += this.speed;
         this.Y_Center += this.speed;
       }
-      this.sprite.down.x = worldToCanvas(this.x - spriteWKoef, 0);
-      this.sprite.down.y = worldToCanvas(this.y - spriteHKoef, 1);
+      this.sprite.down.x = worldToCanvas(this.x, 0);
+      this.sprite.down.y = worldToCanvas(this.y, 1);
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed) {
@@ -51,8 +51,8 @@ class Player {
         this.y -= this.speed;
         this.Y_Center -= this.speed;
       }
-      this.sprite.up.x = worldToCanvas(this.x - spriteWKoef, 0);
-      this.sprite.up.y = worldToCanvas(this.y - spriteHKoef, 1);
+      this.sprite.up.x = worldToCanvas(this.x, 0);
+      this.sprite.up.y = worldToCanvas(this.y, 1);
       this.direction = "Up";
       this.sprite.up.update();
     }
@@ -62,8 +62,8 @@ class Player {
         this.x += this.speed;
         this.X_Center += this.speed;
       }
-      this.sprite.right.x = worldToCanvas(this.x - spriteWKoef, 0);
-      this.sprite.right.y = worldToCanvas(this.y - spriteHKoef, 1);
+      this.sprite.right.x = worldToCanvas(this.x, 0);
+      this.sprite.right.y = worldToCanvas(this.y, 1);
       this.direction = "Right";
       this.sprite.right.update();
     } else if (leftPressed) {
@@ -71,8 +71,8 @@ class Player {
         this.x -= this.speed;
         this.X_Center -= this.speed;
       }
-      this.sprite.left.x = worldToCanvas(this.x - spriteWKoef, 0);
-      this.sprite.left.y = worldToCanvas(this.y - spriteHKoef, 1);
+      this.sprite.left.x = worldToCanvas(this.x, 0);
+      this.sprite.left.y = worldToCanvas(this.y, 1);
       this.direction = "Left";
       this.sprite.left.update();
     }

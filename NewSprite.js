@@ -27,16 +27,30 @@ class Sprite {
   }
 
   drawSprite() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
+    if (sight.y > this.y) {
+      if (sight.x < this.x) {
+        deg = -deg - Math.PI;
+      } else {
+        deg = -deg + Math.PI;
+      }
+    }
+    ctx.rotate(deg);
+
     ctx.drawImage(
         this.image,
         this.srcX,
         this.srcY,
         this.width,
         this.height,
-        this.x,
-        this.y,
+        -this.width / 2,
+        -this.height / 2 - spriteHKoef,
         this.width,
         this.height
     );
+
+    ctx.restore();
   }
 }
