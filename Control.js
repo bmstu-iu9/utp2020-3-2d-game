@@ -5,6 +5,8 @@ let leftPressed = false;
 let downPressed = false;
 let upPressed = false;
 let mouseDown = false;
+let changeShootingMode = false;
+let reloadPending = false;
 
 const keyUpHandler = (e) => {
   if (e.keyCode === 68) {     //d
@@ -15,6 +17,8 @@ const keyUpHandler = (e) => {
     downPressed = false;
   } else if (e.keyCode === 87) { //w
     upPressed = false;
+  } else if (e.keyCode === 82) { //r
+    reloadPending = true;
   }
 }
 
@@ -47,17 +51,13 @@ const mouseDownHandler = (e) => {
       mouseDown = true;
     }
     if (e.which === 2) {
-      singleShoot = !singleShoot;
-      shootEnable = true;
+      changeShootingMode = true;
     }
   }
 }
 
 const mouseUpHandler = (e) => {
   mouseDown = false;
-  if (singleShoot) {
-    shootEnable = true;
-  }
 }
 
 document.addEventListener("keydown", keyDownHandler, false);

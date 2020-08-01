@@ -6,35 +6,37 @@ class Sight {
     this.y = initY;
     this.width = width;
     this.height = height;
+    this.dotSize = 1;
+    this.offset = 2;
   }
 
   draw() {
     ctx.beginPath();
-    ctx.rect(this.x - 0.5, this.y - 0.5, 1, 1);
+    ctx.rect(this.x - this.dotSize / 2, this.y - this.dotSize / 2, this.dotSize, this.dotSize);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.rect(this.x + 2, this.y - 1, this.width, this.height);
+    ctx.rect(this.x + this.offset + this.dotSize / 2, this.y - this.height / 2, this.width, this.height);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.rect(this.x - 2 - this.width, this.y - 1, this.width, this.height);
+    ctx.rect(this.x - this.offset - this.dotSize / 2 - this.width, this.y - this.height / 2, this.width, this.height);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.rect(this.x - 1, this.y + 2, this.height, this.width);
+    ctx.rect(this.x - this.height / 2, this.y + this.offset + this.dotSize / 2, this.height, this.width);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.rect(this.x - 1, this.y - 2 - this.width, this.height, this.width);
+    ctx.rect(this.x - this.height / 2, this.y - this.offset - this.dotSize / 2 - this.width, this.height, this.width);
     ctx.fillStyle = "red";
     ctx.fill();
     ctx.closePath();

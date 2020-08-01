@@ -1,5 +1,5 @@
 'use strict'
-let RFA =
+let RAF =
   window.requestAnimationFrame ||
   window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
   window.oRequestAnimationFrame ||
@@ -36,8 +36,6 @@ let sightHeight = 2;
 
 let bulletSpeed = 10;
 let bullets = new Set();
-let singleShoot = true;
-let shootEnable = true;
 
 let playerStartX = 100;
 let playerStartY = 120;

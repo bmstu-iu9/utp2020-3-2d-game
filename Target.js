@@ -104,10 +104,12 @@ class Target {
       ctx.closePath();
       ctx.beginPath();
       ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.o * scale, 0, Math.PI * 2);
+      ctx.strokeStyle = "black";
       ctx.stroke();
       ctx.closePath();
       ctx.beginPath();
       ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.s * scale, 0, Math.PI * 2);
+      ctx.strokeStyle = "black";
       ctx.stroke();
       ctx.closePath();
     } else {

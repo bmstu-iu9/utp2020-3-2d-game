@@ -13,9 +13,7 @@ class Player {
     this.sprite = sprite;
     this.speed = speed;
     this.direction = "Down";
-    this.bulletsInMagazine = 30;
-    this.magazine = 1;
-    this.reload = false;
+    this.weapon = new Weapon(1);
   }
 
   drawDirection() {
@@ -33,6 +31,10 @@ class Player {
 
     if (this.direction === "Right") {
       this.sprite.right.drawSprite();
+    }
+
+    if (this.weapon.isReloading()) {
+      this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
     }
   }
 
@@ -77,33 +79,20 @@ class Player {
       this.sprite.left.update();
     }
 
-    if (mouseDown) {
-      if (shootEnable) {
-        if (player.bulletsInMagazine === 0) {
-          this.reload = true;
-          if (player.magazine !== 0) {
-            player.bulletsInMagazine = 30;
-            player.magazine--;
-            this.reload = false;
-          } else {
-            this.reload = false;
-          }
-        } else {
-          player.bulletsInMagazine--;
-          bullets.add(new Bullet(player.x, player.y,
-                                 canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
-                                 bulletSpeed));
-          if (singleShoot) {
-            shootEnable = false;
-          }
-        }
-      }
+    if (changeShootingMode) {
+      this.weapon.switchShootingMode();
+      changeShootingMode = false;
     }
 
-  }
+    if (reloadPending){
+      this.weapon.reload();
+      reloadPending = false;
+    }
 
-  checkBullets() {
-    return player.bulletsInMagazine !== 0 || player.magazine !== 0;
+    if (mouseDown){
+      this.weapon.shoot(this.x, this.y, canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
+      this.weapon.shootExecuted = 1;
+    } else this.weapon.shootExecuted = 0;
   }
 
 }

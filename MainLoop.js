@@ -24,8 +24,9 @@ const update = () => {
 
 const drawPosit = () => {
   ctx.font = "16px Arial";
-ctx.fillStyle = "#0095DD";
-  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + "x: " + sight.x + " y: " + sight.y + " / " + bullets.size, 20, 20);
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + "x: " + sight.x + " y: " + sight.y + " / " + bullets.size +
+  " Ammo: " + player.weapon.bullets + " / " + player.weapon.magazines.reduce( (accumulator, currentValue) => accumulator + currentValue, 0), 20, 20);
 }
 
 const drawTileTypes = () => {
@@ -100,7 +101,7 @@ const loop = () => {
   draw();
   lastTime = now;
 
-  RFA(loop);
+  RAF(loop);
 }
 
 const onImagesLoaded = (images) => {
