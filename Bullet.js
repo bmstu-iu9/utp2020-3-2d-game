@@ -8,7 +8,7 @@ class Bullet {
     this.shooted = false;
     this.justShooted = true;
     this.bulletAnimationRadius = 1.2;
-    this.bulletRadius = 5;           //нормирование и умножение на скорость \/
+    this.bulletRadius = 0.4;           //нормирование и умножение на скорость \/
     this.dx = speed * (sightX - x) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.dy = speed * (sightY - y) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.speed = speed;
