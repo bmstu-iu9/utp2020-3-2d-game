@@ -20,6 +20,7 @@ const update = () => {
     targets[i].update();
   }
   camera.updateCoordinates();
+  collision();
 }
 
 const drawPosit = () => {
