@@ -48,8 +48,8 @@ const collision = () => {
       }
     }
 
-    if (canvasToWorld(bul.x, 0) <= 0 || canvasToWorld(bul.x, 0) >= mapImg.naturalWidth ||
-      canvasToWorld(bul.y, 1) <= 0 || canvasToWorld(bul.y, 1) >= mapImg.naturalHeight) {
+    if (canvasToWorld(bul.x, 0) <= 0 || canvasToWorld(bul.x, 0) >= images["map"].naturalWidth ||
+      canvasToWorld(bul.y, 1) <= 0 || canvasToWorld(bul.y, 1) >= images["map"].naturalHeight) {
       f = true;
     }
 

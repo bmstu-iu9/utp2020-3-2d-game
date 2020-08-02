@@ -40,7 +40,7 @@ class Player {
 
   move() {
     if (downPressed) {
-      if (this.y < mapImg.naturalHeight) {
+      if (this.y < images["map"].naturalHeight) {
         this.y += this.speed;
         this.Y_Center += this.speed;
       }
@@ -60,7 +60,7 @@ class Player {
     }
 
     if (rightPressed) {
-      if (this.x < mapImg.naturalWidth) {
+      if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
         this.X_Center += this.speed;
       }

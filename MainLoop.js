@@ -11,9 +11,9 @@ const update = () => {
   }
 
   bullets.forEach(b => (b.x < 0 ||
-                        b.x > mapImg.naturalHeight ||
+                        b.x > images["map"].naturalHeight ||
                         b.y < 0 ||
-                        b.y > mapImg.naturalWidth) ? bullets.delete(b) : b );
+                        b.y > images["map"].naturalWidth) ? bullets.delete(b) : b );
 
   player.move();
   for (let i = 0; i < targets.length; i++) {
@@ -105,28 +105,4 @@ const loop = () => {
   RAF(loop);
 }
 
-const onImagesLoaded = (images) => {
-  let notLoaded = Object.keys(images).length;
-
-  for (let x in images) {
-    if (images[x].complete) {
-      notLoaded--;
-    } else {
-      images[x].addEventListener("load", () => {
-        notLoaded--;
-        if (notLoaded === 0){
-          notLoaded = -1;
-          loop();
-        }
-      });
-    }
-  }
-
-  if (notLoaded === 0) {
-    notLoaded = -1;
-    loop();
-  }
-
-}
-
-onImagesLoaded(images);
+loop();

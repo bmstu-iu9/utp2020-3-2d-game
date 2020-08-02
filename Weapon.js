@@ -1,5 +1,5 @@
 class Weapon {
-  constructor(id) {
+  constructor(id, bulletImg) {
     switch (id) {
       case 0:
         this.fireRate = 1/10; //sec for 1 round
@@ -7,7 +7,7 @@ class Weapon {
         this.maxBullets = 30;
         this.magazines = [];
         this.magazines.push(30);
-        this.bulletSpeed = 12; //связано с fps
+        this.bulletSpeed = 12;
         this.reloadTime = 1.5; //sec
         break;
       case 1:
@@ -31,6 +31,7 @@ class Weapon {
     }
 
     this.id = id;
+    this.bulletImg = bulletImg;
     this.lastBulletTime = 0;
     this.reloading = false;
     this.reloadId = null;
@@ -39,8 +40,8 @@ class Weapon {
     this.shootingEnabled = true;
     this.shootExecuted = 0;
     this.angle = 0;
-    this.dt = 2 * Math.PI / (this.reloadTime * 60); //зависит от fps
-  }
+    this.dt = 2 * Math.PI / (this.reloadTime * 60); //шаг на каждый фрейм
+  }                                                 //при условии 60 fps
   //0 - ak
   //1 - m16
   //2 - remington shotgun

@@ -36,6 +36,7 @@ let sightHeight = 2;
 
 let bulletSpeed = 10;
 let bullets = new Set();
+let rounds = [];
 
 let playerStartX = 100;
 let playerStartY = 120;
@@ -45,24 +46,14 @@ let spritePlW = 64;
 let spritePlH = 64;
 const spriteHKoef = 9;
 
-const mapImg = new Image();
-mapImg.src = "map.png";
-
-const playerImg = new Image();
-playerImg.src = "player.png";
-
-const images = {};
-images["map"] = mapImg;
-images["player"] = playerImg;
-
-const camera = new Camera(cameraStartX, cameraStartY, mapImg, visiblePart, visiblePart, cameraSpeed);
+const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const spritePl = {
-  up : new Sprite(playerImg, 0,spritePlH*spriteIndex[0], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[0]),
-  down : new Sprite(playerImg, 0, spritePlH*spriteIndex[2], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[2]),
-  left : new Sprite(playerImg, 0, spritePlH*spriteIndex[1], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[1]),
-  right : new Sprite(playerImg, 0, spritePlH*spriteIndex[3], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[3]),
+  up : new Sprite(images["player"], 0,spritePlH*spriteIndex[0], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[0]),
+  down : new Sprite(images["player"], 0, spritePlH*spriteIndex[2], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[2]),
+  left : new Sprite(images["player"], 0, spritePlH*spriteIndex[1], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[1]),
+  right : new Sprite(images["player"], 0, spritePlH*spriteIndex[3], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[3]),
 };
 
 const player = new Player(playerStartX, playerStartY, 64, 64, playerSpeed, spritePl);
