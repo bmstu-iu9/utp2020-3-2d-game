@@ -1,5 +1,5 @@
 class Weapon {
-  constructor(id, bulletImg) {
+  constructor(id) {
     switch (id) {
       case 0:
         this.fireRate = 1/10; //sec for 1 round
@@ -18,6 +18,7 @@ class Weapon {
         this.magazines.push(30);
         this.bulletSpeed = 16;
         this.reloadTime = 1.2;
+        this.roundImage = images["5.56gauge"];
         break;
       case 2:
         this.fireRate = 1;
@@ -27,11 +28,11 @@ class Weapon {
         this.magazines.push(6);
         this.bulletSpeed = 15;
         this.reloadTime = 3.5;
+        this.roundImage = images["12gauge"];
         break;
     }
 
     this.id = id;
-    this.bulletImg = bulletImg;
     this.lastBulletTime = 0;
     this.reloading = false;
     this.reloadId = null;
@@ -58,6 +59,7 @@ class Weapon {
       ) {
       bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed));
       this.bullets--;
+      rounds.push(new Round(x, y, targetX, targetY, this.roundImage));
       this.lastBulletTime = performance.now();
     } else if (this.bullets <= 0) {
       //щелчок по причине пустого магазина

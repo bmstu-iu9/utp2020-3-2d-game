@@ -11,11 +11,15 @@ const update = () => {
   }
 
   bullets.forEach(b => (b.x < 0 ||
-                        b.x > images["map"].naturalHeight ||
+                        b.x > images["map"].naturalWidth ||
                         b.y < 0 ||
-                        b.y > images["map"].naturalWidth) ? bullets.delete(b) : b );
+                        b.y > images["map"].naturalHeight) ? bullets.delete(b) : b );
 
   player.move();
+  rounds.forEach((item) => {
+    item.update();
+  });
+
   for (let i = 0; i < targets.length; i++) {
     targets[i].update();
   }
@@ -79,6 +83,10 @@ const draw = () => {
   for (let i = 0; i < targets.length; i++) {
     targets[i].draw(1 / camera.scaleX);
   }
+
+  rounds.forEach((item) => {
+    item.draw();
+  });
 
   sight.draw();
   drawPosit();
