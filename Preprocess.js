@@ -1,6 +1,6 @@
 'use strict'
 
-let promises = [ {"name": "map", "src" : "resources/jungle_carcass_v1.1.png"}, {"name":"player", "src" : "resources/player.png"},
+let promises = [ {"name": "map", "src" : "resources/jungle_carcass_v1.2.png"}, {"name":"player", "src" : "resources/player.png"},
                  {"name" : "12gauge", "src" : "resources/12gauge_pixelized.png"},
                  {"name" : "5.56gauge", "src" : "resources/5.56gauge_pixelized.png"} ];
 
