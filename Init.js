@@ -22,14 +22,14 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
-const canvasTileSize = 20;
-const worldTileSize = 4;
-
-let cameraStartX = 0;
-let cameraStartY = 0;
-let cameraSpeed = 0.5;
+let cameraStartX = 1250;
+let cameraStartY = 150;
 const moveBorder = 150;
-const visiblePart = 200;
+const visiblePart = 700;
+let cameraSpeed = 2;
+
+const worldTileSize = 10;
+const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
 
 let sightWidth = 8;
 let sightHeight = 2;
@@ -38,8 +38,8 @@ let bulletSpeed = 10;
 let bullets = new Set();
 let rounds = [];
 
-let playerStartX = 100;
-let playerStartY = 120;
+let playerStartX = 1300;
+let playerStartY = 500;
 let playerSpeed = cameraSpeed;
 let spriteIndex = [8,9,10,11];
 let spritePlW = 64;
@@ -50,7 +50,7 @@ const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const spritePl = {
-  up : new Sprite(images["player"], 0,spritePlH*spriteIndex[0], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[0]),
+  up : new Sprite(images["player"], 0, spritePlH*spriteIndex[0], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[0]),
   down : new Sprite(images["player"], 0, spritePlH*spriteIndex[2], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[2]),
   left : new Sprite(images["player"], 0, spritePlH*spriteIndex[1], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[1]),
   right : new Sprite(images["player"], 0, spritePlH*spriteIndex[3], spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), spriteIndex[3]),

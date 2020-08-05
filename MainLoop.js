@@ -35,7 +35,7 @@ const drawPosit = () => {
 }
 
 const drawTileTypes = () => {
-  ctx.font = "16px Arial";
+  ctx.font = "8px Arial";
   ctx.fillStyle = "red";
 
   let minX = Math.floor(camera.x / worldTileSize);
@@ -46,26 +46,29 @@ const drawTileTypes = () => {
   for (let i = minY; i < maxY; i++) {
     for (let j = minX; j < maxX; j++) {
       switch (tileMap[i][j]) {
-        case "sand":
-          ctx.fillText("s", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+        case "water":
+          ctx.fillText("wa", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
           break;
-        case "dark ocean":
-          ctx.fillText("do", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+        case "red":
+          ctx.fillText("r", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
           break;
-        case "ocean":
+        case "door":
+          ctx.fillText("d", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "black":
+          ctx.fillText("b", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "orange":
           ctx.fillText("o", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
           break;
-        case "grass":
+        case "white":
+          ctx.fillText("w", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          break;
+        case "glass":
           ctx.fillText("g", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
           break;
-        case "dark grass":
-          ctx.fillText("g", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
-          break;
-        case "cobblestone":
+        case "cover":
           ctx.fillText("c", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
-          break;
-        case "dark cobblestone":
-          ctx.fillText("dc", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
           break;
       }
     }
@@ -76,6 +79,10 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
+  drawTileTypes();
+  rounds.forEach((item) => {
+    item.draw();
+  });
   player.drawDirection();
 
   for (let bullet of bullets) bullet.draw();
@@ -83,10 +90,6 @@ const draw = () => {
   for (let i = 0; i < targets.length; i++) {
     targets[i].draw(1 / camera.scaleX);
   }
-
-  rounds.forEach((item) => {
-    item.draw();
-  });
 
   sight.draw();
   drawPosit();

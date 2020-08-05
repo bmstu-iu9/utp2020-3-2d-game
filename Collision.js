@@ -39,11 +39,11 @@ const collision = () => {
     }
 
     if (!f) {
-      let x1 = canvasToWorld(bul.x, 0);
-      let y1 = canvasToWorld(bul.y, 1);
+      let x1 = bul.x;
+      let y1 = bul.y;
       let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
       let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
-      if ((tileMap[xBlock][yBlock] == "cobblestone") || (tileMap[xBlock][yBlock] == "dark cobblestone")) {
+      if ((tileMap[yBlock][xBlock] == "black") || (tileMap[yBlock][xBlock] == "cover")) {
         f = true;
       }
     }

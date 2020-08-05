@@ -5,6 +5,7 @@ class Round {
     this.img = img;
     this.ratio = 7 / 20; //w/h
     this.w = 2;
+    this.h = this.w / this.ratio;
     this.x = x;
     this.y = y;
     let angle = -3 * Math.PI / 4;
@@ -19,7 +20,6 @@ class Round {
     let dy = l2 / len * mainLen;
 
     this.angle = -3 * Math.PI / 2 - Math.acos(dx / mainLen);
-    console.log(this.angle)
     if (l2 > 0) {
       if (l1 < 0) {
         this.angle = -this.angle - Math.PI;
@@ -46,7 +46,7 @@ class Round {
     ctx.translate(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1));
     ctx.rotate(this.angle);
     ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height,
-                            0, 0, this.w / camera.scaleX , this.w / this.ratio / camera.scaleY);
+                            0, 0, this.w / camera.scaleX , this.h / camera.scaleY);
 
     ctx.restore();
   }

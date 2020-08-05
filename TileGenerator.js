@@ -2,11 +2,11 @@
 const generateTileMap = () => {
   const map = [];
 
-  let blockRealWidth = 20 * camera.scaleX;
-  let blockRealHeight = 20 * camera.scaleY;
+  let blockRealWidth = 10;
+  let blockRealHeight = 10;
 
-  let row = images["map"].height / blockRealHeight;
-  let col = images["map"].width / blockRealWidth;
+  let row = (images["map"].height - images["map"].height % blockRealHeight) / blockRealHeight;
+  let col = (images["map"].width - images["map"].width % blockRealWidth) / blockRealWidth;
   console.log(row + " " + col + " " + images["map"].height);
   let mapCanvas = document.createElement("canvas");
   mapCanvas.width = images["map"].width;
@@ -18,11 +18,11 @@ const generateTileMap = () => {
 
   let pixelData = mapCanvas.getContext("2d").
                   getImageData(0, 0, mapCanvas.width, mapCanvas.height).data;
-  console.log(pixelData);
   const findDominant = (x, y, w, h) => {
-    let distinctRGB = [[212, 191, 111], [14, 42, 75], [0, 94, 184], [52, 101, 21], [26, 56, 8], [51, 51, 51], [18, 18, 18]];
-    let distinctColors = ["sand", "dark ocean", "ocean", "grass", "dark grass", "cobblestone", "dark cobblestone"];
-    let count = [0, 0, 0, 0, 0, 0, 0]
+    let distinctRGB = [ [0, 162, 232], [237, 28, 36], [185, 122, 87], [0, 0, 0], [255, 127, 39], [255, 255, 255], [153, 217, 234],
+                        [255, 242, 0] ];
+    let distinctColors = ["water", "red", "door", "black", "orange", "white", "glass", "cover"];
+    let count = [0, 0, 0, 0, 0, 0, 0, 0];
     const checkColor = (r, g, b) => {
       //https://stackoverflow.com/questions/44189508/finding-which-color-is-the-closest-to-the-given-rgb-values-in-c
       let res = 0;
@@ -70,3 +70,5 @@ const generateTileMap = () => {
 
   return map;
 }
+
+generateTileMap();
