@@ -39,18 +39,15 @@ const collision = () => {
     }
 
     if (!f) {
-      let x1 = bul.x;
-      let y1 = bul.y;
-      console.log(`${x1} ${y1}`);
-      let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
-      let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
+      let xBlock = (bul.x - (bul.x % worldTileSize)) / worldTileSize;
+      let yBlock = (bul.y - (bul.y % worldTileSize)) / worldTileSize;
       if ((tileMap[yBlock][xBlock] == "black") || (tileMap[yBlock][xBlock] == "cover")) {
         f = true;
       }
     }
 
-    if (bul.x <= 0 || bul.x >= images["map"].naturalWidth ||
-      bul.y <= 0 || bul.y >= images["map"].naturalHeight) {
+    if (bul.x < 0 || bul.x >= images["map"].naturalWidth ||
+        bul.y < 0 || bul.y >= images["map"].naturalHeight) {
       f = true;
     }
 

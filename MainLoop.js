@@ -3,17 +3,7 @@
 const update = () => {
   for (let bullet of bullets) {
     bullet.updateCoordinates();
-    for (let i = 0; i < targets.length; i++) {
-      if (bullet.collide(targets[i].x, targets[i].y, targets[i].r)) {
-        targets[i].shooted = false;
-      }
-    }
   }
-
-  bullets.forEach(b => (b.x < 0 ||
-                        b.x > images["map"].naturalWidth ||
-                        b.y < 0 ||
-                        b.y > images["map"].naturalHeight) ? bullets.delete(b) : b );
 
   player.move();
   rounds.forEach((item) => {
@@ -79,7 +69,7 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
-  drawTileTypes();
+  //drawTileTypes();
   rounds.forEach((item) => {
     item.draw();
   });
