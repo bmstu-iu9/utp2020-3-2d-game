@@ -41,6 +41,7 @@ class Weapon {
     this.singleShoot = false;
     this.shootingEnabled = true;
     this.shootExecuted = 0;
+    this.emptyMagazineAudio = sounds["empty"];
   }
   //0 - ak
   //1 - m16
@@ -60,8 +61,10 @@ class Weapon {
       this.bullets--;
       rounds.push(new Round(x, y, targetX, targetY, this.roundImage));
       this.lastBulletTime = performance.now();
-    } else if (this.bullets <= 0) {
-      //щелчок по причине пустого магазина
+    } else if (this.bullets <= 0 && this.shootExecuted === 0) {
+      this.emptyMagazineAudio.pause();
+      this.emptyMagazineAudio.currentTime = 0.6;
+      this.emptyMagazineAudio.play();
     }
   }
 
