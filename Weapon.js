@@ -34,16 +34,14 @@ class Weapon {
     }
 
     this.id = id;
-    this.lastBulletTime = 0;
+    this.lastBulletTime = 0;   //millisec
     this.reloading = false;
     this.reloadId = null;
-    this.lastReloadTime = 0;
+    this.lastReloadTime = 0;  //millisec
     this.singleShoot = false;
     this.shootingEnabled = true;
     this.shootExecuted = 0;
-    this.angle = 0;
-    this.dt = 2 * Math.PI / (this.reloadTime * 60); //шаг на каждый фрейм
-  }                                                 //при условии 60 fps
+  }
   //0 - ak
   //1 - m16
   //2 - remington shotgun
@@ -69,7 +67,6 @@ class Weapon {
 
   reload(){
     if (this.magazines.length !== 0 && this.bullets != this.maxBullets) {
-      this.angle = 0;
       this.reloading = true;
       this.lastReloadTime = performance.now();
       this.reloadId = setTimeout(() => {
@@ -85,9 +82,9 @@ class Weapon {
     if (this.reloadId != null){
       clearTimeout(this.reloadId);
       this.reloading = false;
-      let delta = performance.now() - this.lastReloadTime;
-      let bulletReloadTime = this.maxBullets / this.reloadTime;
-      let neededBullets = Math.round(delta / bulletsReloadTime);
+      let delta = (performance.now() - this.lastReloadTime) / 1000;
+      let bulletReloadTime = this.reloadTime / this.maxBullets;
+      let neededBullets = Math.floor(delta / bulletsReloadTime);
       load(neededBullets);
     }
   }
@@ -111,6 +108,7 @@ class Weapon {
 
   drawReload(x, y, r) {
     ctx.beginPath();
+    ctx.lineWidth = 0.5;
     ctx.strokeStyle = "gray";
     ctx.arc(x, y, r, 0, 2 * Math.PI, false);
     ctx.arc(x, y, r + 1.25, 0, 2 * Math.PI, false);
@@ -118,11 +116,9 @@ class Weapon {
     ctx.closePath();
     ctx.beginPath();
     ctx.lineWidth = 2;
-    ctx.arc(x, y, r, 0, this.angle, false);
+    ctx.arc(x, y, r, 0, 2 * Math.PI * (performance.now() - this.lastReloadTime) / 1000 / this.reloadTime, false);
     ctx.stroke();
     ctx.closePath();
-    this.angle += this.dt;
-    ctx.lineWidth = 1;
   }
 
   emptyMagazine() { return this.bullets === 0 };
