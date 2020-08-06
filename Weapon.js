@@ -9,6 +9,7 @@ class Weapon {
         this.magazines.push(30);
         this.bulletSpeed = 12;
         this.reloadTime = 1.5; //sec
+        this.roundImage = images["7.62gauge"];
         break;
       case 1:
         this.fireRate = 1/11.6;

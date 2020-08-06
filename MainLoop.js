@@ -1,28 +1,20 @@
 'use strict'
 
 const update = () => {
-  for (let bullet of bullets) {
+  bullets.forEach(bullet => {
     bullet.updateCoordinates();
-    for (let i = 0; i < targets.length; i++) {
-      if (bullet.collide(targets[i].x, targets[i].y, targets[i].r)) {
-        targets[i].shooted = false;
-      }
-    }
-  }
-
-  bullets.forEach(b => (b.x < 0 ||
-                        b.x > images["map"].naturalWidth ||
-                        b.y < 0 ||
-                        b.y > images["map"].naturalHeight) ? bullets.delete(b) : b );
-
-  player.move();
-  rounds.forEach((item) => {
-    item.update();
   });
 
-  for (let i = 0; i < targets.length; i++) {
-    targets[i].update();
-  }
+  player.move();
+
+  rounds.forEach(round => {
+    round.update();
+  });
+
+  targets.forEach(target => {
+    target.update();
+  });
+
   camera.updateCoordinates();
   collision();
 }
@@ -79,27 +71,25 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
-  drawTileTypes();
-  rounds.forEach((item) => {
-    item.draw();
+
+  rounds.forEach(round => {
+    round.draw();
   });
   player.drawDirection();
 
-  for (let bullet of bullets) bullet.draw();
+  bullets.forEach(bullet => {
+    bullet.draw();
+  });
 
-  for (let i = 0; i < targets.length; i++) {
-    targets[i].draw(1 / camera.scaleX);
-  }
+
+  targets.forEach(target => {
+    target.draw(1 / camera.scaleX);
+  });
+
 
   sight.draw();
   drawPosit();
 }
-
-let lastTime = performance.now();
-let now = 0;
-let dt = 0;
-let fps = 60;
-let gameStep = 1 / fps;
 
 const loop = () => {
   now = performance.now();
@@ -115,5 +105,11 @@ const loop = () => {
 
   RAF(loop);
 }
+
+let lastTime = performance.now();
+let now = 0;
+let dt = 0;
+let fps = 60;
+let gameStep = 1 / fps;
 
 loop();
