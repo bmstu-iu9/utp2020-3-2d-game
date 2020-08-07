@@ -39,28 +39,28 @@ const drawTileTypes = () => {
     for (let j = minX; j < maxX; j++) {
       switch (tileMap[i][j]) {
         case "water":
-          ctx.fillText("wa", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("wa", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "red":
-          ctx.fillText("r", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("r", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "door":
-          ctx.fillText("d", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("d", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "black":
-          ctx.fillText("b", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("b", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "orange":
-          ctx.fillText("o", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("o", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "white":
-          ctx.fillText("w", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("w", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "glass":
-          ctx.fillText("g", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("g", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
         case "cover":
-          ctx.fillText("c", worldToCanvas(j * worldTileSize, 0), worldToCanvas(i * worldTileSize, 1));
+          ctx.fillText("c", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
           break;
       }
     }
@@ -71,7 +71,7 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
-
+  drawTileTypes();
   rounds.forEach(round => {
     round.draw();
   });

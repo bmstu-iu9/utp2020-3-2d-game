@@ -48,10 +48,18 @@ const collision = () => {
     }
 
     if (!f) {
-      let xBlock = (bul.x - (bul.x % worldTileSize)) / worldTileSize;
-      let yBlock = (bul.y - (bul.y % worldTileSize)) / worldTileSize;
-      if ((tileMap[yBlock][xBlock] == "black") || (tileMap[yBlock][xBlock] == "cover")) {
-        f = true;
+
+      for (let j = 0; j < 5; j++) {
+        let x1 = bul.x + (bul.dx * j) / 5;
+        let y1 = bul.y + (bul.dy * j) / 5;
+        let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
+        let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
+        if ((tileMap[yBlock][xBlock] == "black") || (tileMap[yBlock][xBlock] == "cover")) {
+          f = true;
+        }
+        if (f) {
+          break;
+        }
       }
     }
 
