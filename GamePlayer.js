@@ -13,7 +13,7 @@ class Player {
     this.sprite = sprite;
     this.speed = speed;
     this.direction = "Down";
-    this.weapon = new Weapon(1);
+    this.weapon = new Weapon(2);
   }
 
   drawDirection() {
