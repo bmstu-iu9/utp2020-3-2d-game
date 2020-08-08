@@ -31,11 +31,6 @@ let cameraSpeed = 1;
 const worldTileSize = 10;
 const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
 
-let cameraStartX = 0;
-let cameraStartY = 0;
-let cameraSpeed = 0.5;
-const moveBorder = 150;
-const visiblePart = 200;
 
 let sightWidth = 8;
 let sightHeight = 2;
