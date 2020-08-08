@@ -7,9 +7,12 @@ const update = () => {
 
   player.move();
 
-  rounds.forEach(round => {
-    round.update();
-  });
+  for (let i = 0; i < rounds.length; i++) {
+    let round = rounds[i];
+    if (i === 0 && round.deleteTime < performance.now())
+      rounds.splice(0, 1);
+    else round.update();
+  }
 
   targets.forEach(target => {
     target.update();

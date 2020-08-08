@@ -10,6 +10,7 @@ class Weapon {
         this.bulletSpeed = 12;
         this.reloadTime = 1.5; //sec
         this.roundImage = images["7.62gauge"];
+        this.shotSound = new Sound(sounds["shot_ak47"], 1.095, 2, 0.3, 1.5);
         break;
       case 1:
         this.fireRate = 1/11.6;
@@ -20,6 +21,7 @@ class Weapon {
         this.bulletSpeed = 16;
         this.reloadTime = 1.2;
         this.roundImage = images["5.56gauge"];
+        this.shotSound = new Sound(sounds["shot_m16"], 6.21, 7.33, 0.8, 6.7);
         break;
       case 2:
         this.fireRate = 1;
@@ -30,6 +32,7 @@ class Weapon {
         this.bulletSpeed = 15;
         this.reloadTime = 3.5;
         this.roundImage = images["12gauge"];
+        this.shotSound = new Sound(sounds["shot_remington"], 1, 2.2, 0.3, 1.4);
         break;
     }
 
@@ -41,7 +44,7 @@ class Weapon {
     this.singleShoot = false;
     this.shootingEnabled = true;
     this.shootExecuted = 0;
-    this.emptyMagazineAudio = sounds["empty"];
+    this.emptyMagazineSound = new Sound(sounds["empty"], 0.6, 1);
   }
   //0 - ak
   //1 - m16
@@ -61,10 +64,9 @@ class Weapon {
       this.bullets--;
       rounds.push(new Round(x, y, targetX, targetY, this.roundImage));
       this.lastBulletTime = performance.now();
+      this.shotSound.play();
     } else if (this.bullets <= 0 && this.shootExecuted === 0) {
-      this.emptyMagazineAudio.pause();
-      this.emptyMagazineAudio.currentTime = 0.6;
-      this.emptyMagazineAudio.play();
+      this.emptyMagazineSound.play();
     }
   }
 
@@ -72,18 +74,46 @@ class Weapon {
     if (this.magazines.length !== 0 && this.bullets != this.maxBullets) {
       this.reloading = true;
       this.lastReloadTime = performance.now();
-      this.reloadId = setTimeout(() => {
-        this.reloadId = null;
-        this.reloading = false;
-        let neededBullets = this.maxBullets - this.bullets;
-        this.load(neededBullets);
-      }, this.reloadTime * 1000);
+      if (this.id === 2) {  //перезарядка дробовика
+        let loaded = 0;
+        this.reloadId = setInterval(() => {
+
+          if (loaded !== this.maxBullets - this.bullets && this.enoughAmmo(loaded + 1)) {
+            loaded++;
+          } else {
+            clearInterval(this.reloadId);
+            this.reloadId = null;
+            this.reloading = false;
+            this.load(loaded);
+          }
+        }, this.reloadTime / this.maxBullets * 1000);
+      } else {
+        this.reloadId = setTimeout(() => {
+          clearTimeout(this.reloadId);
+          this.reloadId = null;
+          this.reloading = false;
+          let neededBullets = this.maxBullets - this.bullets;
+          this.load(neededBullets);
+        }, this.reloadTime * 1000);
+      }
     };
+  }
+
+  enoughAmmo(neededBullets) {
+    for (let i = 0; i < this.magazines.length; i++)
+      if (this.magazines[i] >= neededBullets) return true;
+      else neededBullets -= this.magazines[i];
+
+    return false;
+
   }
 
   stopReload() {
     if (this.reloadId != null){
-      clearTimeout(this.reloadId);
+
+      if (this.id === 2) clearInterval(this.reloadId);
+      else clearTimeout(this.reloadId);
+
       this.reloading = false;
       let delta = (performance.now() - this.lastReloadTime) / 1000;
       let bulletReloadTime = this.reloadTime / this.maxBullets;

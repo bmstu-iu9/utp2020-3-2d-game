@@ -17,12 +17,16 @@ class Player {
     this.speed = speed;
     this.prevDirect = "Down";
     this.direction = "Down";
+<<<<<<< HEAD
     this.bulletsInMagazine = 30;
     this.magazine = 1;
     this.reload = false;
     this.hp = 2;
     this.dead = false;
     this.fire = false;
+=======
+    this.weapon = new Weapon(2);
+>>>>>>> refs/remotes/origin/prototype
   }
 
   drawDirection() {

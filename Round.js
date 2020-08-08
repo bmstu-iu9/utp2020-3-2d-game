@@ -4,8 +4,9 @@ class Round {
   constructor(x, y, targetX, targetY, img) {
     this.img = img;
     this.ratio = 7 / 20; //w/h
-    this.w = 2;
+    this.w = 1;
     this.h = this.w / this.ratio;
+    this.deleteTime = performance.now() + 6 * 1000; //патрон лежит 6 секунд 
     this.x = x;
     this.y = y;
     let angle = -3 * Math.PI / 4;

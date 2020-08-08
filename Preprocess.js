@@ -3,12 +3,15 @@
 let imagePromises = [ {"name": "map", "src" : "resources/testmap.png"}, {"name":"player", "src" : "resources/Player.png"},
                  {"name" : "walk_RL", "src" : "resources/walk_RL.png"},
                  {"name" : "walk_UD", "src" : "resources/walk_UD.png"},  {"name" : "strafe", "src" : "resources/strafe.png"},
-                 {"name" : "shoot", "src" : "resources/shoot.png"},
+                 {"name" : "shoot", "src" : "resources/Shoot.png"},
                  {"name" : "12gauge", "src" : "resources/12gauge_pixelized.png"},
                  {"name" : "5.56gauge", "src" : "resources/5.56gauge_pixelized.png"},
                  {"name" : "7.62gauge", "src" : "resources/7.62gauge_pixelized.png"} ];
 
-let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" } ]
+let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" },
+                      {"name" : "shot_ak47", "src" : "resources/shot_ak47.mp3"},
+                      {"name" : "shot_m16", "src" : "resources/shot_m16.mp3"},
+                      {"name" : "shot_remington", "src" : "resources/shot_remington.mp3"}, ];
 
 imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
   let img = new Image();
