@@ -22,16 +22,14 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
-<<<<<<< HEAD
-const canvasTileSize = 20;
-const worldTileSize = 4;
-=======
 let cameraStartX = 0;
 let cameraStartY = 0;
 const moveBorder = 150;
 const visiblePart = 200;
 let cameraSpeed = 1;
->>>>>>> e2aa2f6d292997c710742b178ab00e74e6a532c9
+
+const worldTileSize = 10;
+const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
 
 let cameraStartX = 0;
 let cameraStartY = 0;
@@ -46,13 +44,8 @@ let bulletSpeed = 10;
 let bullets = new Set();
 let rounds = [];
 
-<<<<<<< HEAD
-let playerStartX = 100;
-let playerStartY = 120;
-=======
 let playerStartX = 150;
 let playerStartY = 150;
->>>>>>> e2aa2f6d292997c710742b178ab00e74e6a532c9
 let playerSpeed = cameraSpeed;
 let spriteIndex = [8,9,10,11];
 let spritePlW = 96;
