@@ -1,4 +1,6 @@
 'use strict'
+// индексы для спрайтов действия игрока(в классе NewSprite для framesY)
+// 0 - ходьба с ak-47
 // 1 - reload ak-47
 // 2 - ходьба с shotgun
 // 3 - reload  shotgun
@@ -17,22 +19,32 @@ class Player {
     this.speed = speed;
     this.prevDirect = "Down";
     this.direction = "Down";
-<<<<<<< HEAD
-    this.bulletsInMagazine = 30;
-    this.magazine = 1;
     this.reload = false;
     this.hp = 2;
     this.dead = false;
     this.fire = false;
-=======
-    this.weapon = new Weapon(2);
->>>>>>> refs/remotes/origin/prototype
+    this.weapon = new Weapon(1);
+    switch (this.weapon.id) {
+      case 0:
+        this.sprite.pl.indexFrameY = 0;
+      case 2:
+        this.sprite.pl.indexFrameY = 2;
+        break;
+    }
   }
 
   drawDirection() {
-    if (this.dead) {
-      this.sprite.dead.drawSprite();
-    } else {
+    if (this.fire) {
+      switch (this.weapon.id) {
+        case 0:
+          this.sprite.shoot.drawSprite();
+          break;
+        case 2:
+          this.sprite.shoot.drawSprite();
+          break;
+      }
+    }
+
       if (this.direction === "Down") {
         this.drawPlayerBody();
         this.sprite.down.drawSprite();
@@ -52,16 +64,18 @@ class Player {
         this.drawPlayerBody();
         this.sprite.right.drawSprite();
       }
-    }
+      if (this.weapon.isReloading()) {
+        this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
+      }
   }
 
   move() {
     if (downPressed) {
-      if (this.y < mapImg.naturalHeight) {
+      if (this.y < images["map"].naturalHeight) {
         this.y += this.speed;
         this.Y_Center += this.speed;
       }
-      this.sprite.down.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.down.x = worldToCanvas(this.x, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Down";
       this.sprite.down.update();
@@ -70,18 +84,18 @@ class Player {
         this.y -= this.speed;
         this.Y_Center -= this.speed;
       }
-      this.sprite.up.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.up.x = worldToCanvas(this.x, 0);
       this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Up";
       this.sprite.up.update();
     }
 
     if (rightPressed) {
-      if (this.x < mapImg.naturalWidth) {
+      if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
         this.X_Center += this.speed;
       }
-      this.sprite.right.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.right.x = worldToCanvas(this.x, 0);
       this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Right";
       this.sprite.right.update();
@@ -90,42 +104,57 @@ class Player {
         this.x -= this.speed;
         this.X_Center -= this.speed;
       }
-      this.sprite.left.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.left.x = worldToCanvas(this.x, 0);
       this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Left";
       this.sprite.left.update();
     }
 
-    if (mouseDown) {
-      if (shootEnable) {
-        if (player.bulletsInMagazine === 0) {
-          this.reload = true;
-          if (player.magazine !== 0) {
-            player.bulletsInMagazine = 30;
-            player.magazine--;
-            this.reload = false;
-            timeBullet = 30;
-          } else {
-            this.reload = false;
-            timeBullet = 30;
-          }
-        } else {
-          player.bulletsInMagazine--;
-            bullets.add(new Bullet(player.x, player.y,
-                                 canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1),
-                                 bulletSpeed));
-
-          if (singleShoot) {
-            shootEnable = false;
-          }
-        }
-      }
+    if (changeShootingMode) {
+      this.weapon.switchShootingMode();
+      changeShootingMode = false;
     }
 
-  }
+    if (reloadPending) {  // додумать спрайт перезарядки
+      /*this.weapon.reload();
+      while (this.weapon.isReloading()){
+        switch (this.weapon.id) {
+          case 0:
+            this.sprite.pl.indexFrameY = 1;
+            this.sprite.pl.x = this.x;
+            this.sprite.pl.y = this.y;
+            break;
+          case 2:
+            this.sprite.pl.indexFrameY = 3;
+            this.sprite.pl.x = this.x;
+            this.sprite.pl.y = this.y;
+            break;
+        }
+      }*/
 
-  checkBullets() {
-    return player.bulletsInMagazine !== 0 || player.magazine !== 0;
+      reloadPending = false;
+    }
+
+    if (mouseDown){
+      this.fire = true;
+      switch (this.weapon.id) {
+        case 0:
+          this.sprite.shoot.indexFrameY = 0;
+          this.sprite.shoot.x = this.x;
+          this.sprite.shoot.y = this.y;
+          break;
+        case 2:
+          this.sprite.shoot.indexFrameY = 1;
+          this.sprite.shoot.x = this.x;
+          this.sprite.shoot.y = this.y;
+          break;
+      }
+      this.weapon.shoot(this.x, this.y, canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
+      this.weapon.shootExecuted = 1;
+    } else {
+      this.fire = false;
+      this.weapon.shootExecuted = 0;
+    }
   }
 
   drawPlayerBody() {
@@ -140,13 +169,6 @@ class Player {
       }
     }
     ctx.rotate(deg);
-    if (!this.fire) {
-      if (this.weapon.id === 0) {
-       this.sprite.pl.indexFrameY = 0;
-     } else if (this.weapon.id === 2) {
-       this.sprite.pl.indexFrameY = 2;
-     }
-   }
     ctx.drawImage(
         this.sprite.pl.image,
         this.sprite.pl.srcX,
@@ -161,5 +183,16 @@ class Player {
 
     ctx.restore();
   }
+
+  changeWeapon(id) {
+    this.weapon = new Weapon(id);
+    switch (this.weapon.id) {
+      case 0:
+        this.sprite.pl.indexFrameY = 0;
+      case 2:
+        this.sprite.pl.indexFrameY = 2;
+        break;
+    }
   }
+
 }
