@@ -27,8 +27,8 @@ const update = () => {
 const drawPosit = () => {
   ctx.font = "16px Arial";
   ctx.fillStyle = "#0095DD";
-  ctx.fillText("x: " + player.x + " y: " + player.y + " / " + "x: " + sight.x + " y: " + sight.y + " / " + bullets.size +
-  " Ammo: " + player.weapon.bullets + " / " + player.weapon.magazines.reduce( (accumulator, currentValue) => accumulator + currentValue, 0), 20, 20);
+  ctx.fillText("Ammo: " + player.weapon.bullets + " / " +
+               player.weapon.magazines.reduce( (accumulator, currentValue) => accumulator + currentValue, 0), 20, 20);
 }
 
 const drawTileTypes = () => {
@@ -76,7 +76,6 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
-  drawTileTypes();
   rounds.forEach(round => {
     round.draw();
   });

@@ -22,7 +22,7 @@ class Player {
     this.hp = 2;
     this.dead = false;
     this.fire = false;
-    this.weapon = new Weapon(0);
+    this.weapon = new Weapon(2);
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
@@ -78,8 +78,8 @@ class Player {
       if (this.y < images["map"].naturalHeight) {
         this.y += this.speed;
         // временный костыль, связанный с недоработкой сетки навигации
-        if (this.y >= 300) {
-          this.y = 299;
+        if (this.y >= images["map"].naturalHeight) {
+          this.y = images["map"].naturalHeight - 1;
         }
         //
         this.Y_Center += this.speed;
@@ -102,8 +102,8 @@ class Player {
     if (rightPressed) {
       if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
-        if (this.x >= 300) {
-          this.x = 299;
+        if (this.x >= images["map"].naturalWidth) {
+          this.x = images["map"].naturalWidth - 1;
         }
         this.X_Center += this.speed;
       }
@@ -194,7 +194,9 @@ class Player {
   }
 
   vis(tx, ty) {
-    let degRad = Math.acos((tx - mesh[this.XBlock][this.YBlock].x) / Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) + Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2)));
+    let degRad = Math.acos((tx - mesh[this.XBlock][this.YBlock].x) /
+                 Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
+                 Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2)));
     if (ty > mesh[this.XBlock][this.YBlock].y) {
       degRad += Math.PI;
     } else {

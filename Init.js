@@ -26,8 +26,8 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
-let cameraStartX = 0;
-let cameraStartY = 0;
+const cameraStartX = 0;
+const cameraStartY = 0;
 const moveBorder = 150;
 const visiblePart = 200;
 let cameraSpeed = 1;
@@ -39,18 +39,16 @@ const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
 let sightWidth = 8;
 let sightHeight = 2;
 
-let bulletSpeed = 10;
-let bullets = new Set();
-let rounds = [];
+const bullets = new Set();
+const rounds = [];
 
-let playerStartX = 150;
-let playerStartY = 150;
+const playerStartX = 150;
+const playerStartY = 150;
 let playerSpeed = cameraSpeed;
-let spritePlW = 96;
-let spritePlH = 64;
-let spriteFeetH = 38;
-let spriteFeetW = 53;
-const spriteHKoef = 9;
+const spritePlW = 96;
+const spritePlH = 64;
+const spriteFeetH = 38;
+const spriteFeetW = 53;
 
 const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);

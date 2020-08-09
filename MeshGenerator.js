@@ -2,8 +2,10 @@
 
 const generateMesh = () => {
 
-  let blockCenter = 5;
-  let blockSize = 10;
+  const degNum = 36;
+  const step = 10
+  const blockCenter = 5;
+  const blockSize = 10;
   let x = 0, y = 0, sx = 0, sy = 0, tx = 0, ty = 0, dx = 0, dy = 0, xBlock = 0, yBlock = 0;
 
   const mesh = [];
@@ -17,17 +19,17 @@ const generateMesh = () => {
       } else {
         mesh[i][j] = {x: x, y: y, color : 1, bfs: 0, vision: [], def: 0};
       }
-      for (let k = 0; k < 36; k++) {
+      for (let k = 0; k < degNum; k++) {
         if (mesh[i][j].color === 0) {
-          tx = Math.cos(k * 10 * Math.PI / 180) + x;
-          ty = Math.sin(k * 10 * Math.PI / 180) + y;
-          dx = 1 * (tx - x) / Math.sqrt(Math.pow(tx - x, 2) + Math.pow(ty - y, 2));
-          dy = 1 * (ty - y) / Math.sqrt(Math.pow(tx - x, 2) + Math.pow(ty - y, 2));
+          tx = Math.cos(k * step * Math.PI / 180) + x;
+          ty = Math.sin(k * step * Math.PI / 180) + y;
+          dx = (tx - x) / Math.sqrt(Math.pow(tx - x, 2) + Math.pow(ty - y, 2));
+          dy = (ty - y) / Math.sqrt(Math.pow(tx - x, 2) + Math.pow(ty - y, 2));
           xBlock = i;
           yBlock = j;
           sx = x;
           sy = y;
-          while (tileMap[yBlock][xBlock] !== "black" && sx > 0 && sy > 0 && sx < 300 && sy < 300) {
+          while (tileMap[yBlock][xBlock] !== "black" && sx > 0 && sy > 0 && sx < images["map"].naturalWidth && sy < images["map"].naturalHeight) {
             xBlock = (sx - (sx % blockSize)) / blockSize;
             yBlock = (sy - (sy % blockSize)) / blockSize;
             sx += dx;
