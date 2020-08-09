@@ -174,7 +174,7 @@ class Player {
 
       this.weapon.shoot(this.x + (canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 + normX,
                         this.y + (canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2 + normY ,
-                        canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
+                        canvasToWorld(sight.x, 0) + normX, canvasToWorld(sight.y, 1) + normY);
       this.weapon.shootExecuted = 1;
     } else {
       this.fire = false;
