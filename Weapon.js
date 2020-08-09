@@ -84,7 +84,8 @@ class Weapon {
   }
 
   reload() {
-    if (this.magazines.length !== 0 && this.bullets != this.maxBullets) {
+    if (this.magazines.length !== 0 && this.bullets != this.maxBullets &&
+        this.reloading === false) {
       this.reloading = true;
       this.lastReloadTime = performance.now();
       if (this.id === 2) {  //перезарядка дробовика
