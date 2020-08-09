@@ -12,14 +12,13 @@ class Player {
     this.y = y;
     this.w = width;
     this.h = height;
-    this.X_Center = this.x + this.width / 2;
-    this.Y_Center = this.y + this.height / 2;
+    this.X_Center = this.x + this.w / 2;
+    this.Y_Center = this.y + this.h / 2;
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Down";
     this.direction = "Down";
-    this.reload = false;
     this.hp = 2;
     this.dead = false;
     this.fire = false;
@@ -31,25 +30,44 @@ class Player {
         this.sprite.pl.indexFrameY = 2;
         break;
     }
+    this.sprite.shoot.speed = 10;
   }
 
   drawDirection() {
     if (this.direction === "Down") {
-      this.sprite.down.drawSprite();
+      this.sprite.down.drawBodySprite();
     }
     if (this.direction === "Up") {
-      this.sprite.up.drawSprite();
+      this.sprite.up.drawBodySprite();
     }
     if (this.direction === "Left") {
-      this.sprite.left.drawSprite();
+      this.sprite.left.drawBodySprite();
     }
     if (this.direction === "Right") {
-      this.sprite.right.drawSprite();
+      this.sprite.right.drawBodySprite();
     }
-    this.sprite.pl.drawSprite();
+    if (this.fire) {
+      if (!this.weapon.emptyMagazine()) {
+        this.sprite.shoot.drawBodySprite();
+      } else {
+        this.sprite.pl.drawBodySprite();
+      }
+    }
 
-    if (this.weapon.isReloading()) {
-      this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
+    if (!this.fire) {
+      if (this.weapon.isReloading()) {
+        this.sprite.pl.drawBodySprite();
+        this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
+      } else {
+        switch (this.weapon.id) {
+          case 0:
+            this.sprite.pl.indexFrameY = 0;
+          case 2:
+            this.sprite.pl.indexFrameY = 2;
+            break;
+        }
+        this.sprite.pl.drawBodySprite();
+      }
     }
   }
 
@@ -94,9 +112,6 @@ class Player {
       this.sprite.left.update();
     }
 
-    this.sprite.pl.x = worldToCanvas(this.x, 0);
-    this.sprite.pl.y = worldToCanvas(this.y, 1);
-    this.sprite.pl.update();
 
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
@@ -105,24 +120,45 @@ class Player {
 
     if (reloadPending) {  // додумать спрайт перезарядки
       this.weapon.reload();
+      switch (this.weapon.id) {
+        case 0:
+          this.sprite.pl.indexFrameY = 1;
+        case 2:
+          this.sprite.pl.indexFrameY = 3;
+          break;
+      }
       reloadPending = false;
     }
+
+    this.sprite.pl.x = worldToCanvas(this.x, 0);
+    this.sprite.pl.y = worldToCanvas(this.y, 1);
+    this.sprite.pl.update();
 
     if (mouseDown) {
       this.fire = true;
       switch (this.weapon.id) {
         case 0:
           this.sprite.shoot.indexFrameY = 0;
-          this.sprite.shoot.x = this.x;
-          this.sprite.shoot.y = this.y;
+          this.sprite.shoot.x = this.sprite.pl.x;
+          this.sprite.shoot.y = this.sprite.pl.y;
           break;
         case 2:
           this.sprite.shoot.indexFrameY = 1;
-          this.sprite.shoot.x = this.x;
-          this.sprite.shoot.y = this.y;
+          this.sprite.shoot.x = this.sprite.pl.x;
+          this.sprite.shoot.y = this.sprite.pl.y;
           break;
       }
-      this.weapon.shoot(this.x, this.y, canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
+      this.sprite.shoot.update();
+      let k1 = 18;
+      let k2 = 0;
+      let k3 = (canvasToWorld(sight.x, 0) - this.x);
+      let k4 = (canvasToWorld(sight.y, 1) - this.y);
+      let dist1 = Math.sqrt(k1*k1 + k2*k2);
+      let dist2 = Math.sqrt(k3*k3 + k4*k4);
+      let ortX = -k4 / dist2;
+      let ortY = k3 / dist2;
+
+      this.weapon.shoot(this.x + ((canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 ) + ortX + 3, this.y + ((canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2) + ortY , canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
       this.weapon.shootExecuted = 1;
     } else {
       this.fire = false;

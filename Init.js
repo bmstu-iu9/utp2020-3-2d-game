@@ -46,7 +46,6 @@ let rounds = [];
 let playerStartX = 150;
 let playerStartY = 150;
 let playerSpeed = cameraSpeed;
-let spriteIndex = [8,9,10,11];
 let spritePlW = 96;
 let spritePlH = 64;
 let spriteFeetH = 38;
@@ -58,7 +57,7 @@ const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const spritePl = {
   pl : new Sprite(images["player"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3], 16),
-  shoot : new Sprite(images["shoot"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
+  shoot : new Sprite(images["shoot"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 16),
   up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
   down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1], 0),
   right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),

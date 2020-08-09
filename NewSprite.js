@@ -13,7 +13,6 @@ class Sprite {
     this.countIndexY = img.height / srcH;
     this.width = srcW;
     this.height = srcH;
-    this.run = false;
     this.speed = 5;
     this.counter = 0;
     this.k = koef;
@@ -30,6 +29,20 @@ class Sprite {
   }
 
   drawSprite() {
+    ctx.drawImage(
+        this.image,
+        this.srcX,
+        this.srcY,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+    );
+  }
+
+  drawBodySprite() {
     ctx.save();
     ctx.translate(this.x, this.y);
     let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
