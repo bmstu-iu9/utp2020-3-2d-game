@@ -30,7 +30,12 @@ class Player {
         this.sprite.pl.indexFrameY = 2;
         break;
     }
+<<<<<<< HEAD
     this.sprite.shoot.speed = 10;
+=======
+    this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
+>>>>>>> d035dc71c417fa3faa22116d627fc792b474bbb2
   }
 
   drawDirection() {
@@ -75,6 +80,11 @@ class Player {
     if (downPressed) {
       if (this.y < images["map"].naturalHeight) {
         this.y += this.speed;
+        // временный костыль, связанный с недоработкой сетки навигации
+        if (this.y >= 300) {
+          this.y = 299;
+        }
+        //
         this.Y_Center += this.speed;
       }
       this.sprite.down.x = worldToCanvas(this.x, 0);
@@ -95,6 +105,9 @@ class Player {
     if (rightPressed) {
       if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
+        if (this.x >= 300) {
+          this.x = 299;
+        }
         this.X_Center += this.speed;
       }
       this.sprite.right.x = worldToCanvas(this.x, 0);
@@ -112,6 +125,15 @@ class Player {
       this.sprite.left.update();
     }
 
+<<<<<<< HEAD
+=======
+    this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
+
+    this.sprite.pl.x = worldToCanvas(this.x, 0);
+    this.sprite.pl.y = worldToCanvas(this.y, 1);
+    this.sprite.pl.update();
+>>>>>>> d035dc71c417fa3faa22116d627fc792b474bbb2
 
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
@@ -177,4 +199,16 @@ class Player {
     }
   }
 
+  vis(tx, ty) {
+    let degRad = Math.acos((tx - mesh[this.XBlock][this.YBlock].x) / Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) + Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2)));
+    if (ty > mesh[this.XBlock][this.YBlock].y) {
+      degRad += Math.PI;
+    } else {
+      degRad = Math.PI - degRad;
+    }
+    let deg = degRad * 180 / Math.PI;
+    deg = (deg - (deg % 10)) / 10;
+    let dist = Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) + Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2));
+    return mesh[(tx - (tx % worldTileSize)) / worldTileSize][(ty - (ty % worldTileSize)) / worldTileSize].vision[deg] > dist;
+  }
 }
