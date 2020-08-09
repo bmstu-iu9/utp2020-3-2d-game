@@ -19,6 +19,7 @@ class Target {
     this.dy = 0;
     this.sx = 0;
     this.sy = 0;
+    this.weapon = new Weapon(0);
   }
 
   update() {
