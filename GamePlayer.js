@@ -14,7 +14,7 @@ class Player {
     this.h = height;
     this.X_Center = this.x + this.width / 2;
     this.Y_Center = this.y + this.height / 2;
-    this.radius = (this.width / 2) + 1;
+    this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Down";
@@ -23,7 +23,7 @@ class Player {
     this.hp = 2;
     this.dead = false;
     this.fire = false;
-    this.weapon = new Weapon(1);
+    this.weapon = new Weapon(0);
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
@@ -34,39 +34,23 @@ class Player {
   }
 
   drawDirection() {
-    if (this.fire) {
-      switch (this.weapon.id) {
-        case 0:
-          this.sprite.shoot.drawSprite();
-          break;
-        case 2:
-          this.sprite.shoot.drawSprite();
-          break;
-      }
+    if (this.direction === "Down") {
+      this.sprite.down.drawSprite();
     }
+    if (this.direction === "Up") {
+      this.sprite.up.drawSprite();
+    }
+    if (this.direction === "Left") {
+      this.sprite.left.drawSprite();
+    }
+    if (this.direction === "Right") {
+      this.sprite.right.drawSprite();
+    }
+    this.sprite.pl.drawSprite();
 
-      if (this.direction === "Down") {
-        this.drawPlayerBody();
-        this.sprite.down.drawSprite();
-      }
-
-      if (this.direction === "Up") {
-        this.drawPlayerBody();
-        this.sprite.up.drawSprite();
-      }
-
-      if (this.direction === "Left") {
-        this.drawPlayerBody();
-        this.sprite.left.drawSprite();
-      }
-
-      if (this.direction === "Right") {
-        this.drawPlayerBody();
-        this.sprite.right.drawSprite();
-      }
-      if (this.weapon.isReloading()) {
-        this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
-      }
+    if (this.weapon.isReloading()) {
+      this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
+    }
   }
 
   move() {
@@ -76,7 +60,7 @@ class Player {
         this.Y_Center += this.speed;
       }
       this.sprite.down.x = worldToCanvas(this.x, 0);
-      this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.down.y = worldToCanvas(this.y, 1);
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed) {
@@ -85,7 +69,7 @@ class Player {
         this.Y_Center -= this.speed;
       }
       this.sprite.up.x = worldToCanvas(this.x, 0);
-      this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.up.y = worldToCanvas(this.y, 1);
       this.direction = "Up";
       this.sprite.up.update();
     }
@@ -96,7 +80,7 @@ class Player {
         this.X_Center += this.speed;
       }
       this.sprite.right.x = worldToCanvas(this.x, 0);
-      this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.right.y = worldToCanvas(this.y, 1);
       this.direction = "Right";
       this.sprite.right.update();
     } else if (leftPressed) {
@@ -105,10 +89,14 @@ class Player {
         this.X_Center -= this.speed;
       }
       this.sprite.left.x = worldToCanvas(this.x, 0);
-      this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.left.y = worldToCanvas(this.y, 1);
       this.direction = "Left";
       this.sprite.left.update();
     }
+
+    this.sprite.pl.x = worldToCanvas(this.x, 0);
+    this.sprite.pl.y = worldToCanvas(this.y, 1);
+    this.sprite.pl.update();
 
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
@@ -116,26 +104,11 @@ class Player {
     }
 
     if (reloadPending) {  // додумать спрайт перезарядки
-      /*this.weapon.reload();
-      while (this.weapon.isReloading()){
-        switch (this.weapon.id) {
-          case 0:
-            this.sprite.pl.indexFrameY = 1;
-            this.sprite.pl.x = this.x;
-            this.sprite.pl.y = this.y;
-            break;
-          case 2:
-            this.sprite.pl.indexFrameY = 3;
-            this.sprite.pl.x = this.x;
-            this.sprite.pl.y = this.y;
-            break;
-        }
-      }*/
-
+      this.weapon.reload();
       reloadPending = false;
     }
 
-    if (mouseDown){
+    if (mouseDown) {
       this.fire = true;
       switch (this.weapon.id) {
         case 0:
@@ -155,33 +128,6 @@ class Player {
       this.fire = false;
       this.weapon.shootExecuted = 0;
     }
-  }
-
-  drawPlayerBody() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
-    if (sight.y > this.y) {
-      if (sight.x < this.x) {
-        deg = -deg - Math.PI;
-      } else {
-        deg = -deg + Math.PI;
-      }
-    }
-    ctx.rotate(deg);
-    ctx.drawImage(
-        this.sprite.pl.image,
-        this.sprite.pl.srcX,
-        this.sprite.pl.srcY,
-        this.sprite.pl.width,
-        this.sprite.pl.height,
-        -this.sprite.pl.width / 2,
-        -this.sprite.pl.height / 2 - spriteHKoef,
-        this.sprite.pl.width,
-        this.sprite.pl.height
-    );
-
-    ctx.restore();
   }
 
   changeWeapon(id) {

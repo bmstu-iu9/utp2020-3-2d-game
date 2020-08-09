@@ -1,6 +1,6 @@
 class Sprite {
 
-  constructor (img, srcX, srcY, srcW, srcH, x, y, framesY) {
+  constructor (img, srcX, srcY, srcW, srcH, x, y, framesY, koef) {
     this.image = img;
     this.srcX = srcX;
     this.srcY = srcY;
@@ -16,6 +16,7 @@ class Sprite {
     this.run = false;
     this.speed = 5;
     this.counter = 0;
+    this.k = koef;
   }
 
   update() {
@@ -29,16 +30,32 @@ class Sprite {
   }
 
   drawSprite() {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
+    if (sight.y > this.y) {
+      if (sight.x < this.x) {
+        deg = -deg - 3 * Math.PI / 2;
+      } else {
+        deg = -deg + Math.PI / 2;
+      }
+    } else {
+      deg -= Math.PI / 2;
+    }
+    ctx.rotate(deg);
+
     ctx.drawImage(
         this.image,
         this.srcX,
         this.srcY,
         this.width,
         this.height,
-        this.x,
-        this.y,
+        -this.width / 2 + this.k,
+        -this.height / 2,
         this.width,
         this.height
     );
+
+    ctx.restore();
   }
 }

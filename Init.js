@@ -18,7 +18,7 @@ const canvasToWorld = (t, type) => {
 
 const rotate = (x, y, angle) => {
   return { "x": x * Math.cos(angle) - y * Math.sin(angle),
-          "y": x * Math.sin(angle) + y * Math.cos(angle) };
+           "y": x * Math.sin(angle) + y * Math.cos(angle) };
 }
 
 const ctx = canvas.getContext("2d");
@@ -57,13 +57,13 @@ const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const spritePl = {
-  pl : new Sprite(images["player"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3]),
-  shoot : new Sprite(images["shoot"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1]),
-  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0]),
-  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1]),
-  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0]),
-  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1]),
-  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1]),
+  pl : new Sprite(images["player"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3], 16),
+  shoot : new Sprite(images["shoot"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
+  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
+  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1], 0),
+  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
+  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1], 0),
+  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
 };
 
 const player = new Player(playerStartX, playerStartY, spritePlW, spritePlH, playerSpeed, spritePl);

@@ -7,6 +7,7 @@ class Weapon {
         this.maxBullets = 30;
         this.magazines = [];
         this.magazines.push(30);
+        this.magazines.push(30);
         this.bulletSpeed = 12;
         this.reloadTime = 1.5; //sec
         this.roundImage = images["7.62gauge"];
@@ -18,6 +19,7 @@ class Weapon {
         this.maxBullets = 30;
         this.magazines = [];
         this.magazines.push(30);
+        this.magazines.push(30);
         this.bulletSpeed = 16;
         this.reloadTime = 1.2;
         this.roundImage = images["5.56gauge"];
@@ -28,6 +30,7 @@ class Weapon {
         this.bullets = 6;
         this.maxBullets = 6;
         this.magazines = [];
+        this.magazines.push(6);
         this.magazines.push(6);
         this.bulletSpeed = 15;
         this.reloadTime = 3.5;
@@ -53,13 +56,15 @@ class Weapon {
   shoot(x, y, targetX, targetY) {
     let now = performance.now();
 
-    if (this.singleShoot && this.shootExecuted !== 0) this.shootingEnabled = false;
-    else this.shootingEnabled = true;
+    if (this.singleShoot && this.shootExecuted !== 0) {
+      this.shootingEnabled = false;
+    } else {
+      this.shootingEnabled = true;
+    }
 
     if (!this.reloading && this.bullets > 0 &&
        (now - this.lastBulletTime) / 1000 > this.fireRate &&
-        this.shootingEnabled
-      ) {
+        this.shootingEnabled) {
       bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed));
       this.bullets--;
       rounds.push(new Round(x, y, targetX, targetY, this.roundImage));
@@ -70,14 +75,13 @@ class Weapon {
     }
   }
 
-  reload(){
+  reload() {
     if (this.magazines.length !== 0 && this.bullets != this.maxBullets) {
       this.reloading = true;
       this.lastReloadTime = performance.now();
       if (this.id === 2) {  //перезарядка дробовика
         let loaded = 0;
         this.reloadId = setInterval(() => {
-
           if (loaded !== this.maxBullets - this.bullets && this.enoughAmmo(loaded + 1)) {
             loaded++;
           } else {
@@ -109,11 +113,12 @@ class Weapon {
   }
 
   stopReload() {
-    if (this.reloadId != null){
-
-      if (this.id === 2) clearInterval(this.reloadId);
-      else clearTimeout(this.reloadId);
-
+    if (this.reloadId != null) {
+      if (this.id === 2) {
+        clearInterval(this.reloadId);
+      } else {
+        clearTimeout(this.reloadId);
+      }
       this.reloading = false;
       let delta = (performance.now() - this.lastReloadTime) / 1000;
       let bulletReloadTime = this.reloadTime / this.maxBullets;
@@ -135,7 +140,6 @@ class Weapon {
         this.magazines.pop();
       }
     }
-
     this.bullets += loadedBullets;
   }
 

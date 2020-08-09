@@ -9,9 +9,11 @@ const update = () => {
 
   for (let i = 0; i < rounds.length; i++) {
     let round = rounds[i];
-    if (i === 0 && round.deleteTime < performance.now())
+    if (i === 0 && round.deleteTime < performance.now()) {
       rounds.splice(0, 1);
-    else round.update();
+    } else {
+      round.update();
+    }
   }
 
   targets.forEach(target => {
