@@ -67,7 +67,15 @@ class Weapon {
         this.shootingEnabled) {
       bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed));
       this.bullets--;
-      rounds.push(new Round(x, y, targetX, targetY, this.roundImage));
+
+      let k1 = targetX - x;
+      let k2 = targetY - y;
+      let len = Math.sqrt(k1 * k1 + k2 * k2);
+      let offsetLen = 7;
+      //тут координаты должны вычисляться на основе длины оружия
+      rounds.push(new Round(x - k1 / len * offsetLen, y - k2 / len * offsetLen,
+                            targetX, targetY, this.roundImage));
+      //
       this.lastBulletTime = performance.now();
       this.shotSound.play();
     } else if (this.bullets <= 0 && this.shootExecuted === 0) {

@@ -131,7 +131,7 @@ class Player {
       changeShootingMode = false;
     }
 
-    if (reloadPending) {  
+    if (reloadPending) {
       this.weapon.reload();
       switch (this.weapon.id) {
         case 0:
@@ -162,16 +162,19 @@ class Player {
           break;
       }
       this.sprite.shoot.update();
-      let k1 = 18;
+      let k1 = 12.5;
       let k2 = 0;
       let k3 = (canvasToWorld(sight.x, 0) - this.x);
       let k4 = (canvasToWorld(sight.y, 1) - this.y);
       let dist1 = Math.sqrt(k1*k1 + k2*k2);
       let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let ortX = -k4 / dist2;
-      let ortY = k3 / dist2;
+      let normLen = 3;
+      let normX = -k4 / dist2 * normLen;
+      let normY = k3 / dist2 * normLen;
 
-      this.weapon.shoot(this.x + ((canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 ) + ortX + 3, this.y + ((canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2) + ortY , canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
+      this.weapon.shoot(this.x + (canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 + normX,
+                        this.y + (canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2 + normY ,
+                        canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
       this.weapon.shootExecuted = 1;
     } else {
       this.fire = false;
