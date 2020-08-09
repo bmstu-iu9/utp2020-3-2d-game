@@ -60,7 +60,7 @@ class Target {
       case 2:
         if (this.shooted) {
           if (Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2)) <= this.s) {
-            bullets.add(new Bullet(this.x, this.y, player.x, player.y, bulletSpeed));
+            this.weapon.shoot(this.x, this.y, player.x, player.y);
           } else {
             this.st = 1
           }
