@@ -69,7 +69,7 @@ const spritePl = {
 const player = new Player(playerStartX, playerStartY, spritePlW, spritePlH, playerSpeed, spritePl);
 
 const targets = [];
-targets.push(new Target(10, 10, 5, [{x: 10, y: 10}, {x: 50, y: 10}]));
-targets.push(new Target(50, 100, 5, [{x: 50, y: 100}, {x: 100, y: 200}]));
-targets.push(new Target(100, 100, 5, [{x: 100, y: 100}, {x: 50, y: 200}]));
-targets.push(new Target(200, 100, 5, [{x: 200, y: 100}, {x: 10, y: 20}]));
+targets.push(new Target(15, 30, 5, [{x: 15, y: 30}, {x: 15, y: 195}]));
+targets.push(new Target(220, 100, 5, [{x: 220, y: 100}, {x: 120, y: 25}]));
+targets.push(new Target(85, 285, 5, [{x: 85, y: 285}, {x: 130, y: 205}, {x: 215, y: 205}, {x: 215, y: 295}]));
+targets.push(new Target(200, 100, 5, [{x: 260, y: 115}, {x: 260, y: 185}]));
