@@ -1,0 +1,94 @@
+canvas{
+  cursor: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+body {
+  background-color: #668033;
+}
+
+.back {
+  width: 270px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 5%;
+  right: 4%;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.in {
+  line-height: 70px;
+  vertical-align: middle;
+}
+
+.back:hover {
+  background: #666633;
+}
+
+.menu {
+  width: 500px;
+  height: 500px;
+  background: #ffe066;
+  color: #666633;
+  border-radius: 10px;
+  text-align: center;
+  position: absolute;
+  bottom: 30%;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+.btnabout {
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 40%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnabout:hover {
+  background: #666633;
+}
+
+.btnplay {
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 65%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnplay:hover {
+  background: #666633;
+}
