@@ -6,9 +6,8 @@ const dist = (x1, x2, y1, y2) => {
   return Math.sqrt(k1 * k1 + k2 * k2);
 }
 
-const step = 5;
-
 const collision = () => {
+  const step = 5;
 
   for (let bul of bullets) {
     let f = false;
