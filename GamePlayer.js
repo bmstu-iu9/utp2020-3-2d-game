@@ -30,12 +30,9 @@ class Player {
         this.sprite.pl.indexFrameY = 2;
         break;
     }
-<<<<<<< HEAD
     this.sprite.shoot.speed = 10;
-=======
     this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
     this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
->>>>>>> d035dc71c417fa3faa22116d627fc792b474bbb2
   }
 
   drawDirection() {
@@ -125,22 +122,16 @@ class Player {
       this.sprite.left.update();
     }
 
-<<<<<<< HEAD
-=======
+
     this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
     this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
-
-    this.sprite.pl.x = worldToCanvas(this.x, 0);
-    this.sprite.pl.y = worldToCanvas(this.y, 1);
-    this.sprite.pl.update();
->>>>>>> d035dc71c417fa3faa22116d627fc792b474bbb2
 
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
       changeShootingMode = false;
     }
 
-    if (reloadPending) {  // додумать спрайт перезарядки
+    if (reloadPending) {  
       this.weapon.reload();
       switch (this.weapon.id) {
         case 0:
