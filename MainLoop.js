@@ -88,9 +88,10 @@ const draw = () => {
 
 
   targets.forEach(target => {
-    target.draw(1 / camera.scaleX);
+    if (player.vis(target.x, target.y)) {
+      target.draw(1 / camera.scaleX);
+    }
   });
-
 
   sight.draw();
   drawPosit();

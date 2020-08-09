@@ -20,6 +20,8 @@ class Target {
     this.sx = 0;
     this.sy = 0;
     this.weapon = new Weapon(0);
+    this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
   }
 
   update() {
@@ -94,6 +96,8 @@ class Target {
         }
         break;
     }
+    this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
   }
 
   draw(scale) {
