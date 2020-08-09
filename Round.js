@@ -6,21 +6,17 @@ class Round {
     this.ratio = 7 / 20; //w/h
     this.w = 1;
     this.h = this.w / this.ratio;
-    this.deleteTime = performance.now() + 6 * 1000; //патрон лежит 6 секунд 
+    this.deleteTime = performance.now() + 6 * 1000; //патрон лежит 6 секунд
     this.x = x;
     this.y = y;
-    let angle = -3 * Math.PI / 4;
-    let normLen = Math.sin(angle);
-    let mainLen = Math.cos(angle);
+    let angle = 3 * Math.PI / 4;
     let l1 = targetX - x;
     let l2 = targetY - y;
     let len = Math.sqrt(l1 * l1 + l2 * l2);
-    let dxN = -l2 / len * normLen;
-    let dyN = l1 / len * normLen;
-    let dx = l1 / len * mainLen;
-    let dy = l2 / len * mainLen;
+    let dx = l1 / len;
+    let dy = l2 / len;
 
-    this.angle = -3 * Math.PI / 2 - Math.acos(dx / mainLen);
+    this.angle = -3 * Math.PI / 2 - Math.acos(dx);
     if (l2 > 0) {
       if (l1 < 0) {
         this.angle = -this.angle - Math.PI;
@@ -29,8 +25,9 @@ class Round {
       }
     }
 
-    this.dxAngled = dx - dxN;
-    this.dyAngled = dy - dyN;
+    let v = rotate(dx, dy, angle);
+    this.dxAngled = v.x;
+    this.dyAngled = v.y;
 
     this.len = 10;
   }

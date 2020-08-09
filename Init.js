@@ -16,6 +16,10 @@ const canvasToWorld = (t, type) => {
   else return t * camera.scaleY + camera.y;
 }
 
+const rotate = (x, y, angle) => {
+  return { "x": x * Math.cos(angle) - y * Math.sin(angle),
+          "y": x * Math.sin(angle) + y * Math.cos(angle) };
+}
 
 const ctx = canvas.getContext("2d");
 
