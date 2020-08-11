@@ -148,7 +148,6 @@ class Player {
     this.sprite.pl.update();
 
     if (mouseDown) {
-      this.fire = true;
       switch (this.weapon.id) {
         case 0:
           this.sprite.shoot.indexFrameY = 0;
@@ -162,6 +161,7 @@ class Player {
           break;
       }
       this.sprite.shoot.update();
+
       let k1 = 12.5;
       let k2 = 0;
       let k3 = (canvasToWorld(sight.x, 0) - this.x);
@@ -172,9 +172,10 @@ class Player {
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
 
-      this.weapon.shoot(this.x + (canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 + normX,
-                        this.y + (canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2 + normY ,
-                        canvasToWorld(sight.x, 0) + normX, canvasToWorld(sight.y, 1) + normY);
+      this.fire = this.weapon.shoot(
+                  this.x + (canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 + normX,
+                  this.y + (canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2 + normY,
+                  canvasToWorld(sight.x, 0) + normX, canvasToWorld(sight.y, 1) + normY);
       this.weapon.shootExecuted = 1;
     } else {
       this.fire = false;

@@ -53,6 +53,7 @@ class Weapon {
   //1 - m16
   //2 - remington shotgun
 
+  //возвращает true, если был произведен выстрел
   shoot(x, y, targetX, targetY) {
     let now = performance.now();
 
@@ -78,9 +79,13 @@ class Weapon {
       //
       this.lastBulletTime = performance.now();
       this.shotSound.play();
+      
+      return true;
     } else if (this.bullets <= 0 && this.shootExecuted === 0) {
       this.emptyMagazineSound.play();
     }
+
+    return false;
   }
 
   reload() {
