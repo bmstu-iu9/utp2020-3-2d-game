@@ -194,7 +194,7 @@ class Weapon {
       }, this.stepTime * 1000);
       this.nullId = setInterval(() => {
         this.offsetY = 0;
-      }, this.stepTime * 1000 * 10000 / this.step); //step не более 10 тыс
+      }, this.stepTime * 1000 * 10000 / this.step); //offsetY не более 10 тыс
     }
 
     ctx.drawImage(this.image, 0, 0, this.image.naturalWidth, this.image.naturalHeight,
@@ -206,12 +206,14 @@ class Weapon {
   pickUp() {
     clearInterval(this.stepId);
     clearInterval(this.nullId);
+    weapons.delete(this);
   }
 
   drop(x, y) { //передаются координаты мира
     this.x = x;
     this.y = y;
     this.offsetY = 0;
+    weapons.add(this);
   }
 
   emptyMagazine() { return this.bullets === 0 };
