@@ -6,7 +6,10 @@ let imagePromises = [ {"name": "map", "src" : "resources/testmap.png"}, {"name":
                  {"name" : "shoot", "src" : "resources/Shoot.png"},
                  {"name" : "12gauge", "src" : "resources/12gauge_pixelized.png"},
                  {"name" : "5.56gauge", "src" : "resources/5.56gauge_pixelized.png"},
-                 {"name" : "7.62gauge", "src" : "resources/7.62gauge_pixelized.png"} ];
+                 {"name" : "7.62gauge", "src" : "resources/7.62gauge_pixelized.png"},
+                 {"name" : "ak47", "src" : "resources/ak47_side_pixelized.png"},
+                 {"name" : "m16", "src" : "resources/m16_side_pixelized.png"},
+                 {"name" : "remington870", "src" : "resources/remington_side_pixelized.png"}, ];
 
 let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" },
                       {"name" : "shot_ak47", "src" : "resources/shot_ak47.mp3"},

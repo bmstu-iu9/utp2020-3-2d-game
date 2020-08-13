@@ -79,12 +79,16 @@ const draw = () => {
   rounds.forEach(round => {
     round.draw();
   });
+
+  weapons.forEach(weapon => {
+    weapon.draw();
+  });
+
   player.drawDirection();
 
   bullets.forEach(bullet => {
     bullet.draw();
   });
-
 
   targets.forEach(target => {
     if (player.vis(target.x, target.y)) {
