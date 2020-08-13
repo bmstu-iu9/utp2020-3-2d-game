@@ -7,30 +7,33 @@ let upPressed = false;
 let mouseDown = false;
 let changeShootingMode = false;
 let reloadPending = false;
+let pickUp = false;
 
 const keyUpHandler = (e) => {
-  if (e.keyCode === 68) {     //d
+  if (e.keyCode === 68) { //d
     rightPressed = false;
-  } else if (e.keyCode === 65) {  //a
+  } else if (e.keyCode === 65) { //a
     leftPressed = false;
   } else if (e.keyCode === 83) { //s
     downPressed = false;
   } else if (e.keyCode === 87) { //w
     upPressed = false;
-  } else if (e.keyCode === 82) { //r
-    reloadPending = true;
   }
 }
 
 const keyDownHandler = (e) => {
-  if (e.keyCode === 68) {     //d
+  if (e.keyCode === 68) { //d
     rightPressed = true;
-  } else if(e.keyCode === 65) {  //a
+  } else if (e.keyCode === 65) { //a
     leftPressed = true;
   } else if (e.keyCode === 83) { //s
     downPressed = true;
   } else if (e.keyCode === 87) { //w
     upPressed = true;
+  } else if (e.keyCode === 69) { //e
+    pickUp = true;
+  } else if (e.keyCode === 82) { //r
+    reloadPending = true;
   }
 }
 
