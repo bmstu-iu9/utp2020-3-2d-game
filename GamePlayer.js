@@ -18,8 +18,6 @@ class Player {
     this.Y_Center = canvasToWorld(worldToCanvas(this.y, 1) + (this.h_World / 2), 1);
     this.weaponX = canvasToWorld(worldToCanvas(this.X_Center, 0) - 24, 0);
     this.weaponY = canvasToWorld(worldToCanvas(this.Y_Center, 1) + 16);
-    console.log(this.weaponX);
-    console.log(this.weaponY);
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
@@ -28,7 +26,9 @@ class Player {
     this.hp = 2;
     this.dead = false;
     this.fire = false;
-    this.weapon = new Weapon(0);
+    this.weapon = new Weapon(2);
+    this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
+
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
@@ -143,6 +143,21 @@ class Player {
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
       changeShootingMode = false;
+    }
+
+    if (this.grenades.length){
+      let grenade = this.grenades[this.grenades.length - 1];
+      if (throwTime && !grenade.isActivated()) {
+        grenade.activate();
+      } else if (throwGrenade) {
+        if (!grenade.exploded()) {
+          grenade.throw(this.x, this.y,
+                canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
+        }
+        this.grenades.pop();
+        throwGrenade = false;
+        throwTime = null;
+      }
     }
 
     if (reloadPending) {

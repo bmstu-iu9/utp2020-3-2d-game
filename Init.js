@@ -73,3 +73,4 @@ targets.push(new Target(200, 100, 5, [{x: 260, y: 115}, {x: 260, y: 185}]));
 
 const weapons = new Set();
 weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
+const grenades = new Set();

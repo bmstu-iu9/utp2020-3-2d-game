@@ -9,7 +9,8 @@ let imagePromises = [ {"name": "map", "src" : "resources/testmap.png"}, {"name":
                  {"name" : "7.62gauge", "src" : "resources/7.62gauge_pixelized.png"},
                  {"name" : "ak47", "src" : "resources/ak47_side_pixelized.png"},
                  {"name" : "m16", "src" : "resources/m16_side_pixelized.png"},
-                 {"name" : "remington870", "src" : "resources/remington_side_pixelized.png"}, ];
+                 {"name" : "remington870", "src" : "resources/remington_side_pixelized.png"},
+                 {"name" : "grenade", "src" : "resources/grenade_without_check_pixelized.png"}, ];
 
 let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" },
                       {"name" : "shot_ak47", "src" : "resources/shot_ak47.mp3"},
@@ -57,7 +58,8 @@ Promise.all(imagePromises.concat(soundPromises)).then(
       else sounds[Object.keys(resource)[0]] = Object.values(resource)[0];
     });
 
-    loadScript("Init.js").
+    loadScript("Grenade.js").
+    then(script => loadScript("Init.js")).
     then(script => loadScript("MainLoop.js")).
     then(script => console.log("all scripts are loaded")).
     catch(error => console.log("Error:" + error.message));
