@@ -12,14 +12,6 @@ class Grenade {
     this.firstAnimTime = 0;
   }
 
-  static maxSpeed = 5;
-  static maxTime = 2; //sec
-  static image = images["grenade"];
-  static width = 4;
-  static height = 4;
-  static explosionTime = 5; //sec
-  static animTime = 1; //sec
-
   update() {  //доработать физику скорости и отскоков от препятствий
     if (this.explode) {
       setTimeout(() => {
@@ -96,3 +88,12 @@ class Grenade {
     ctx.closePath();
   }
 }
+
+Grenade.maxSpeed = 5;
+Grenade.maxTime = 2; //sec
+Grenade.image = images["grenade"];
+Grenade.width = 4;
+Grenade.height = 4;
+Grenade.explosionTime = 5; //sec
+Grenade.animTime = 1; //sec
+Grenade.explosionRadius = 20;

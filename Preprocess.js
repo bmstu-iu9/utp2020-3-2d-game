@@ -43,6 +43,7 @@ const loadScript = src => {
   return new Promise( (resolve, reject) => {
     let script = document.createElement('script');
     script.src = src;
+    script.async = false;
 
     script.onload = () => resolve(script);
     script.onerror = () => reject(new Error(`Error loading script ${src}`));
