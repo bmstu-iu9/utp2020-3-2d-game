@@ -98,3 +98,4 @@ Grenade.height = 4;
 Grenade.explosionTime = 5; //sec
 Grenade.animTime = 1; //sec
 Grenade.explosionRadius = 20;
+Grenade.damage = 2;
