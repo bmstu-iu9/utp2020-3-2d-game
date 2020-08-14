@@ -5,6 +5,10 @@ const update = () => {
     bullet.updateCoordinates();
   });
 
+  grenades.forEach(grenade => {
+    grenade.update();
+  });
+
   player.move();
 
   for (let i = 0; i < rounds.length; i++) {
@@ -85,7 +89,7 @@ const draw = () => {
   });
 
   player.drawDirection();
-
+  
   bullets.forEach(bullet => {
     bullet.draw();
   });
@@ -95,6 +99,14 @@ const draw = () => {
       target.draw(1 / camera.scaleX);
     }
   });
+
+  grenades.forEach(grenade => {
+    grenade.draw();
+  });
+
+  if (!throwGrenade && throwTime){
+    Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
+  }
 
   sight.draw();
   drawPosit();

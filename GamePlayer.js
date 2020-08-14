@@ -23,6 +23,8 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.weapon = new Weapon(2);
+    this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
+
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
@@ -129,6 +131,21 @@ class Player {
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
       changeShootingMode = false;
+    }
+
+    if (this.grenades.length){
+      let grenade = this.grenades[this.grenades.length - 1];
+      if (throwTime && !grenade.isActivated()) {
+        grenade.activate();
+      } else if (throwGrenade) {
+        if (!grenade.exploded()) {
+          grenade.throw(this.x, this.y,
+                canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
+        }
+        this.grenades.pop();
+        throwGrenade = false;
+        throwTime = null;
+      }
     }
 
     if (reloadPending) {

@@ -8,6 +8,8 @@ let mouseDown = false;
 let changeShootingMode = false;
 let reloadPending = false;
 let pickUp = false;
+let throwGrenade = false;
+let throwTime = 0;
 
 const keyUpHandler = (e) => {
   if (e.keyCode === 68) { //d
@@ -18,6 +20,9 @@ const keyUpHandler = (e) => {
     downPressed = false;
   } else if (e.keyCode === 87) { //w
     upPressed = false;
+  } else if (e.keyCode === 71 && !throwGrenade) { //g
+    throwGrenade = true;
+    throwTime = performance.now() - throwTime;
   }
 }
 
@@ -34,6 +39,8 @@ const keyDownHandler = (e) => {
     pickUp = true;
   } else if (e.keyCode === 82) { //r
     reloadPending = true;
+  } else if (e.keyCode === 71 && !throwTime) { //g
+    throwTime = performance.now();
   }
 }
 
