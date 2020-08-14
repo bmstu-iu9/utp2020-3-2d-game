@@ -10,10 +10,16 @@ class Player {
   constructor (x, y, width, height, speed, sprite) {
     this.x = x;
     this.y = y;
-    this.w = width;
-    this.h = height;
-    this.X_Center = this.x + this.w / 2;
-    this.Y_Center = this.y + this.h / 2;
+    this.w = width;  //размеры на канвасе
+    this.h = height; //
+    this.w_World = width;
+    this.h_World = height;
+    this.X_Center = canvasToWorld(worldToCanvas(this.x, 0) + (this.w_World / 2), 0);
+    this.Y_Center = canvasToWorld(worldToCanvas(this.y, 1) + (this.h_World / 2), 1);
+    this.weaponX = canvasToWorld(worldToCanvas(this.X_Center, 0) - 24, 0);
+    this.weaponY = canvasToWorld(worldToCanvas(this.Y_Center, 1) + 16);
+    console.log(this.weaponX);
+    console.log(this.weaponY);
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
@@ -22,7 +28,7 @@ class Player {
     this.hp = 2;
     this.dead = false;
     this.fire = false;
-    this.weapon = new Weapon(2);
+    this.weapon = new Weapon(0);
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
@@ -77,12 +83,15 @@ class Player {
     if (downPressed) {
       if (this.y < images["map"].naturalHeight) {
         this.y += this.speed;
+        this.weaponY += this.speed;
+        this.Y_Center += this.speed;
         // временный костыль, связанный с недоработкой сетки навигации
         if (this.y >= images["map"].naturalHeight) {
           this.y = images["map"].naturalHeight - 1;
+          this.weaponY -= this.speed - 1;
+          this.Y_Center -= this.speed - 1;
         }
         //
-        this.Y_Center += this.speed;
       }
       this.sprite.down.x = worldToCanvas(this.x, 0);
       this.sprite.down.y = worldToCanvas(this.y, 1);
@@ -92,6 +101,7 @@ class Player {
       if (this.y !== 0) {
         this.y -= this.speed;
         this.Y_Center -= this.speed;
+        this.weaponY -= this.speed;
       }
       this.sprite.up.x = worldToCanvas(this.x, 0);
       this.sprite.up.y = worldToCanvas(this.y, 1);
@@ -102,10 +112,13 @@ class Player {
     if (rightPressed) {
       if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
+        this.X_Center += this.speed;
+        this.weaponX += this.speed;
         if (this.x >= images["map"].naturalWidth) {
           this.x = images["map"].naturalWidth - 1;
+          this.X_Center -= this.speed - 1;
+          this.weaponX -= this.speed - 1;
         }
-        this.X_Center += this.speed;
       }
       this.sprite.right.x = worldToCanvas(this.x, 0);
       this.sprite.right.y = worldToCanvas(this.y, 1);
@@ -114,6 +127,7 @@ class Player {
     } else if (leftPressed) {
       if (this.x !== 0) {
         this.x -= this.speed;
+        this.weaponX -= this.speed;
         this.X_Center -= this.speed;
       }
       this.sprite.left.x = worldToCanvas(this.x, 0);
@@ -133,12 +147,14 @@ class Player {
 
     if (reloadPending) {
       this.weapon.reload();
-      switch (this.weapon.id) {
+      if (this.weapon.isReloading()) {
+        switch (this.weapon.id) {
         case 0:
           this.sprite.pl.indexFrameY = 1;
         case 2:
           this.sprite.pl.indexFrameY = 3;
           break;
+        }
       }
       reloadPending = false;
     }
@@ -168,7 +184,7 @@ class Player {
       let k4 = (canvasToWorld(sight.y, 1) - this.y);
       let dist1 = Math.sqrt(k1*k1 + k2*k2);
       let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let normLen = 3;
+      let normLen = 1;
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
 
