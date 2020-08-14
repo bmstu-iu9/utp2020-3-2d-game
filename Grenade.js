@@ -6,6 +6,7 @@ class Grenade {
     this.y = y;
     this.activated = false;
     this.explode = false;
+    this.checked = false;
     this.speed = 0;
     this.dx = 0;
     this.dy = 0;

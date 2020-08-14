@@ -2,6 +2,7 @@ class Weapon {
   constructor(id, x = 0, y = 0) {
     switch (id) {
       case 0:
+        this.damage = 1;
         this.fireRate = 1/10; //sec for 1 round
         this.bullets = 30;
         this.maxBullets = 30;
@@ -16,6 +17,7 @@ class Weapon {
         this.shotSound = new Sound(sounds["shot_ak47"], 1.095, 2, 0.3, 1.5);
         break;
       case 1:
+        this.damage = 1;
         this.fireRate = 1/11.6;
         this.bullets = 30;
         this.maxBullets = 30;
@@ -30,6 +32,7 @@ class Weapon {
         this.shotSound = new Sound(sounds["shot_m16"], 6.21, 7.33, 0.8, 6.7);
         break;
       case 2:
+        this.damage = 1;
         this.fireRate = 1;
         this.bullets = 6;
         this.maxBullets = 6;
@@ -82,7 +85,7 @@ class Weapon {
     if (!this.reloading && this.bullets > 0 &&
        (now - this.lastBulletTime) / 1000 > this.fireRate &&
         this.shootingEnabled) {
-      bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed));
+      bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed, this.damage));
       this.bullets--;
 
       let k1 = targetX - x;

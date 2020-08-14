@@ -1,9 +1,10 @@
 'use strict';
 
 class Bullet {
-  constructor(x, y, sightX, sightY, speed) {
+  constructor(x, y, sightX, sightY, speed, damage) {
     this.x = x;
     this.y = y;
+    this.damage = damage;
     this.flies = false;
     this.shooted = false;
     this.justShooted = true;
