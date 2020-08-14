@@ -13,9 +13,6 @@ class Sprite {
     this.countIndexY = img.height / srcH;
     this.width = srcW;
     this.height = srcH;
-    //this.widthW = this.width * (1 / camera.scaleX); оставил на всякий случай
-    this.widthW = this.width;
-    this.heightW = this.height;
     this.speed = 5;
     this.counter = 0;
     this.k = koef;
@@ -40,19 +37,17 @@ class Sprite {
         this.height,
         this.x,
         this.y,
-        this.widthW,
-        this.heightW
+        this.width,
+        this.height
     );
   }
 
   drawBodySprite() {
-    let x = worldToCanvas(player.weaponX, 0);
-    let y = worldToCanvas(player.weaponY, 1);
     ctx.save();
     ctx.translate(this.x, this.y);
-    let deg = 3 * Math.PI / 2 + Math.acos((x - sight.x) / Math.sqrt(Math.pow((x - sight.x), 2) + Math.pow((y - sight.y), 2)));
-    if (sight.y > y) {
-      if (sight.x < x) {
+    let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
+    if (sight.y > this.y) {
+      if (sight.x < this.x) {
         deg = -deg - 3 * Math.PI / 2;
       } else {
         deg = -deg + Math.PI / 2;
@@ -68,10 +63,10 @@ class Sprite {
         this.srcY,
         this.width,
         this.height,
-        -this.widthW / 2 + this.k,
-        -this.heightW / 2,
-        this.widthW,
-        this.heightW
+        -this.width / 2 + this.k,
+        -this.height / 2,
+        this.width,
+        this.height
     );
 
     ctx.restore();

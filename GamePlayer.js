@@ -199,7 +199,7 @@ class Player {
       let k4 = (canvasToWorld(sight.y, 1) - this.y);
       let dist1 = Math.sqrt(k1*k1 + k2*k2);
       let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let normLen = 1;
+      let normLen = 3;
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
 
