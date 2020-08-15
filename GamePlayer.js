@@ -16,8 +16,6 @@ class Player {
     this.h = this.h_World; //
     this.X_Center = this.x + this.w_World/2; // координаты центра в мире
     this.Y_Center = this.y + this.h_World/2;
-    console.log(this.X_Center);
-    console.log(this.Y_Center);
     this.weaponX = this.X_Center - (this.w_World / 4); // координаты в мире
     this.weaponY = this.Y_Center + (this.h_World / 8);
     this.radius = 5;
