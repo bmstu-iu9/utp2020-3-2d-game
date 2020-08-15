@@ -15,9 +15,7 @@ class Grenade {
 
   update() {  //доработать физику скорости и отскоков от препятствий
     if (this.explode) {
-      setTimeout(() => {
-        grenades.delete(this);
-      }, Grenade.animTime * 1000);
+      
     } else {
       this.x += this.dx * this.speed;
       this.y += this.dy * this.speed;
@@ -47,6 +45,9 @@ class Grenade {
         this.y = player.y;
         grenades.add(this);
       }
+      setTimeout(() => {
+        grenades.delete(this);
+      }, Grenade.animTime * 1000);
     }, Grenade.explosionTime * 1000);
   }
 
