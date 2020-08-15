@@ -31,7 +31,7 @@ const collision = () => {
         }
         if (!f) {
           if (bul.justShooted == false) {
-            if (bul.bulletRadius + player.radius >= dist(bul.x + (bul.dx * i) / step, player.x, bul.y + (bul.dy * i) / step, player.y)) {
+            if (collisionCircleRect(x1, y1, bul.bulletRadius, player.x, player.y, player.h_World, player.w_World )){
               f = true;
             }
           }
@@ -51,6 +51,10 @@ const collision = () => {
           }
         }
         if (f) {
+          if (i != 0) {
+            bul.x = x1;
+            bul.y = y1;
+          }
           break;
         }
       }

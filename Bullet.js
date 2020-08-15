@@ -31,7 +31,7 @@ class Bullet {
         if (Math.random() < 0.8){
           if (dist < this.bulletAnimationRadius / 2) {
             ctx.beginPath();
-            ctx.fillStyle = "yellow";
+            ctx.fillStyle = "blue";
             ctx.fillRect(worldToCanvas(pxX, 0), worldToCanvas(pxY, 1), 1, 1);
             ctx.closePath();
           } else if (dist < this.bulletAnimationRadius) {
@@ -77,7 +77,7 @@ class Bullet {
            pxX += norm1Dx * normStep, pxY += norm1Dy * normStep, iterateNorm1Len += normStep) {
           ctx.beginPath();
           ctx.rect(worldToCanvas(this.x + pxX + dx, 0), worldToCanvas(this.y + pxY + dy, 1), 1, 1);
-          ctx.fillStyle = "yellow";
+          ctx.fillStyle = "blue";
           ctx.strokeStyle = "black";
           ctx.lineWidth = 0.5;
           //ctx.stroke();
@@ -89,7 +89,7 @@ class Bullet {
            pxX += norm2Dx * normStep, pxY += norm2Dy * normStep, iterateNorm2Len += normStep) {
           ctx.beginPath();
           ctx.rect(worldToCanvas(this.x + pxX + dx, 0), worldToCanvas(this.y + pxY + dy, 1), 1, 1);
-          ctx.fillStyle = "yellow";
+          ctx.fillStyle = "blue";
           ctx.strokeStyle = "black";
           ctx.lineWidth = 0.5;
           //ctx.stroke();
