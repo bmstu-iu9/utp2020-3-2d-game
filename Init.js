@@ -44,11 +44,15 @@ const rounds = [];
 
 const playerStartX = 150;
 const playerStartY = 150;
+const playerWidth = 14;
+const playerHeight = 38;
 let playerSpeed = cameraSpeed;
 const spritePlW = 96;
 const spritePlH = 64;
 const spriteFeetH = 38;
 const spriteFeetW = 53;
+const FeetH = 7;
+const FeetW = 28;
 
 const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
@@ -63,7 +67,14 @@ const spritePl = {
   strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
 };
 
-const player = new Player(playerStartX, playerStartY, spritePlW, spritePlH, playerSpeed, spritePl);
+spritePl.pl.setWorldSize(playerWidth, playerHeight);
+spritePl.shoot.setWorldSize(playerWidth, playerHeight);
+spritePl.up.setWorldSize(FeetH, FeetW);
+spritePl.down.setWorldSize(FeetH, FeetW);
+spritePl.left.setWorldSize(FeetW / 4.7, FeetH * 3.2);
+spritePl.right.setWorldSize(FeetW / 4.7, FeetH * 3.2);
+
+const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight, playerSpeed, spritePl);
 
 const targets = [];
 targets.push(new Target(15, 30, 5, [{x: 15, y: 30}, {x: 15, y: 195}]));

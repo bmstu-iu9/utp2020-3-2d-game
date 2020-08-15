@@ -37,8 +37,8 @@ class Sprite {
         this.height,
         this.x,
         this.y,
-        this.width,
-        this.height
+        this.canvasW,
+        this.canvasH
     );
   }
 
@@ -63,12 +63,20 @@ class Sprite {
         this.srcY,
         this.width,
         this.height,
-        -this.width / 2 + this.k,
-        -this.height / 2,
-        this.width,
-        this.height
+        -this.canvasW / 2 + this.k,
+        -this.canvasH / 2,
+        this.canvasW,
+        this.canvasH
     );
 
     ctx.restore();
   }
+
+  setWorldSize(W , H) {
+    this.worldW = W;
+    this.worldH = H;
+    this.canvasW = W * (1 / camera.scaleX);
+    this.canvasH = H;
+  }
+
 }

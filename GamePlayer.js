@@ -10,19 +10,21 @@ class Player {
   constructor (x, y, width, height, speed, sprite) {
     this.x = x;
     this.y = y;
-    this.w = width;  //размеры на канвасе
-    this.h = height; //
     this.w_World = width;
     this.h_World = height;
-    this.X_Center = canvasToWorld(worldToCanvas(this.x, 0) + (this.w_World / 2), 0);
-    this.Y_Center = canvasToWorld(worldToCanvas(this.y, 1) + (this.h_World / 2), 1);
-    this.weaponX = canvasToWorld(worldToCanvas(this.X_Center, 0) - 24, 0);
-    this.weaponY = canvasToWorld(worldToCanvas(this.Y_Center, 1) + 16);
+    this.w = this.w_World * (1 / camera.scaleX);  //размеры на канвасе
+    this.h = this.h_World; //
+    this.X_Center = this.x + this.w_World/2; // координаты центра в мире
+    this.Y_Center = this.y + this.h_World/2;
+    console.log(this.X_Center);
+    console.log(this.Y_Center);
+    this.weaponX = this.X_Center - (this.w_World / 4); // координаты в мире
+    this.weaponY = this.Y_Center + (this.h_World / 8);
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Down";
-    this.direction = "Down";
+    this.direction = "Left";
     this.hp = 2;
     this.dead = false;
     this.fire = false;
