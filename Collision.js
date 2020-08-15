@@ -64,3 +64,25 @@ const collision = () => {
     }
   }
 }
+
+let collisionPlayer = (x, y, h, w) => {
+  let xBlock = (x - (x % worldTileSize)) / worldTileSize;
+  let yBlock = (y - (y % worldTileSize)) / worldTileSize;
+  let xBlock1 = (x + w - ((x + w) % worldTileSize)) / worldTileSize;
+  let yBlock1 = (y + h - ((y + h) % worldTileSize)) / worldTileSize;
+  let f = true;
+
+  for (let i = xBlock; i != xBlock1; i++) {
+    for (let j = yBlock; j != yBlock1; j++) {
+      if ((i < 0) || (i >= tileMap[0].length) ||
+          (j < 0) || (j >= tileMap.length) ||
+          (tileMap[j][i] == "black") ||
+          (tileMap[j][i] == "cover")) {
+            f = false;
+          }
+      if (!f) break;
+    }
+    if (!f) break;
+  }
+  return f;
+}

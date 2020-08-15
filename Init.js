@@ -42,8 +42,8 @@ let sightHeight = 2;
 const bullets = new Set();
 const rounds = [];
 
-const playerStartX = 150;
-const playerStartY = 150;
+const playerStartX = 130;
+const playerStartY = 130;
 const playerWidth = 14;
 const playerHeight = 38;
 let playerSpeed = cameraSpeed;

@@ -80,7 +80,7 @@ class Player {
   }
 
   move() {
-    if (downPressed) {
+    if ((downPressed) && (collisionPlayer(this.x, this.y + this.speed, this.w_World, this.h_World))) {
       if (this.y < images["map"].naturalHeight) {
         this.y += this.speed;
         this.weaponY += this.speed;
@@ -97,7 +97,7 @@ class Player {
       this.sprite.down.y = worldToCanvas(this.y, 1);
       this.direction = "Down";
       this.sprite.down.update();
-    } else if (upPressed) {
+    } else if (upPressed && (collisionPlayer(this.x, this.y - this.speed, this.w_World, this.h_World))) {
       if (this.y !== 0) {
         this.y -= this.speed;
         this.Y_Center -= this.speed;
@@ -109,7 +109,7 @@ class Player {
       this.sprite.up.update();
     }
 
-    if (rightPressed) {
+    if (rightPressed && (collisionPlayer(this.x + this.speed, this.y, this.w_World, this.h_World))) {
       if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
         this.X_Center += this.speed;
@@ -124,7 +124,7 @@ class Player {
       this.sprite.right.y = worldToCanvas(this.y, 1);
       this.direction = "Right";
       this.sprite.right.update();
-    } else if (leftPressed) {
+    } else if (leftPressed && (collisionPlayer(this.x - this.speed, this.y, this.w_World, this.h_World))) {
       if (this.x !== 0) {
         this.x -= this.speed;
         this.weaponX -= this.speed;
