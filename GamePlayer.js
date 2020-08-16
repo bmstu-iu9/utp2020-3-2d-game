@@ -10,19 +10,25 @@ class Player {
   constructor (x, y, width, height, speed, sprite) {
     this.x = x;
     this.y = y;
-    this.w_World = width;
-    this.h_World = height;
+    this.w_World = width; // размеры спрайта в мире
+    this.h_World = height; //
     this.w = this.w_World * (1 / camera.scaleX);  //размеры на канвасе
     this.h = this.h_World; //
+    this.realX = this.x + (this.w_World / 12); //для коллизии
+    this.realY = this.y + (this.h_World / 8); //
+    this.realW = this.w_World - (2 * (this.w_World / 12)); // размеры для коллизии
+    this.realH = this.h_World - (2 * (this.h_World / 8)); //
     this.X_Center = this.x + this.w_World/2; // координаты центра в мире
     this.Y_Center = this.y + this.h_World/2;
+    this.realXCenter = this.realX + this.realW/2;
+    this.realYCenter = this.realY + this.realH/2;
     this.weaponX = this.X_Center - (this.w_World / 4); // координаты в мире
     this.weaponY = this.Y_Center + (this.h_World / 8);
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Down";
-    this.direction = "Left";
+    this.direction = "Down";
     this.hp = 2;
     this.dead = false;
     this.fire = false;
@@ -80,16 +86,20 @@ class Player {
   }
 
   move() {
-    if ((downPressed) && (collisionPlayer(this.x, this.y + this.speed, this.w_World, this.h_World))) {
+    if ((downPressed) && (collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH))) {
       if (this.y < images["map"].naturalHeight) {
+        this.realY += this.speed;
+        this.realYCenter += this.speed;
         this.y += this.speed;
         this.weaponY += this.speed;
         this.Y_Center += this.speed;
         // временный костыль, связанный с недоработкой сетки навигации
         if (this.y >= images["map"].naturalHeight) {
           this.y = images["map"].naturalHeight - 1;
-          this.weaponY -= this.speed - 1;
-          this.Y_Center -= this.speed - 1;
+          this.realY = this.y + this.h_World / 8;
+          this.realYCenter = this.realY + this.realH / 2;
+          this.Y_Center = this.y + this.h_World / 2;
+          this.weaponY = this.Y_Center + (this.h_World / 8);
         }
         //
       }
@@ -97,9 +107,11 @@ class Player {
       this.sprite.down.y = worldToCanvas(this.y, 1);
       this.direction = "Down";
       this.sprite.down.update();
-    } else if (upPressed && (collisionPlayer(this.x, this.y - this.speed, this.w_World, this.h_World))) {
+    } else if (upPressed && (collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH))) {
       if (this.y !== 0) {
         this.y -= this.speed;
+        this.realY -= this.speed;
+        this.realYCenter -= this.speed;
         this.Y_Center -= this.speed;
         this.weaponY -= this.speed;
       }
@@ -109,24 +121,30 @@ class Player {
       this.sprite.up.update();
     }
 
-    if (rightPressed && (collisionPlayer(this.x + this.speed, this.y, this.w_World, this.h_World))) {
+    if (rightPressed && (collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH))) {
       if (this.x < images["map"].naturalWidth) {
         this.x += this.speed;
+        this.realX += this.speed;
+        this.realXCenter += this.speed;
         this.X_Center += this.speed;
         this.weaponX += this.speed;
         if (this.x >= images["map"].naturalWidth) {
           this.x = images["map"].naturalWidth - 1;
-          this.X_Center -= this.speed - 1;
-          this.weaponX -= this.speed - 1;
+          this.realX = this.x + (this.w_World / 12);
+          this.realXCenter = this.realX + this.realW / 2;
+          this.X_Center = this.x + this.w_World / 2;
+          this.weaponX = this.X_Center - (this.w_World / 4);
         }
       }
       this.sprite.right.x = worldToCanvas(this.x, 0);
       this.sprite.right.y = worldToCanvas(this.y, 1);
       this.direction = "Right";
       this.sprite.right.update();
-    } else if (leftPressed && (collisionPlayer(this.x - this.speed, this.y, this.w_World, this.h_World))) {
+    } else if (leftPressed && (collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH))) {
       if (this.x !== 0) {
         this.x -= this.speed;
+        this.realX -= this.speed;
+        this.realXCenter -= this.speed;
         this.weaponX -= this.speed;
         this.X_Center -= this.speed;
       }
