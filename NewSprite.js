@@ -43,6 +43,7 @@ class Sprite {
   }
 
   drawBodySprite() {
+    let gunOffset = Math.PI / 12;
     ctx.save();
     ctx.translate(this.x, this.y);
     let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
@@ -55,7 +56,7 @@ class Sprite {
     } else {
       deg -= Math.PI / 2;
     }
-    ctx.rotate(deg);
+    ctx.rotate(deg - gunOffset);
 
     ctx.drawImage(
         this.image,
@@ -76,7 +77,7 @@ class Sprite {
     this.worldW = W;
     this.worldH = H;
     this.canvasW = W * (1 / camera.scaleX);
-    this.canvasH = H;
+    this.canvasH = H * (1 / camera.scaleY);
   }
 
 }

@@ -44,22 +44,31 @@ const rounds = [];
 
 const playerStartX = 130;
 const playerStartY = 130;
-const playerWidth = 14;
-const playerHeight = 38;
+const playerWidth = 10;
+const playerHeight = 12;
 let playerSpeed = cameraSpeed;
-const spritePlW = 96;
-const spritePlH = 64;
+const spriteTileW = 96;
+const spriteTileH = 64;
 const spriteFeetH = 38;
 const spriteFeetW = 53;
-const FeetH = 7;
-const FeetW = 28;
+const FeetH = 1.75;
+const FeetW = 7;
+
+const srcOffsetX = 8;
+const srcOffsetY = 10;
+const realOffsetX = playerWidth / spriteTileW * srcOffsetX;
+const realOffsetY = playerHeight / spriteTileH * srcOffsetY;
+const srcRealW = 63;
+const srcRealH = 49;
+const realW = playerWidth / spriteTileW * srcRealW;
+const realH = playerHeight / spriteTileH * srcRealH;
 
 const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const spritePl = {
-  pl : new Sprite(images["player"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3], 16),
-  shoot : new Sprite(images["shoot"], 0, 0, spritePlW, spritePlH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 16),
+  pl : new Sprite(images["player"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3], 0),
+  shoot : new Sprite(images["shoot"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
   up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
   down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1], 0),
   right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
@@ -74,7 +83,8 @@ spritePl.down.setWorldSize(FeetH, FeetW);
 spritePl.left.setWorldSize(FeetW / 4.7, FeetH * 3.2);
 spritePl.right.setWorldSize(FeetW / 4.7, FeetH * 3.2);
 
-const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight, playerSpeed, spritePl);
+const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
+                          realOffsetX, realOffsetY, realW, realH, playerSpeed, spritePl);
 
 const targets = [];
 targets.push(new Target(15, 30, 5, [{x: 15, y: 30}, {x: 15, y: 195}]));

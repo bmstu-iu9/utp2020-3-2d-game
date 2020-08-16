@@ -89,7 +89,7 @@ const draw = () => {
   });
 
   player.drawDirection();
-  
+
   bullets.forEach(bullet => {
     bullet.draw();
   });
@@ -107,6 +107,17 @@ const draw = () => {
   if (!throwGrenade && throwTime){
     Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
   }
+
+  ctx.beginPath();
+  ctx.rect(worldToCanvas(player.realX, 0), worldToCanvas(player.realY, 1), player.realW / camera.scaleX, player.realH / camera.scaleY);
+  ctx.strokeStyle = "red";
+  ctx.stroke();
+  ctx.closePath();
+  ctx.beginPath();
+  ctx.rect(worldToCanvas(player.x, 0), worldToCanvas(player.y, 1), player.w, player.h);
+  ctx.strokeStyle = "blue";
+  ctx.stroke();
+  ctx.closePath();
 
   sight.draw();
   drawPosit();

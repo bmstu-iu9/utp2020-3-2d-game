@@ -7,17 +7,17 @@
 
 class Player {
 
-  constructor (x, y, width, height, speed, sprite) {
+  constructor (x, y, width, height, offsetX, offsetY, rW, rH, speed, sprite) {
     this.x = x;
     this.y = y;
     this.w_World = width; // размеры спрайта в мире
     this.h_World = height; //
     this.w = this.w_World * (1 / camera.scaleX);  //размеры на канвасе
-    this.h = this.h_World; //
-    this.realX = this.x + (this.w_World / 12); //для коллизии
-    this.realY = this.y + (this.h_World / 8); //
-    this.realW = this.w_World - (2 * (this.w_World / 12)); // размеры для коллизии
-    this.realH = this.h_World - (2 * (this.h_World / 8)); //
+    this.h = this.h_World * (1 / camera.scaleY); //
+    this.realX = this.x + offsetX; //для коллизии
+    this.realY = this.y + offsetY; //
+    this.realW = rW; // размеры для коллизии
+    this.realH = rH; //
     this.X_Center = this.x + this.w_World/2; // координаты центра в мире
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
@@ -32,7 +32,7 @@ class Player {
     this.hp = 2;
     this.dead = false;
     this.fire = false;
-    this.weapon = new Weapon(2);
+    this.weapon = new Weapon(0);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
 
     switch (this.weapon.id) {
@@ -103,8 +103,8 @@ class Player {
         }
         //
       }
-      this.sprite.down.x = worldToCanvas(this.x, 0);
-      this.sprite.down.y = worldToCanvas(this.y, 1);
+      this.sprite.down.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed && (collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH))) {
@@ -115,8 +115,8 @@ class Player {
         this.Y_Center -= this.speed;
         this.weaponY -= this.speed;
       }
-      this.sprite.up.x = worldToCanvas(this.x, 0);
-      this.sprite.up.y = worldToCanvas(this.y, 1);
+      this.sprite.up.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Up";
       this.sprite.up.update();
     }
@@ -136,8 +136,8 @@ class Player {
           this.weaponX = this.X_Center - (this.w_World / 4);
         }
       }
-      this.sprite.right.x = worldToCanvas(this.x, 0);
-      this.sprite.right.y = worldToCanvas(this.y, 1);
+      this.sprite.right.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Right";
       this.sprite.right.update();
     } else if (leftPressed && (collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH))) {
@@ -148,8 +148,8 @@ class Player {
         this.weaponX -= this.speed;
         this.X_Center -= this.speed;
       }
-      this.sprite.left.x = worldToCanvas(this.x, 0);
-      this.sprite.left.y = worldToCanvas(this.y, 1);
+      this.sprite.left.x = worldToCanvas(this.X_Center, 0);
+      this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Left";
       this.sprite.left.update();
     }
@@ -169,7 +169,7 @@ class Player {
         grenade.activate();
       } else if (throwGrenade) {
         if (!grenade.exploded()) {
-          grenade.throw(this.x, this.y,
+          grenade.throw(this.realXCenter, this.realYCenter,
                 canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
         }
         this.grenades.pop();
@@ -192,8 +192,8 @@ class Player {
       reloadPending = false;
     }
 
-    this.sprite.pl.x = worldToCanvas(this.x, 0);
-    this.sprite.pl.y = worldToCanvas(this.y, 1);
+    this.sprite.pl.x = worldToCanvas(this.X_Center, 0);
+    this.sprite.pl.y = worldToCanvas(this.Y_Center, 1);
     this.sprite.pl.update();
 
     if (mouseDown) {
@@ -211,20 +211,20 @@ class Player {
       }
       this.sprite.shoot.update();
 
-      let k1 = 12.5;
+      let k1 = 6;
       let k2 = 0;
-      let k3 = (canvasToWorld(sight.x, 0) - this.x);
-      let k4 = (canvasToWorld(sight.y, 1) - this.y);
+      let k3 = (canvasToWorld(sight.x, 0) - this.realXCenter);
+      let k4 = (canvasToWorld(sight.y, 1) - this.realYCenter);
       let dist1 = Math.sqrt(k1*k1 + k2*k2);
       let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let normLen = 3;
+      let normLen = 2;
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
 
       this.fire = this.weapon.shoot(
-                  this.x + (canvasToWorld(sight.x, 0) - this.x) * dist1 / dist2 + normX,
-                  this.y + (canvasToWorld(sight.y, 1) - this.y) * dist1 / dist2 + normY,
-                  canvasToWorld(sight.x, 0) + normX, canvasToWorld(sight.y, 1) + normY);
+                  this.realXCenter + (canvasToWorld(sight.x, 0) - this.realXCenter) * dist1 / dist2 + normX,
+                  this.realYCenter + (canvasToWorld(sight.y, 1) - this.realYCenter) * dist1 / dist2 + normY,
+                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
       this.weapon.shootExecuted = 1;
     } else {
       this.fire = false;
