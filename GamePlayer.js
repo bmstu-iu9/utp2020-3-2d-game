@@ -25,8 +25,8 @@ class Player {
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
-    this.prevDirect = "Down";
-    this.direction = "Down";
+    this.prevDirect = "Right";
+    this.direction = "Right";
     this.hp = 2;
     this.dead = false;
     this.fire = false;
@@ -222,6 +222,29 @@ class Player {
       this.fire = false;
       this.weapon.shootExecuted = 0;
     }
+
+    if (pickUp) {
+      let radius = 10;
+      for (let item of weapons) {
+        let dv = Math.sqrt(Math.pow(this.realX - item.x, 2) + Math.pow(this.realY - item.y, 2));
+        if (dv <= radius) {
+          let gun = item;
+          item.pickUp();
+          this.weapon.drop(gun.x, gun.y);
+          this.weapon = gun;
+          switch (this.weapon.id) {
+            case 0:
+              this.sprite.pl.indexFrameY = 0;
+            case 2:
+              this.sprite.pl.indexFrameY = 2;
+              break;
+          }
+          break;
+        }
+      }
+      pickUp = false;
+    }
+
   }
 
   changeWeapon(id) {
