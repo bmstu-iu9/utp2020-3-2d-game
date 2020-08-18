@@ -10,44 +10,56 @@ let reloadPending = false;
 let pickUp = false;
 let throwGrenade = false;
 let throwTime = 0;
+let paused = true;
 
 const keyUpHandler = (e) => {
-  if (e.keyCode === 68) { //d
-    rightPressed = false;
-  } else if (e.keyCode === 65) { //a
-    leftPressed = false;
-  } else if (e.keyCode === 83) { //s
-    downPressed = false;
-  } else if (e.keyCode === 87) { //w
-    upPressed = false;
-  } else if (e.keyCode === 71 && !throwGrenade) { //g
-    throwGrenade = true;
-    throwTime = performance.now() - throwTime;
+  if (!paused) {
+    if (e.keyCode === 68) { //d
+      rightPressed = false;
+    } else if (e.keyCode === 65) { //a
+      leftPressed = false;
+    } else if (e.keyCode === 83) { //s
+      downPressed = false;
+    } else if (e.keyCode === 87) { //w
+      upPressed = false;
+    } else if (e.keyCode === 71 && !throwGrenade) { //g
+      throwGrenade = true;
+      throwTime = performance.now() - throwTime;
+    }
+  }
+  if (e.keyCode === 27 && !firstStart) { //esc
+    if (paused) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   }
 }
 
 const keyDownHandler = (e) => {
-  if (e.keyCode === 68) { //d
-    rightPressed = true;
-  } else if (e.keyCode === 65) { //a
-    leftPressed = true;
-  } else if (e.keyCode === 83) { //s
-    downPressed = true;
-  } else if (e.keyCode === 87) { //w
-    upPressed = true;
-  } else if (e.keyCode === 69) { //e
-    pickUp = true;
-  } else if (e.keyCode === 82) { //r
-    reloadPending = true;
-  } else if (e.keyCode === 71 && !throwTime) { //g
-    throwTime = performance.now();
+  if (!paused) {
+    if (e.keyCode === 68) { //d
+      rightPressed = true;
+    } else if (e.keyCode === 65) { //a
+      leftPressed = true;
+    } else if (e.keyCode === 83) { //s
+      downPressed = true;
+    } else if (e.keyCode === 87) { //w
+      upPressed = true;
+    } else if (e.keyCode === 69) { //e
+      pickUp = true;
+    } else if (e.keyCode === 82) { //r
+      reloadPending = true;
+    } else if (e.keyCode === 71 && !throwTime) { //g
+      throwTime = performance.now();
+    }
   }
 }
 
 const mouseMoveHandler = (e) => {
   const tmpX = e.clientX - canvas.offsetLeft;
   const tmpY = e.clientY - canvas.offsetTop;
-  if (tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
+  if (!paused && tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
     sight.x = tmpX;
     sight.y = tmpY;
   }
@@ -56,7 +68,7 @@ const mouseMoveHandler = (e) => {
 const mouseDownHandler = (e) => {
   const tmpX = e.clientX - canvas.offsetLeft;
   const tmpY = e.clientY - canvas.offsetTop;
-  if (tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
+  if (!paused && tmpX > 0 && tmpX < canvas.width && tmpY > 0 && tmpY < canvas.height) {
     if (e.which === 1) {
       mouseDown = true;
     }
@@ -67,7 +79,9 @@ const mouseDownHandler = (e) => {
 }
 
 const mouseUpHandler = (e) => {
-  mouseDown = false;
+  if (!paused) {
+    mouseDown = false;
+  }
 }
 
 document.addEventListener("keydown", keyDownHandler, false);

@@ -6,6 +6,10 @@ let RAF =
   window.msRequestAnimationFrame ||
   function(callback){ window.setTimeout(callback, 1000 / 60) };
 
+let cancelRAF =
+  window.cancelAnimationFrame || window.mozCancelAnimationFrame ||
+  window.webkitCancelAnimationFrame;
+
 const worldToCanvas = (t, type) => {
   if (type == 0) return (t - camera.x) / camera.scaleX;
   else return (t - camera.y) / camera.scaleY;
