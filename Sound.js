@@ -17,6 +17,7 @@ class Sound {                                //fadeout start in sec
     clearTimeout(this.fadeoutTimeout);
     clearInterval(this.fadeoutSteps);
     this.audio.currentTime = this.start;
+    this.audio.volume *= Sound.globalVolume / 100;
     this.audio.play();
 
     this.timeout = setTimeout(() => {
@@ -33,3 +34,5 @@ class Sound {                                //fadeout start in sec
     }, this.fadeout * 1000)
   }
 }
+
+Sound.globalVolume = 100;

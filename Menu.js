@@ -65,7 +65,9 @@ settingsDiv.className = "in";
 const settingsText = document.createTextNode("Настройки");
 settingsDiv.append(settingsText);
 settings.append(settingsDiv);
-
+settings.onclick = () => {
+  toggleSettings();
+}
 const restart = document.createElement("button");
 restart.className = "btnrestart";
 const restartDiv = document.createElement("div");
@@ -84,6 +86,44 @@ divMenu.append(play);
 divMenu.append(settings);
 divMenu.append(about);
 
+const soundContainer = document.createElement("div");
+soundContainer.className = "slidercontainer";
+const soundRange = document.createElement("input");
+soundRange.setAttribute("type", "range");
+soundRange.className = "slider";
+soundRange.setAttribute("min", "0");
+soundRange.setAttribute("max", "100");
+soundRange.setAttribute("value", "100");
+const soundText = document.createTextNode("Звук:");
+soundContainer.append(soundText);
+soundContainer.append(soundRange);
+let settingsOpened = false;
+
+const toggleSettings = () => {
+  if (!settingsOpened) {
+    settingsOpened = true;
+    if (firstStart) {
+      about.style.bottom = "5%";
+    } else {
+      restart.style.bottom = "5%";
+    }
+    divMenu.append(soundContainer);
+  } else {
+    settingsOpened = false;
+    if (firstStart) {
+      about.style.bottom = "15%";
+    } else {
+      restart.style.bottom = "15%";
+    }
+    saveSettings();
+    soundContainer.remove();
+  }
+}
+
+const saveSettings = () => {
+  Sound.globalVolume = soundRange.value;
+}
+
 const openMenu = () => {
   if (!firstStart) {
     cancelRAF(requestId);
@@ -101,6 +141,9 @@ const closeMenu = () => {
     divMenu.append(restart);
   }
   divMenu.remove();
+  if (settingsOpened) {
+    toggleSettings();
+  }
   document.body.append(menu);
 
   if (!firstStart) {
