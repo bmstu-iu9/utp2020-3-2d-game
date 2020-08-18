@@ -62,7 +62,7 @@ body {
   text-align: center;
   font-size: 15pt;
   position: absolute;
-  bottom: 40%;
+  bottom: 15%;
   right: 0;
   left: 0;
   margin: auto;
@@ -92,5 +92,49 @@ body {
 }
 
 .btnplay:hover {
+  background: #666633;
+}
+
+.btnsettings {
+  z-index: 1;
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 40%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnsettings:hover {
+  background: #666633;
+}
+
+.btnrestart {
+  z-index: 1;
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 15%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnrestart:hover {
   background: #666633;
 }

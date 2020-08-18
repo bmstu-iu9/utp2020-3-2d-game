@@ -45,6 +45,35 @@ class Player {
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
   }
 
+  init(x, y) {
+    let dx = x - this.x;
+    let dy = y - this.y;
+    this.x = x;
+    this.y = y;
+    this.realX += dx;
+    this.realY += dy;
+    this.X_Center += dx;
+    this.Y_Center += dy;
+    this.realXCenter += dx;
+    this.realYCenter += dy;
+    this.prevDirect = "Down";
+    this.direction = "Down";
+    this.hp = 2;
+    this.dead = false;
+    this.fire = false;
+    this.weapon = new Weapon(0);
+    this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
+    this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
+    switch (this.weapon.id) {
+      case 0:
+        this.sprite.pl.indexFrameY = 0;
+      case 2:
+        this.sprite.pl.indexFrameY = 2;
+        break;
+    }
+  }
+
   drawDirection() {
     if (this.direction === "Down") {
       this.sprite.down.drawBodySprite();

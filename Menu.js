@@ -47,11 +47,6 @@ const aboutDiv = document.createElement("div");
 aboutDiv.className = "in";
 aboutDiv.insertAdjacentHTML("beforeend", aboutText);
 
-const divMenu = document.createElement("div");
-divMenu.className = "menu";
-divMenu.append(play);
-divMenu.append(about);
-
 let aboutOpened = false;
 about.onclick = () => {
   if (!aboutOpened) {
@@ -64,9 +59,31 @@ about.onclick = () => {
 }
 
 const settings = document.createElement("button");
-// const settings
+settings.className = "btnsettings";
+const settingsDiv = document.createElement("div");
+settingsDiv.className = "in";
+const settingsText = document.createTextNode("Настройки");
+settingsDiv.append(settingsText);
+settings.append(settingsDiv);
 
-// const restart = document
+const restart = document.createElement("button");
+restart.className = "btnrestart";
+const restartDiv = document.createElement("div");
+restartDiv.className = "in";
+const restartText = document.createTextNode("Заново");
+restartDiv.append(restartText);
+restart.append(restartDiv);
+restart.onclick = () => {
+  init();
+  closeMenu();
+}
+
+const divMenu = document.createElement("div");
+divMenu.className = "menu";
+divMenu.append(play);
+divMenu.append(settings);
+divMenu.append(about);
+
 const openMenu = () => {
   if (!firstStart) {
     cancelRAF(requestId);
@@ -81,6 +98,7 @@ const closeMenu = () => {
     play.remove()
     about.remove();
     divMenu.append(resume);
+    divMenu.append(restart);
   }
   divMenu.remove();
   document.body.append(menu);
@@ -90,7 +108,7 @@ const closeMenu = () => {
     requestId = RAF(loop);
   }
   paused = false;
-  if (firstStart) firstStart = false;
+  firstStart = false;
 }
 
 openMenu();
