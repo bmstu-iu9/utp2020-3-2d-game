@@ -1,6 +1,6 @@
 class Sprite {
 
-  constructor (img, srcX, srcY, srcW, srcH, x, y, framesY, koef) {
+  constructor (img, srcX, srcY, srcW, srcH, x, y, framesY) {
     this.image = img;
     this.srcX = srcX;
     this.srcY = srcY;
@@ -15,7 +15,6 @@ class Sprite {
     this.height = srcH;
     this.speed = 5;
     this.counter = 0;
-    this.k = koef;
   }
 
   update() {
@@ -43,20 +42,23 @@ class Sprite {
   }
 
   drawBodySprite() {
-    let gunOffset = Math.PI / 12;
     ctx.save();
     ctx.translate(this.x, this.y);
-    let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
+    let deg = 0;
     if (sight.y > this.y) {
       if (sight.x < this.x) {
-        deg = -deg - 3 * Math.PI / 2;
+        deg = Math.PI / 2 + Math.atan((this.x - sight.x) / (sight.y - this.y)) - gunOffset;
       } else {
-        deg = -deg + Math.PI / 2;
+        deg = Math.PI / 2 - Math.atan((sight.x - this.x) / (sight.y - this.y)) - gunOffset;
       }
     } else {
-      deg -= Math.PI / 2;
+      if (sight.x > this.x) {
+        deg = 2 * Math.PI - Math.atan((this.y - sight.y) / (sight.x - this.x)) - gunOffset;
+      } else {
+        deg = Math.PI + Math.atan((this.y - sight.y) / (this.x - sight.x)) - gunOffset;
+      }
     }
-    ctx.rotate(deg - gunOffset);
+    ctx.rotate(deg);
 
     ctx.drawImage(
         this.image,
@@ -64,7 +66,7 @@ class Sprite {
         this.srcY,
         this.width,
         this.height,
-        -this.canvasW / 2 + this.k,
+        -this.canvasW / 2,
         -this.canvasH / 2,
         this.canvasW,
         this.canvasH

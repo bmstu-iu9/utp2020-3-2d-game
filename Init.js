@@ -44,7 +44,7 @@ const rounds = [];
 
 const playerStartX = 130;
 const playerStartY = 130;
-const playerWidth = 10;
+const playerWidth = 14;
 const playerHeight = 12;
 let playerSpeed = cameraSpeed;
 const spriteTileW = 96;
@@ -62,26 +62,31 @@ const srcRealW = 63;
 const srcRealH = 49;
 const realW = playerWidth / spriteTileW * srcRealW;
 const realH = playerHeight / spriteTileH * srcRealH;
+const gunOffsetX = 88;
+const gunOffsetY = 48;
+let xDeg = 24;
+let yDeg = 40;
+const gunOffset = Math.atan( (gunOffsetY - yDeg) / (gunOffsetX - xDeg));
 
 const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
 
 const spritePl = {
-  pl : new Sprite(images["player"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3], 0),
-  shoot : new Sprite(images["shoot"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
-  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
-  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1], 0),
-  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0], 0),
-  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1], 0),
-  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1], 0),
+  pl : new Sprite(images["player"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3]),
+  shoot : new Sprite(images["shoot"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1]),
+  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0]),
+  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1]),
+  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0]),
+  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1]),
+  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1]),
 };
 
 spritePl.pl.setWorldSize(playerWidth, playerHeight);
 spritePl.shoot.setWorldSize(playerWidth, playerHeight);
 spritePl.up.setWorldSize(FeetH, FeetW);
 spritePl.down.setWorldSize(FeetH, FeetW);
-spritePl.left.setWorldSize(FeetW / 4.7, FeetH * 3.2);
-spritePl.right.setWorldSize(FeetW / 4.7, FeetH * 3.2);
+spritePl.left.setWorldSize(FeetW, FeetH);
+spritePl.right.setWorldSize(FeetW, FeetH);
 
 const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
                           realOffsetX, realOffsetY, realW, realH, playerSpeed, spritePl);

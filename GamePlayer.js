@@ -22,8 +22,6 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
-    this.weaponX = this.X_Center - (this.w_World / 4); // координаты в мире
-    this.weaponY = this.Y_Center + (this.h_World / 8);
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
@@ -43,8 +41,8 @@ class Player {
         break;
     }
     this.sprite.shoot.speed = 10;
-    this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
-    this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
+    this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
   }
 
   drawDirection() {
@@ -87,19 +85,17 @@ class Player {
 
   move() {
     if ((downPressed) && (collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH))) {
-      if (this.y < images["map"].naturalHeight) {
+      if (this.realYCenter < images["map"].naturalHeight) {
         this.realY += this.speed;
         this.realYCenter += this.speed;
         this.y += this.speed;
-        this.weaponY += this.speed;
         this.Y_Center += this.speed;
         // временный костыль, связанный с недоработкой сетки навигации
-        if (this.y >= images["map"].naturalHeight) {
-          this.y = images["map"].naturalHeight - 1;
-          this.realY = this.y + this.h_World / 8;
-          this.realYCenter = this.realY + this.realH / 2;
+        if (this.realYCenter >= images["map"].naturalHeight) {
+          this.realYCenter = images["map"].naturalHeight - 1;
+          this.realY = this.realYCenter - this.realH / 2;
+          this.y = this.realY - realOffsetY;
           this.Y_Center = this.y + this.h_World / 2;
-          this.weaponY = this.Y_Center + (this.h_World / 8);
         }
         //
       }
@@ -108,12 +104,11 @@ class Player {
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed && (collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH))) {
-      if (this.y !== 0) {
+      if (this.realYCenter !== 0) {
         this.y -= this.speed;
         this.realY -= this.speed;
         this.realYCenter -= this.speed;
         this.Y_Center -= this.speed;
-        this.weaponY -= this.speed;
       }
       this.sprite.up.x = worldToCanvas(this.X_Center, 0);
       this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
@@ -122,18 +117,16 @@ class Player {
     }
 
     if (rightPressed && (collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH))) {
-      if (this.x < images["map"].naturalWidth) {
+      if (this.realXCenter < images["map"].naturalWidth) {
         this.x += this.speed;
         this.realX += this.speed;
         this.realXCenter += this.speed;
         this.X_Center += this.speed;
-        this.weaponX += this.speed;
-        if (this.x >= images["map"].naturalWidth) {
-          this.x = images["map"].naturalWidth - 1;
-          this.realX = this.x + (this.w_World / 12);
-          this.realXCenter = this.realX + this.realW / 2;
+        if (this.realXCenter >= images["map"].naturalWidth) {
+          this.realXCenter = images["map"].naturalWidth - 1;
+          this.realX = this.realXCenter - this.realW / 2;
+          this.x = this.realX - realOffsetX;
           this.X_Center = this.x + this.w_World / 2;
-          this.weaponX = this.X_Center - (this.w_World / 4);
         }
       }
       this.sprite.right.x = worldToCanvas(this.X_Center, 0);
@@ -141,11 +134,10 @@ class Player {
       this.direction = "Right";
       this.sprite.right.update();
     } else if (leftPressed && (collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH))) {
-      if (this.x !== 0) {
+      if (this.realXCenter !== 0) {
         this.x -= this.speed;
         this.realX -= this.speed;
         this.realXCenter -= this.speed;
-        this.weaponX -= this.speed;
         this.X_Center -= this.speed;
       }
       this.sprite.left.x = worldToCanvas(this.X_Center, 0);
@@ -155,8 +147,8 @@ class Player {
     }
 
 
-    this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
-    this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
+    this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
 
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
@@ -253,8 +245,8 @@ class Player {
     let deg = degRad * 180 / Math.PI / 10
     let deg1 = Math.floor(deg);
     let deg2 = Math.ceil(deg) % 36;
-    let vx = this.x - mesh[this.XBlock][this.YBlock].x;
-    let vy = this.y - mesh[this.XBlock][this.YBlock].y;
+    let vx = this.realXCenter - mesh[this.XBlock][this.YBlock].x;
+    let vy = this.realYCenter - mesh[this.XBlock][this.YBlock].y;
     let blocks = [];
     if (vx > 0) {
       if (vy > 0) {
@@ -313,9 +305,9 @@ class Player {
     for (let i = 0; i < 4; i++) {
       visDist.push(blocks[i].vision[deg1] + (blocks[i].vision[deg2] - blocks[i].vision[deg1]) * (deg - deg1));
     }
-    let tempRes1 = ((blocks[3].x - this.x) * visDist[0] + (this.x - blocks[0].x) * visDist[2]) / 10;
-    let tempRes2 = ((blocks[3].x - this.x) * visDist[1] + (this.x - blocks[0].x) * visDist[3]) / 10;
-    let res = ((blocks[3].y - this.y) * tempRes1 + (this.y - blocks[0].y) * tempRes2) / 10;
+    let tempRes1 = ((blocks[3].x - this.realXCenter) * visDist[0] + (this.realXCenter - blocks[0].x) * visDist[2]) / 10;
+    let tempRes2 = ((blocks[3].x - this.realXCenter) * visDist[1] + (this.realXCenter - blocks[0].x) * visDist[3]) / 10;
+    let res = ((blocks[3].y - this.realYCenter) * tempRes1 + (this.realYCenter - blocks[0].y) * tempRes2) / 10;
     let dist = Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
                          Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2));
     return res > dist;
