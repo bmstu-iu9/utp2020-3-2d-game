@@ -135,7 +135,7 @@ const loop = () => {
   draw();
   lastTime = now;
 
-  RAF(loop);
+  requestId = RAF(loop);
 }
 
 let lastTime = performance.now();
@@ -144,4 +144,4 @@ let dt = 0;
 let fps = 60;
 let gameStep = 1 / fps;
 
-loop();
+let requestId = RAF(loop);

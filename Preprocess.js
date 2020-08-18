@@ -48,7 +48,7 @@ const loadScript = src => {
     script.onload = () => resolve(script);
     script.onerror = () => reject(new Error(`Error loading script ${src}`));
 
-    document.body.appendChild(script);
+    document.body.append(script);
   });
 }
 

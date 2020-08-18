@@ -1,4 +1,4 @@
-canvas{
+canvas {
   cursor: none;
   position: absolute;
   top: 0;
@@ -52,6 +52,7 @@ body {
 }
 
 .btnabout {
+  z-index: 1;
   width: 350px;
   height: 70px;
   background: #003300;
@@ -73,6 +74,7 @@ body {
 }
 
 .btnplay {
+  z-index: 1;
   width: 350px;
   height: 70px;
   background: #003300;
