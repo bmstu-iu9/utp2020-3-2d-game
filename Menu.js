@@ -12,7 +12,7 @@ play.append(playDiv);
 play.onclick = () => {
   closeMenu();
   const preprocess = document.createElement("script");
-  preprocess.src = "preprocess.js";
+  preprocess.src = "Preprocess.js";
   document.body.append(preprocess);
 }
 
