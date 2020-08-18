@@ -104,3 +104,23 @@ targets.push(new Target(200, 100, 5, [{x: 260, y: 115}, {x: 260, y: 185}]));
 const weapons = new Set();
 weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
 const grenades = new Set();
+
+const init = () => {
+  bullets.clear();
+  rounds.splice(0, rounds.length);
+
+  camera.x = cameraStartX;
+  camera.y = cameraStartY;
+
+  player.init(playerStartX, playerStartY);
+
+  targets.splice(0, targets.length);
+  targets.push(new Target(15, 30, 5, [{x: 15, y: 30}, {x: 15, y: 195}]));
+  targets.push(new Target(220, 100, 5, [{x: 220, y: 100}, {x: 120, y: 25}]));
+  targets.push(new Target(85, 285, 5, [{x: 85, y: 285}, {x: 130, y: 205}, {x: 215, y: 205}, {x: 215, y: 295}]));
+  targets.push(new Target(200, 100, 5, [{x: 260, y: 115}, {x: 260, y: 185}]));
+
+  weapons.clear();
+  weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
+  grenades.clear();
+}

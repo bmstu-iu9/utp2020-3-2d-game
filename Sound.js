@@ -11,7 +11,7 @@ class Sound {                                //fadeout start in sec
   }
 
   play() {
-    this.audio.volume = this.volume;
+    this.audio.volume = this.volume * Sound.globalVolume / 100;
     this.audio.pause();
     clearTimeout(this.timeout);
     clearTimeout(this.fadeoutTimeout);
@@ -33,3 +33,5 @@ class Sound {                                //fadeout start in sec
     }, this.fadeout * 1000)
   }
 }
+
+Sound.globalVolume = 100;
