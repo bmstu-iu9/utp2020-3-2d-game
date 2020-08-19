@@ -1,20 +1,24 @@
 class Target {
-  constructor(X, Y, R, r) {
+  constructor(X, Y, R) {
     this.x = X;
     this.y = Y;
     this.r = R;
     this.o = 10 * R;
     this.s = 6 * R;
-    this.route = r;
-    this.p = 1;
+    this.route = null;
+    this.p = 0;
     this.st = 0;
+    this.visible = false;
+    // 0 - ожидание
+    // 1 - движение в укрытие
+    /*this.st = 0;
     // 0 - движение по маршруту
     // 1 - сближение
     // 2 - стрельба
     // 3 - поиск
-    // 4 - возвращение
+    // 4 - возвращение*/
     this.alive = true;
-    this.speed = 0.2;
+    this.speed = player.speed;
     this.dx = 0;
     this.dy = 0;
     this.sx = 0;
@@ -26,6 +30,36 @@ class Target {
 
   update() {
     switch(this.st) {
+      case 0:
+      if (this.alive) {
+        if (this.visible) {
+          this.route = BFS(mesh[this.XBlock][this.YBlock]);
+          bfscount += 1;
+          this.p = this.route.length - 1;
+          let str = JSON.stringify(this.route, null, 4);
+          console.log(str);
+          this.st = 1;
+        }
+      }
+      break;
+      case 1:
+      if (this.alive) {
+        this.dx = this.speed * (this.route[this.p].x - this.x) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
+        this.dy = this.speed * (this.route[this.p].y - this.y) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
+        this.x += this.dx;
+        this.y += this.dy;
+        if (Math.sqrt(Math.pow(this.x - this.route[this.p].x, 2) + Math.pow(this.y - this.route[this.p].y, 2)) <= 2) {
+          if (this.p - 1 === -1) {
+            this.st = 0;
+          } else {
+            this.p -= 1;
+          }
+        }
+      }
+      break;
+    }
+
+    /*switch(this.st) {
       case 0:
         if (this.alive) {
           this.dx = this.speed * (this.route[this.p].x - this.x) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
@@ -95,7 +129,7 @@ class Target {
           }
         }
         break;
-    }
+    }*/
     this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
     this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
   }
@@ -107,18 +141,6 @@ class Target {
       ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.r * scale, 0, Math.PI * 2);
       ctx.fillStyle = "yellow";
       ctx.fill();
-      ctx.closePath();
-      ctx.beginPath();
-      ctx.lineWidth = 0.5;
-      ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.o * scale, 0, Math.PI * 2);
-      ctx.strokeStyle = "black";
-      ctx.stroke();
-      ctx.closePath();
-      ctx.beginPath();
-      ctx.lineWidth = 0.5;
-      ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.s * scale, 0, Math.PI * 2);
-      ctx.strokeStyle = "black";
-      ctx.stroke();
       ctx.closePath();
     } else {
       ctx.beginPath();

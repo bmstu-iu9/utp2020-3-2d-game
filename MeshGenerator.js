@@ -15,12 +15,12 @@ const generateMesh = () => {
       x = i * blockSize + blockCenter;
       y = j * blockSize + blockCenter;
       if (tileMap[j][i] == "white") {
-        mesh[i][j] = {x: x, y: y, color : 0, bfs: 0, vision: [], def: 0};
+        mesh[i][j] = {x: x, y: y, color : 0, bfs: 0, vision: [], def: 4, incidence: []};
       } else {
-        mesh[i][j] = {x: x, y: y, color : 1, bfs: 0, vision: [], def: 0};
+        mesh[i][j] = {x: x, y: y, color : 1, bfs: 0, vision: [], def: 4, incidence: []};
       }
       for (let k = 0; k < degNum; k++) {
-        if (mesh[i][j].color === 0) {
+        if (mesh[i][j].color === 0 || mesh[i][j].color === 1) {
           tx = Math.cos(k * step * Math.PI / 180) + x;
           ty = Math.sin(k * step * Math.PI / 180) + y;
           dx = (tx - x) / Math.sqrt(Math.pow(tx - x, 2) + Math.pow(ty - y, 2));
@@ -45,31 +45,39 @@ const generateMesh = () => {
     for (let j = 0; j < mesh[0].length; j++) {
       if (i !== 0) {
         if (mesh[i - 1][j].color === 1) {
-          mesh[i][j].def += 1;
+          mesh[i][j].def -= 1;
+        } else {
+          mesh[i][j].incidence.push({i: i - 1, j: j});
         }
       } else {
-        mesh[i][j].def += 1;
+        mesh[i][j].def -= 1;
       }
       if (j !== 0) {
         if (mesh[i][j - 1].color === 1) {
-          mesh[i][j].def += 1;
+          mesh[i][j].def -= 1;
+        } else {
+          mesh[i][j].incidence.push({i: i, j: j - 1});
         }
       } else {
-        mesh[i][j].def += 1;
+        mesh[i][j].def -= 1;
       }
       if (i !== mesh.length - 1) {
         if (mesh[i + 1][j].color === 1) {
-          mesh[i][j].def += 1;
+          mesh[i][j].def -= 1;
+        } else {
+          mesh[i][j].incidence.push({i: i + 1, j: j});
         }
       } else {
-        mesh[i][j].def += 1;
+        mesh[i][j].def -= 1;
       }
       if (j !== mesh[0].length - 1) {
         if (mesh[i][j + 1].color === 1) {
-          mesh[i][j].def += 1;
+          mesh[i][j].def -= 1;
+        } else {
+          mesh[i][j].incidence.push({i: i, j: j + 1});
         }
       } else {
-        mesh[i][j].def += 1;
+        mesh[i][j].def -= 1;
       }
     }
   }

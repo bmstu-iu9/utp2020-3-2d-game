@@ -96,10 +96,10 @@ const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
                           realOffsetX, realOffsetY, realW, realH, playerSpeed, spritePl);
 
 const targets = [];
-targets.push(new Target(15, 30, 5, [{x: 15, y: 30}, {x: 15, y: 195}]));
-targets.push(new Target(220, 100, 5, [{x: 220, y: 100}, {x: 120, y: 25}]));
-targets.push(new Target(85, 285, 5, [{x: 85, y: 285}, {x: 130, y: 205}, {x: 215, y: 205}, {x: 215, y: 295}]));
-targets.push(new Target(200, 100, 5, [{x: 260, y: 115}, {x: 260, y: 185}]));
+targets.push(new Target(15, 30, 5));
+targets.push(new Target(130, 100, 5));
+targets.push(new Target(80, 285, 5));
+targets.push(new Target(200, 100, 5));
 
 const weapons = new Set();
 weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
@@ -115,10 +115,10 @@ const init = () => {
   player.init(playerStartX, playerStartY);
 
   targets.splice(0, targets.length);
-  targets.push(new Target(15, 30, 5, [{x: 15, y: 30}, {x: 15, y: 195}]));
-  targets.push(new Target(220, 100, 5, [{x: 220, y: 100}, {x: 120, y: 25}]));
-  targets.push(new Target(85, 285, 5, [{x: 85, y: 285}, {x: 130, y: 205}, {x: 215, y: 205}, {x: 215, y: 295}]));
-  targets.push(new Target(200, 100, 5, [{x: 260, y: 115}, {x: 260, y: 185}]));
+  targets.push(new Target(15, 30, 5));
+  targets.push(new Target(130, 100, 5));
+  targets.push(new Target(80, 285, 5));
+  targets.push(new Target(200, 100, 5));
 
   weapons.clear();
   weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));

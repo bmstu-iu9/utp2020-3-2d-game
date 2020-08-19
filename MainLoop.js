@@ -96,7 +96,10 @@ const draw = () => {
 
   targets.forEach(target => {
     if (player.vis(target.x, target.y)) {
+      target.visible = true;
       target.draw(1 / camera.scaleX);
+    } else {
+      target.visible = false;
     }
   });
 
