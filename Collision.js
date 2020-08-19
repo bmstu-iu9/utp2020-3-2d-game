@@ -65,11 +65,11 @@ const collision = () => {
   }
 }
 
-let collisionPlayer = (x, y, h, w) => {
-  let xBlock = (x - (x % worldTileSize)) / worldTileSize;
-  let yBlock = (y - (y % worldTileSize)) / worldTileSize;
-  let xBlock1 = (x + w - ((x + w) % worldTileSize)) / worldTileSize;
-  let yBlock1 = (y + h - ((y + h) % worldTileSize)) / worldTileSize;
+let collisionPlayer = (x, y, w, h) => {
+  let xBlock = Math.floor(x / worldTileSize);
+  let yBlock = Math.floor(y / worldTileSize);;
+  let xBlock1 = Math.ceil((x + w) / worldTileSize);
+  let yBlock1 = Math.ceil((y + h) / worldTileSize);
   let f = true;
 
   for (let i = xBlock; i != xBlock1; i++) {
