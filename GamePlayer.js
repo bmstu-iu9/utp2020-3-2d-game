@@ -118,48 +118,44 @@ class Player {
   }
 
   move() {
-    if ((downPressed) && (collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH))) {
-      if (this.realYCenter < images["map"].naturalHeight) {
-        this.realY += this.speed;
-        this.realYCenter += this.speed;
-        this.y += this.speed;
-        this.Y_Center += this.speed;
-      }
+    if (downPressed && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
+      this.realY += this.speed;
+      this.realYCenter += this.speed;
+      this.y += this.speed;
+      this.Y_Center += this.speed;
+
       this.sprite.down.x = worldToCanvas(this.X_Center, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Down";
       this.sprite.down.update();
-    } else if (upPressed && (collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH))) {
-      if (this.realYCenter !== 0) {
-        this.y -= this.speed;
-        this.realY -= this.speed;
-        this.realYCenter -= this.speed;
-        this.Y_Center -= this.speed;
-      }
+    } else if (upPressed && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
+      this.y -= this.speed;
+      this.realY -= this.speed;
+      this.realYCenter -= this.speed;
+      this.Y_Center -= this.speed;
+
       this.sprite.up.x = worldToCanvas(this.X_Center, 0);
       this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Up";
       this.sprite.up.update();
     }
 
-    if (rightPressed && (collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH))) {
-      if (this.realXCenter < images["map"].naturalWidth) {
-        this.x += this.speed;
-        this.realX += this.speed;
-        this.realXCenter += this.speed;
-        this.X_Center += this.speed;
-      }
+    if (rightPressed && collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH)) {
+      this.x += this.speed;
+      this.realX += this.speed;
+      this.realXCenter += this.speed;
+      this.X_Center += this.speed;
+
       this.sprite.right.x = worldToCanvas(this.X_Center, 0);
       this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Right";
       this.sprite.right.update();
-    } else if (leftPressed && (collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH))) {
-      if (this.realXCenter !== 0) {
-        this.x -= this.speed;
-        this.realX -= this.speed;
-        this.realXCenter -= this.speed;
-        this.X_Center -= this.speed;
-      }
+    } else if (leftPressed && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
+      this.x -= this.speed;
+      this.realX -= this.speed;
+      this.realXCenter -= this.speed;
+      this.X_Center -= this.speed;
+
       this.sprite.left.x = worldToCanvas(this.X_Center, 0);
       this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
       this.direction = "Left";
