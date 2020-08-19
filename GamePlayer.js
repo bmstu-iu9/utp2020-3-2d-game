@@ -30,6 +30,7 @@ class Player {
     this.hp = 2;
     this.dead = false;
     this.fire = false;
+    this.shooting = false;
     this.weapon = new Weapon(0);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
 
@@ -56,11 +57,10 @@ class Player {
     this.Y_Center += dy;
     this.realXCenter += dx;
     this.realYCenter += dy;
-    this.prevDirect = "Down";
-    this.direction = "Down";
     this.hp = 2;
     this.dead = false;
     this.fire = false;
+    this.shooting = false;
     this.weapon = new Weapon(0);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
@@ -88,10 +88,15 @@ class Player {
       this.sprite.right.drawBodySprite();
     }
     if (this.fire) {
-      if (!this.weapon.emptyMagazine()) {
-        this.sprite.shoot.drawBodySprite();
+      if (!this.weapon.isReloading()) {
+        if (!this.weapon.emptyMagazine()) {
+          this.sprite.shoot.drawBodySprite();
+        } else {
+          this.sprite.pl.drawBodySprite();
+        }
       } else {
-        this.sprite.pl.drawBodySprite();
+          this.sprite.pl.drawBodySprite();
+          this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
       }
     }
 
@@ -241,13 +246,14 @@ class Player {
       let normLen = 2;
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
-
+      this.shooting = true;
       this.fire = this.weapon.shoot(
                   this.realXCenter + (canvasToWorld(sight.x, 0) - this.realXCenter) * dist1 / dist2 + normX,
                   this.realYCenter + (canvasToWorld(sight.y, 1) - this.realYCenter) * dist1 / dist2 + normY,
                   canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
       this.weapon.shootExecuted = 1;
     } else {
+      this.shooting = false;
       this.fire = false;
       this.weapon.shootExecuted = 0;
     }
