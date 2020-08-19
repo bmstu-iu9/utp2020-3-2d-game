@@ -124,14 +124,6 @@ class Player {
         this.realYCenter += this.speed;
         this.y += this.speed;
         this.Y_Center += this.speed;
-        // временный костыль, связанный с недоработкой сетки навигации
-        if (this.realYCenter >= images["map"].naturalHeight) {
-          this.realYCenter = images["map"].naturalHeight - 1;
-          this.realY = this.realYCenter - this.realH / 2;
-          this.y = this.realY - realOffsetY;
-          this.Y_Center = this.y + this.h_World / 2;
-        }
-        //
       }
       this.sprite.down.x = worldToCanvas(this.X_Center, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
@@ -156,12 +148,6 @@ class Player {
         this.realX += this.speed;
         this.realXCenter += this.speed;
         this.X_Center += this.speed;
-        if (this.realXCenter >= images["map"].naturalWidth) {
-          this.realXCenter = images["map"].naturalWidth - 1;
-          this.realX = this.realXCenter - this.realW / 2;
-          this.x = this.realX - realOffsetX;
-          this.X_Center = this.x + this.w_World / 2;
-        }
       }
       this.sprite.right.x = worldToCanvas(this.X_Center, 0);
       this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
@@ -303,7 +289,7 @@ class Player {
     let deg = degRad * 180 / Math.PI / 10
     let deg1 = Math.floor(deg);
     let deg2 = Math.ceil(deg) % 36;
-    /*let vx = this.realXCenter - mesh[this.XBlock][this.YBlock].x;
+    let vx = this.realXCenter - mesh[this.XBlock][this.YBlock].x;
     let vy = this.realYCenter - mesh[this.XBlock][this.YBlock].y;
     let blocks = [];
     if (vx > 0) {
@@ -365,8 +351,8 @@ class Player {
     }
     let tempRes1 = ((blocks[3].x - this.realXCenter) * visDist[0] + (this.realXCenter - blocks[0].x) * visDist[2]) / 10;
     let tempRes2 = ((blocks[3].x - this.realXCenter) * visDist[1] + (this.realXCenter - blocks[0].x) * visDist[3]) / 10;
-    let res = ((blocks[3].y - this.realYCenter) * tempRes1 + (this.realYCenter - blocks[0].y) * tempRes2) / 10;*/
-    let res = mesh[this.XBlock][this.YBlock].vision[deg1] + (mesh[this.XBlock][this.YBlock].vision[deg2] - mesh[this.XBlock][this.YBlock].vision[deg1]) * (deg - deg1);
+    let res = ((blocks[3].y - this.realYCenter) * tempRes1 + (this.realYCenter - blocks[0].y) * tempRes2) / 10;
+    //let res = mesh[this.XBlock][this.YBlock].vision[deg1] + (mesh[this.XBlock][this.YBlock].vision[deg2] - mesh[this.XBlock][this.YBlock].vision[deg1]) * (deg - deg1);
     let dist = Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
                          Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2));
     return res > dist;
