@@ -209,6 +209,8 @@ class Weapon {
   pickUp() {
     clearInterval(this.stepId);
     clearInterval(this.nullId);
+    this.stepId = null;
+    this.nullId = null;
     weapons.delete(this);
   }
 
