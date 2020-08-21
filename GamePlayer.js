@@ -91,7 +91,7 @@ class Player {
     if (this.direction === "Right") {
       this.sprite.right.drawBodySprite();
     }
-    if (this.fire) {
+    if (this.shooting) {
       if (!this.weapon.isReloading()) {
         if (!this.weapon.emptyMagazine()) {
           this.sprite.shoot.drawBodySprite();
@@ -104,7 +104,7 @@ class Player {
       }
     }
 
-    if (!this.fire) {
+    if (!this.shooting) {
       if (this.weapon.isReloading()) {
         this.sprite.pl.drawBodySprite();
         this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
