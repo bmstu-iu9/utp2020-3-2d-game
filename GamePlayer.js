@@ -22,6 +22,7 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
+    this.angle = 0;
     this.radius = 5;
     this.sprite = sprite;
     this.speed = speed;
@@ -57,7 +58,10 @@ class Player {
     this.Y_Center += dy;
     this.realXCenter += dx;
     this.realYCenter += dy;
+    this.prevDirect = "Right";
+    this.direction = "Right";
     this.hp = 2;
+    this.angle = 0;
     this.dead = false;
     this.fire = false;
     this.shooting = false;

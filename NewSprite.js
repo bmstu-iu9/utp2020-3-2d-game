@@ -58,8 +58,8 @@ class Sprite {
         deg = Math.PI + Math.atan((this.y - sight.y) / (this.x - sight.x)) - gunOffset;
       }
     }
+    player.angle = deg;
     ctx.rotate(deg);
-
     ctx.drawImage(
         this.image,
         this.srcX,
