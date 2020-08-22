@@ -105,6 +105,10 @@ const weapons = new Set();
 weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
 const grenades = new Set();
 
+const doors = [];
+doors.push(new Door(30, 61, 8, 2, false, images["door"]));
+doors.push(new Door(121, 70, 8, 2, true, images["door"]));
+
 const init = () => {
   bullets.clear();
   rounds.splice(0, rounds.length);
@@ -123,4 +127,8 @@ const init = () => {
   weapons.clear();
   weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
   grenades.clear();
+
+  doors.splice(0, doors.length);
+  doors.push(new Door(30, 61, 8, 2, false, images["door"]));
+  doors.push(new Door(121, 70, 8, 2, true, images["door"]));
 }
