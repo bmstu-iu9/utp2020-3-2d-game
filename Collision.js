@@ -22,7 +22,8 @@ const collision = () => {
         if (!f) {
           let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
           let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
-          if ((tileMap[yBlock][xBlock] == "black") || (tileMap[yBlock][xBlock] == "cover")) {
+          if ((tileMap[yBlock][xBlock] === "black") || (tileMap[yBlock][xBlock] === "cover" ||
+               tileMap[yBlock][xBlock] === "red")) {
             f = true;
           }
           if (f) {
@@ -76,8 +77,10 @@ let collisionPlayer = (x, y, w, h) => {
     for (let j = yBlock; j != yBlock1; j++) {
       if ((i < 0) || (i >= tileMap[0].length) ||
           (j < 0) || (j >= tileMap.length) ||
-          (tileMap[j][i] == "black") ||
-          (tileMap[j][i] == "cover")) {
+          (tileMap[j][i] === "black") ||
+          (tileMap[j][i] === "cover") ||
+          tileMap[j][i] === "orange" ||
+          tileMap[j][i] === "red") {
             f = false;
           }
       if (!f) break;

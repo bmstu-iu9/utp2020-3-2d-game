@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 let RAF =
   window.requestAnimationFrame ||
   window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -31,10 +31,10 @@ canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
 const cameraStartX = 0;
-const cameraStartY = 0;
+const cameraStartY = 841;
 const moveBorder = 150;
-const visiblePart = 200;
-let cameraSpeed = 1;
+const visiblePart = 500;
+let cameraSpeed = 4;
 
 const worldTileSize = 10;
 const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
@@ -46,10 +46,10 @@ let sightHeight = 2;
 const bullets = new Set();
 const rounds = [];
 
-const playerStartX = 130;
-const playerStartY = 130;
-const playerWidth = 14;
-const playerHeight = 12;
+const playerStartX = 200;
+const playerStartY = 1234;
+const playerWidth = 56;
+const playerHeight = 48;
 let playerSpeed = cameraSpeed;
 const spriteTileW = 96;
 const spriteTileH = 64;
@@ -97,7 +97,7 @@ const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
 
 const targets = [];
 //targets.push(new Target(15, 30, 5));
-targets.push(new Target(130, 100, 5));
+// targets.push(new Target(130, 100, 5));
 //targets.push(new Target(80, 285, 5));
 //targets.push(new Target(200, 100, 5));
 
