@@ -33,8 +33,8 @@ canvas.width = window.innerHeight;
 const cameraStartX = 0;
 const cameraStartY = 0;
 const moveBorder = 150;
-const visiblePart = 200;
-let cameraSpeed = 1;
+const visiblePart = 500;
+let cameraSpeed = 4;
 
 const worldTileSize = 10;
 const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
@@ -46,10 +46,10 @@ let sightHeight = 2;
 const bullets = new Set();
 const rounds = [];
 
-const playerStartX = 130;
-const playerStartY = 130;
-const playerWidth = 14;
-const playerHeight = 12;
+const playerStartX = 218;
+const playerStartY = 52;
+const playerWidth = 56;
+const playerHeight = 48;
 let playerSpeed = cameraSpeed;
 const spriteTileW = 96;
 const spriteTileH = 64;

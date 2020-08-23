@@ -81,7 +81,7 @@ const generateMesh = () => {
       }
     }
   }
-  let str = JSON.stringify(mesh, null, 4);
+  let str = JSON.stringify(mesh);
   console.log(str);
 }
 

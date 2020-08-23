@@ -34,7 +34,6 @@ const collision = () => {
           if (bul.justShooted == false) {
             if (collisionCircleRect(x1, y1, bul.bulletRadius, player.realX, player.realY, player.realH, player.realW)){
               f = true;
-              console.log("bullet" + " " + x1 + " " + y1);
             }
           }
         }

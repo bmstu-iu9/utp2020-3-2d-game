@@ -65,7 +65,7 @@ const generateTileMap = () => {
     }
   }
 
-  let str = JSON.stringify(map, null, 4);
+  let str = JSON.stringify(map);
   console.log(str);
 
   return map;
