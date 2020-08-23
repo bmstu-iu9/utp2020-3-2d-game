@@ -23,7 +23,7 @@ class Player {
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
     this.angle = 0;
-    this.radius = 5;
+    this.actionRadius = 10;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Right";
@@ -245,10 +245,9 @@ class Player {
     }
 
     if (pickUp) {
-      let radius = 10;
       for (let item of weapons) {
         let dv = Math.sqrt(Math.pow(this.realX - item.x, 2) + Math.pow(this.realY - item.y, 2));
-        if (dv <= radius) {
+        if (dv <= this.actionRadius) {
           let gun = item;
           item.pickUp();
           this.weapon.drop(gun.x, gun.y);
@@ -264,6 +263,20 @@ class Player {
         }
       }
       pickUp = false;
+    }
+
+    if (openDoor) {
+      for (let i = 0; i < doors.length; i++) {
+        let door = doors[i];
+        let cDoor = door.getCenter();
+        let dist = Math.sqrt(Math.pow(this.realXCenter - cDoor.x, 2) +
+                             Math.pow(this.realYCenter - cDoor.y, 2));
+        if (dist < this.actionRadius) {
+          door.toggle();
+          break;
+        }
+      }
+      openDoor = false;
     }
 
   }

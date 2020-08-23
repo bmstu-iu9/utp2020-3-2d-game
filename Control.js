@@ -11,6 +11,7 @@ let pickUp = false;
 let throwGrenade = false;
 let throwTime = 0;
 let paused = true;
+let openDoor = false;
 
 const keyUpHandler = (e) => {
   if (!paused) {
@@ -25,6 +26,8 @@ const keyUpHandler = (e) => {
     } else if (e.keyCode === 71 && !throwGrenade) { //g
       throwGrenade = true;
       throwTime = performance.now() - throwTime;
+    } else if (e.keyCode === 70) {
+      openDoor = true;
     }
   }
   if (e.keyCode === 27 && !firstStart) { //esc
