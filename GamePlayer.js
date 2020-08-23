@@ -282,7 +282,7 @@ class Player {
   vis(tx, ty) {
     let degRad = Math.acos((tx - mesh[this.XBlock][this.YBlock].x) /
                  Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
-                 Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2)));
+                           Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2)));
     if (ty < mesh[this.XBlock][this.YBlock].y) {
       degRad = 2 * Math.PI - degRad;
     }
@@ -355,6 +355,13 @@ class Player {
     //let res = mesh[this.XBlock][this.YBlock].vision[deg1] + (mesh[this.XBlock][this.YBlock].vision[deg2] - mesh[this.XBlock][this.YBlock].vision[deg1]) * (deg - deg1);
     let dist = Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
                          Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2));
-    return res > dist;
+    let vx1 = canvasToWorld(sight.x) - this.realXCenter;
+    let vx2 = tx - this.realXCenter;
+    let vy1 = canvasToWorld(sight.y) - this.realYCenter;
+    let vy2 = ty - this.realYCenter;
+    let visAngle = Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
+                             (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
+                              Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
+    return res > dist && visAngle < Math.PI / 2;
   }
 }

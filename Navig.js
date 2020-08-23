@@ -46,21 +46,17 @@ class Queue {
 let bfscount = 1;
 
 const BFS = (st) => {
-  let incid = null;
   let cameFrom = new Map();
-  //cameFrom.set(st, null);
   let queue = new Queue();
   let v = null;
   st.bfs = bfscount;
-  console.log(bfscount);
   queue.enqueue(st);
   while (!queue.isEmpty()) {
     v = queue.dequeue();
     if ((checkNode(v) || checkDist(st, v)) && v !== st) {
-      console.log("+");
       break;
     }
-    for (incid of v.incidence) {
+    for (let incid of v.incidence) {
       if (mesh[incid.i][incid.j].bfs !== bfscount) {
         mesh[incid.i][incid.j].bfs = bfscount;
         if (checkDef(mesh[incid.i][incid.j], st)) {
@@ -106,11 +102,11 @@ class PriorityQueue {
     let i = this.count;
     this.count += 1;
     this.heap.push(new Elem2(val, k));
-    while (i > 0 && this.heap[(i - 1) / 2].cost > this.heap[i].cost) {
-      let tmp = this.heap[(i - 1) / 2];
-      this.heap[(i - 1) / 2] = this.heap[i];
+    while (i > 0 && this.heap[Math.floor((i - 1) / 2)].cost > this.heap[i].cost) {
+      let tmp = this.heap[Math.floor((i - 1) / 2)];
+      this.heap[Math.floor((i - 1) / 2)] = this.heap[i];
       this.heap[i] = tmp;
-      i = (i - 1) / 2;
+      i = Math.floor((i - 1) / 2);
     }
   }
 
@@ -121,7 +117,10 @@ class PriorityQueue {
       this.heap[0] = this.heap[this.count];
       this.heap.pop();
       this.heapify(0, this.count);
+    } else {
+      this.heap.pop();
     }
+    return res;
   }
 
   heapify(i, n) {
@@ -147,18 +146,19 @@ class PriorityQueue {
 }
 
 const A_Star = (start, goal) => {
-  prQueue = new PriorityQueue();
+  let prQueue = new PriorityQueue();
+  let cur = null;
   prQueue.enqueue(start, 0);
   let cameFrom = new Map();
   let costSoFar = new Map();
   costSoFar.set(start, 0);
   while (!prQueue.isEmpty()) {
-    let cur = prQueue.dequeue();
+    cur = prQueue.dequeue();
     if (cur === goal) {
       break;
     }
-    for (incid of cur.incidence) {
-      let newCost = costSoFar.get(mesh[incid.i][incid.j]) + findCost(mesh[incid.i][incid.j]);
+    for (let incid of cur.incidence) {
+      let newCost = costSoFar.get(cur) + findCost(mesh[incid.i][incid.j]);
       if (!costSoFar.has(mesh[incid.i][incid.j]) || newCost < costSoFar.get(mesh[incid.i][incid.j])) {
         costSoFar.set(mesh[incid.i][incid.j], newCost);
         let priority = newCost + heuristic(mesh[incid.i][incid.j], goal);
@@ -178,14 +178,18 @@ const makeRoute = (cF, s, g) => {
     cur = cF.get(cur);
     route.push(cur);
   }
-  route.pop();
+  //route.pop();
   return route;
 }
 
 const findCost = (elem) => {
-  return elem.def; //+ checkVis();
+  if (player.vis(elem.x, elem.y)){
+    return elem.def + 100;
+  } else {
+    return elem.def;
+  }
 }
 
 const heuristic = (block1, block2) => {
-  return Math.sqrt(Math.pow(block1.x - block2.x, 2) +  Math.pow(block1.y - block2.y, 2));
+  return Math.round(Math.sqrt(Math.pow(block1.x - block2.x, 2) +  Math.pow(block1.y - block2.y, 2)));
 }
