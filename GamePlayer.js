@@ -72,6 +72,7 @@ class Player {
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
         break;
@@ -112,6 +113,7 @@ class Player {
         switch (this.weapon.id) {
           case 0:
             this.sprite.pl.indexFrameY = 0;
+            break;
           case 2:
             this.sprite.pl.indexFrameY = 2;
             break;
@@ -196,6 +198,7 @@ class Player {
         switch (this.weapon.id) {
         case 0:
           this.sprite.pl.indexFrameY = 1;
+          break;
         case 2:
           this.sprite.pl.indexFrameY = 3;
           break;
@@ -255,6 +258,7 @@ class Player {
           switch (this.weapon.id) {
             case 0:
               this.sprite.pl.indexFrameY = 0;
+              break;
             case 2:
               this.sprite.pl.indexFrameY = 2;
               break;
@@ -286,6 +290,7 @@ class Player {
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
         break;
