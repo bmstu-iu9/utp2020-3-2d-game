@@ -9,7 +9,7 @@ class Weapon {
         this.magazines = [];
         this.magazines.push(30);
         this.magazines.push(30);
-        this.bulletSpeed = 12;
+        this.bulletSpeed = 36;
         this.reloadTime = 1.5; //sec
         this.image = images["ak47"];
         this.width = 13;
@@ -24,7 +24,7 @@ class Weapon {
         this.magazines = [];
         this.magazines.push(30);
         this.magazines.push(30);
-        this.bulletSpeed = 16;
+        this.bulletSpeed = 48;
         this.reloadTime = 1.2;
         this.image = images["m16"];
         this.width = 14;
@@ -39,7 +39,7 @@ class Weapon {
         this.magazines = [];
         this.magazines.push(6);
         this.magazines.push(6);
-        this.bulletSpeed = 15;
+        this.bulletSpeed = 45;
         this.reloadTime = 3.5;
         this.image = images["remington870"];
         this.width = 15;

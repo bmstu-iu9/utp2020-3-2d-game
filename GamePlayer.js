@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 // индексы для спрайтов действия игрока(в классе NewSprite для framesY)
 // 0 - ходьба с ak-47
 // 1 - reload ak-47
@@ -226,13 +226,13 @@ class Player {
       }
       this.sprite.shoot.update();
 
-      let k1 = 6;
+      let k1 = 30;
       let k2 = 0;
       let k3 = (canvasToWorld(sight.x, 0) - this.realXCenter);
       let k4 = (canvasToWorld(sight.y, 1) - this.realYCenter);
       let dist1 = Math.sqrt(k1*k1 + k2*k2);
       let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let normLen = 2;
+      let normLen = 12;
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
       this.shooting = true;
