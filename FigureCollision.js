@@ -43,7 +43,7 @@ let collisionCircleRect = (xC, yC, r, xR, yR, h, w) => {
   if ((!f) && (xC >= xR) && (xC <= xR + w) && (yC > yR + h) && (r >= yC - yR - h)) {
     f = true;
   }
-  if ((!f) && (yC >= xR) && (yC <= yR + h) && (xC < xR) && (r >= xR - xC)) {
+  if ((!f) && (yC >= yR) && (yC <= yR + h) && (xC < xR) && (r >= xR - xC)) {
     f = true;
   }
   if ((!f) && (yC >= yR) && (yC <= yR + h) && (xC > xR + w) && (r >= xC - xR - w)) {
