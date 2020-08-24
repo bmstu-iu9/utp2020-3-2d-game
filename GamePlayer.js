@@ -4,6 +4,12 @@
 // 1 - reload ak-47
 // 2 - ходьба с shotgun
 // 3 - reload  shotgun
+// 4 - ходьба с m16
+// 5 - reload m16
+// sprites shoot :
+// 0 - shoot ak47
+// 1 - shoot shotgun
+// 2 - shoot m16
 
 class Player {
 
@@ -38,6 +44,10 @@ class Player {
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        break;
+      case 1:
+        this.sprite.pl.indexFrameY = 4;
+        break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
         break;
@@ -72,6 +82,9 @@ class Player {
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        break;
+      case 1:
+        this.sprite.pl.indexFrameY = 4;
         break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
@@ -114,6 +127,9 @@ class Player {
           case 0:
             this.sprite.pl.indexFrameY = 0;
             break;
+          case 1:
+            this.sprite.pl.indexFrameY = 4;
+            break;
           case 2:
             this.sprite.pl.indexFrameY = 2;
             break;
@@ -132,6 +148,7 @@ class Player {
 
       this.sprite.down.x = worldToCanvas(this.X_Center, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.pl.update();
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
@@ -142,6 +159,7 @@ class Player {
 
       this.sprite.up.x = worldToCanvas(this.X_Center, 0);
       this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.pl.update();
       this.direction = "Up";
       this.sprite.up.update();
     }
@@ -154,6 +172,7 @@ class Player {
 
       this.sprite.right.x = worldToCanvas(this.X_Center, 0);
       this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.pl.update();
       this.direction = "Right";
       this.sprite.right.update();
     } else if (leftPressed && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
@@ -164,6 +183,7 @@ class Player {
 
       this.sprite.left.x = worldToCanvas(this.X_Center, 0);
       this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.pl.update();
       this.direction = "Left";
       this.sprite.left.update();
     }
@@ -199,6 +219,9 @@ class Player {
         case 0:
           this.sprite.pl.indexFrameY = 1;
           break;
+        case 1:
+          this.sprite.pl.indexFrameY = 5;
+          break;
         case 2:
           this.sprite.pl.indexFrameY = 3;
           break;
@@ -209,21 +232,22 @@ class Player {
 
     this.sprite.pl.x = worldToCanvas(this.X_Center, 0);
     this.sprite.pl.y = worldToCanvas(this.Y_Center, 1);
-    this.sprite.pl.update();
+    if (this.weapon.isReloading()) this.sprite.pl.update();
 
     if (mouseDown) {
       switch (this.weapon.id) {
         case 0:
           this.sprite.shoot.indexFrameY = 0;
-          this.sprite.shoot.x = this.sprite.pl.x;
-          this.sprite.shoot.y = this.sprite.pl.y;
+          break;
+        case 1:
+          this.sprite.pl.indexFrameY = 2;
           break;
         case 2:
           this.sprite.shoot.indexFrameY = 1;
-          this.sprite.shoot.x = this.sprite.pl.x;
-          this.sprite.shoot.y = this.sprite.pl.y;
           break;
       }
+      this.sprite.shoot.x = this.sprite.pl.x;
+      this.sprite.shoot.y = this.sprite.pl.y;
       this.sprite.shoot.update();
 
       let k1 = 30;
@@ -259,6 +283,9 @@ class Player {
             case 0:
               this.sprite.pl.indexFrameY = 0;
               break;
+            case 1:
+              this.sprite.pl.indexFrameY = 4;
+              break;
             case 2:
               this.sprite.pl.indexFrameY = 2;
               break;
@@ -290,6 +317,9 @@ class Player {
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        break;
+      case 1:
+        this.sprite.pl.indexFrameY = 4;
         break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
