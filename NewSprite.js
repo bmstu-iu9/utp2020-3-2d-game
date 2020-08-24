@@ -8,19 +8,22 @@ class Sprite {
     this.indexFrameY = 0;
     this.x = x;
     this.y = y;
-    this.currentFrame = 0;
+    this.currentFrame = [];
     this.tickCount = img.width / srcW;
     this.countIndexY = img.height / srcH;
     this.width = srcW;
     this.height = srcH;
     this.speed = 5;
     this.counter = 0;
+    for (let i = 0; i!=framesY.length; i++){
+      this.currentFrame[i] = 0;
+    }
   }
 
   update() {
       if (this.counter === (this.speed - 1)) {
-      this.currentFrame = ++this.currentFrame % this.tickCount;
-      this.srcX = this.currentFrame * this.width;
+      this.currentFrame[this.indexFrameY] = ++this.currentFrame[this.indexFrameY] % this.tickCount;
+      this.srcX = this.currentFrame[this.indexFrameY] * this.width;
       this.srcY = this.framesY[this.indexFrameY] * this.height;
     }
 
