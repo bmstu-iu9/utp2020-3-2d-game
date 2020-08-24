@@ -241,6 +241,7 @@ class Player {
           break;
         case 1:
           this.sprite.pl.indexFrameY = 2;
+          this.sprite.shoot.indexFrameY = 2;
           break;
         case 2:
           this.sprite.shoot.indexFrameY = 1;
