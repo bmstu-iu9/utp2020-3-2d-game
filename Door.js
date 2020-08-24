@@ -34,6 +34,8 @@ class Door {
     this.lastAngle = 0;
     this.offsetAngle = Math.atan(h / w);
     this.moving = false;
+    this.st = 0;
+    this.blocks = [];
   }
 
   draw() {
@@ -118,10 +120,35 @@ class Door {
     else return this.w;
   }
 
+  colorWhiteBlocks() {
+    let blockX1 = Math.floor(this.getX() / worldTileSize);
+    let blockX2 = Math.floor((this.getX() + this.getW()) / worldTileSize);
+    let blockY1 = Math.floor(this.getY() / worldTileSize);
+    let blockY2 = Math.floor((this.getY() + this.getH()) / worldTileSize);
+
+    for (let j = blockY1; j != blockY2; j++) {
+      for (let i = blockX1; i != blockX2; i++) {
+        tileMap[j][i] = "white";
+      }
+    }
+  }
+
+  colorBrownBlocks() {
+    let blockX1 = Math.floor(this.getX() / worldTileSize);
+    let blockX2 = Math.floor((this.getX() + this.getW()) / worldTileSize);
+    let blockY1 = Math.floor(this.getY() / worldTileSize);
+    let blockY2 = Math.floor((this.getY() + this.getH()) / worldTileSize);
+
+    for (let j = blockY1; j != blockY2; j++) {
+      for (let i = blockX1; i != blockX2; i++) {
+        tileMap[j][i] = "door";
+      }
+    }
+  }
+
   toggle() {
     this.horizontal = !this.horizontal;
     this.time = this.maxTime;
-
     if (this.moving) {
       if (this.dt > 0) {
         let half = (this.maxAngle + this.minAngle) / 2;

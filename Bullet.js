@@ -18,7 +18,6 @@ class Bullet {
   draw() {
     if (this.justShooted){
       this.drawRandomFire();
-      this.justShooted = false;
     } else this.drawRandomTail();
   }
 
@@ -105,6 +104,7 @@ class Bullet {
   updateCoordinates() {
     this.x += this.dx;
     this.y += this.dy;
+    if (this.justShooted) this.justShooted = false;
   }
 
   collide(tX, tY, tR) {

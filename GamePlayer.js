@@ -23,7 +23,7 @@ class Player {
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
     this.angle = 0;
-    this.actionRadius = 10;
+    this.actionRadius = rW / 2;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Right";
