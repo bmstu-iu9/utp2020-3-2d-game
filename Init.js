@@ -107,7 +107,10 @@ const grenades = new Set();
 
 const doors = [];
 doors.push(new Door(1200, 955, 80, 10, true, images["door"]));
-doors.push(new Door(121, 70, 8, 2, true, images["door"]));
+doors.push(new Door(1710, 955, 80, 10, true, images["door"]));
+doors.push(new Door(1700, 1135, 80, 10, true, images["door"]));
+doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
+doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
 
 const init = () => {
   bullets.clear();
