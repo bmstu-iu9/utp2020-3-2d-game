@@ -29,7 +29,7 @@ class Player {
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
     this.angle = 0;
-    this.actionRadius = rW / 2;
+    this.actionRadius = rW;
     this.sprite = sprite;
     this.speed = speed;
     this.prevDirect = "Right";
@@ -256,7 +256,7 @@ class Player {
       let k4 = (canvasToWorld(sight.y, 1) - this.realYCenter);
       let dist1 = Math.sqrt(k1*k1 + k2*k2);
       let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let normLen = 12;
+      let normLen = 5;
       let normX = -k4 / dist2 * normLen;
       let normY = k3 / dist2 * normLen;
       this.shooting = true;
@@ -273,8 +273,8 @@ class Player {
 
     if (pickUp) {
       for (let item of weapons) {
-        let dv = Math.sqrt(Math.pow(this.realX - item.x, 2) + Math.pow(this.realY - item.y, 2));
-        if (dv <= this.actionRadius) {
+        let dv = Math.sqrt(Math.pow(this.realXCenter - (item.x + item.width/2), 2) + Math.pow(this.realYCenter - (item.y + item.height/2), 2));
+        if (dv <= this.actionRadius + item.pickUpRadius) {
           let gun = item;
           item.pickUp();
           this.weapon.drop(gun.x, gun.y);
@@ -299,10 +299,9 @@ class Player {
     if (openDoor) {
       for (let i = 0; i < doors.length; i++) {
         let door = doors[i];
-        let cDoor = door.getCenter();
-        let dist = Math.sqrt(Math.pow(this.realXCenter - cDoor.x, 2) +
-                             Math.pow(this.realYCenter - cDoor.y, 2));
-        if (dist < this.actionRadius) {
+        if (collisionCircleRect(this.realXCenter, this.realYCenter, this.actionRadius,
+                                door.getX(), door.getY(), door.getH(), door.getW())) {
+          console.log("collision " + i);
           door.toggle();
           break;
         }

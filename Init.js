@@ -102,7 +102,7 @@ const targets = [];
 //targets.push(new Target(200, 100, 5));
 
 const weapons = new Set();
-weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
+weapons.add(new Weapon(1, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829));
 const grenades = new Set();
 
 const doors = [];
@@ -128,10 +128,13 @@ const init = () => {
   //targets.push(new Target(200, 100, 5));
 
   weapons.clear();
-  weapons.add(new Weapon(1, 50, 50)).add(new Weapon(2, 50, 90)).add(new Weapon(0, 80, 80));
+  weapons.add(new Weapon(1, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829));
   grenades.clear();
 
   doors.splice(0, doors.length);
-  doors.push(new Door(1200, 950, 80, 10, true, images["door"]));
-  doors.push(new Door(121, 70, 8, 2, true, images["door"]));
+  doors.push(new Door(1200, 955, 80, 10, true, images["door"]));
+  doors.push(new Door(1710, 955, 80, 10, true, images["door"]));
+  doors.push(new Door(1700, 1135, 80, 10, true, images["door"]));
+  doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
+  doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
 }

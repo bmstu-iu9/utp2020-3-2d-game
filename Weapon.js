@@ -12,7 +12,7 @@ class Weapon {
         this.bulletSpeed = 36;
         this.reloadTime = 1.5; //sec
         this.image = images["ak47"];
-        this.width = 13;
+        this.width = 39;
         this.roundImage = images["7.62gauge"];
         this.shotSound = new Sound(sounds["shot_ak47"], 1.095, 2, 0.3, 1.5);
         break;
@@ -27,7 +27,7 @@ class Weapon {
         this.bulletSpeed = 48;
         this.reloadTime = 1.2;
         this.image = images["m16"];
-        this.width = 14;
+        this.width = 42;
         this.roundImage = images["5.56gauge"];
         this.shotSound = new Sound(sounds["shot_m16"], 6.21, 7.33, 0.8, 6.7);
         break;
@@ -42,7 +42,7 @@ class Weapon {
         this.bulletSpeed = 45;
         this.reloadTime = 3.5;
         this.image = images["remington870"];
-        this.width = 15;
+        this.width = 45;
         this.roundImage = images["12gauge"];
         this.shotSound = new Sound(sounds["shot_remington"], 1, 2.2, 0.3, 1.4);
         break;
@@ -67,6 +67,7 @@ class Weapon {
     this.shootingEnabled = true;
     this.shootExecuted = 0;
     this.emptyMagazineSound = new Sound(sounds["empty"], 0.6, 1);
+    this.pickUpRadius = 10;
   }
   //0 - ak
   //1 - m16

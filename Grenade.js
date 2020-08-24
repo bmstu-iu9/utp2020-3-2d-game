@@ -11,7 +11,7 @@ class Grenade {
     this.dx = 0;
     this.dy = 0;
     //this.firstAnimTime = 0;
-    this.animRadius = 10;
+    this.animRadius = 20;
     this.transparency = 1;
   }
 
@@ -52,27 +52,27 @@ class Grenade {
       this.explode = true;
       this.clouds = [];
       this.clouds.push(new Cloud(this.x + 10, this.y + 5, Math.cos(-Math.PI / 4), Math.sin(-Math.PI / 4),
-                                 0.05, 2, "49, 49, 49", 1, 1));
+                                 0.05, 8, "49, 49, 49", 1, 1));
       this.clouds.push(new Cloud(this.x + 5, this.y + 10, Math.cos(Math.PI / 6), Math.sin(Math.PI / 6),
-                                 0.05, 4, "208, 208, 208", 1, 3));
+                                 0.05, 16, "208, 208, 208", 1, 3));
       this.clouds.push(new Cloud(this.x + 1, this.y + 3, Math.cos(Math.PI), Math.sin(Math.PI),
-                                 0.07, 4, "208, 208, 208", 1, 3));
+                                 0.07, 16, "208, 208, 208", 1, 3));
       this.clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(-3 * Math.PI / 4), Math.sin(- 3 * Math.PI / 4),
-                                 0.07, 4, "208, 208, 208", 1, 2.5));
+                                 0.07, 16, "208, 208, 208", 1, 2.5));
       this.clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(-Math.PI / 2), Math.sin(-Math.PI / 2),
-                                 0.07, 5, "49, 49, 49", 1, 2.5));
+                                 0.07, 20, "49, 49, 49", 1, 2.5));
       this.clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4),
-                                 0.03, 4, "49, 49, 49", 1, 2))
+                                 0.03, 16, "49, 49, 49", 1, 2))
       this.clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4),
-                                 0.07, 4, "208, 208, 208", 1, 4));
+                                 0.07, 16, "208, 208, 208", 1, 4));
       this.clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(0), Math.sin(0),
-                                 0.05, 4, "208, 208, 208", 1, 3));
+                                 0.05, 16, "208, 208, 208", 1, 3));
       this.clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(-3 * Math.PI / 4), Math.sin(- 3 * Math.PI / 4),
-                                 0.07, 4, "192, 192, 192", 1, 4.5));
+                                 0.07, 16, "192, 192, 192", 1, 4.5));
       this.clouds.push(new Cloud(this.x + 7, this.y + 2, Math.cos(-Math.PI), Math.sin(-Math.PI),
-                                 0.1, 4, "192, 192, 192", 1, 4.5));
+                                 0.1, 16, "192, 192, 192", 1, 4.5));
       this.clouds.push(new Cloud(this.x + 8, this.y + 8, Math.cos(0), Math.sin(0),
-                                 0.09, 4, "192, 192, 192", 1, 4.5))
+                                 0.09, 16, "192, 192, 192", 1, 4.5))
 
       setTimeout(() => {
         grenades.delete(this);
@@ -178,7 +178,7 @@ class Cloud {
   }
 
   draw() {
-    let step = 0.3;
+    let step = 0.8;
     for (let pxY = this.y - this.r; pxY < this.y + this.r; pxY += step) {
       for (let pxX = this.x - this.r; pxX < this.x + this.r; pxX += step){
         let dist = Math.sqrt(Math.pow(pxX - this.x, 2) + Math.pow(pxY - this.y, 2)) +
@@ -209,8 +209,8 @@ class Cloud {
 Grenade.maxSpeed = 5;
 Grenade.maxTime = 2; //sec
 Grenade.image = images["grenade"];
-Grenade.width = 4;
-Grenade.height = 4;
+Grenade.width = 10;
+Grenade.height = 10;
 Grenade.explosionTime = 5; //sec
 Grenade.animTime = 4; //sec
 Grenade.explosionRadius = 20;
