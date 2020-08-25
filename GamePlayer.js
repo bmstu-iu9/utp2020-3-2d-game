@@ -28,6 +28,10 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
+    this.xForCol = this.realX;
+    this.yForCol = this.realY;
+    this.xCenForCol = this.realXCenter;
+    this.yCenForCol = this.realYCenter;
     this.angle = 0;
     this.actionRadius = rW;
     this.sprite = sprite;
@@ -235,20 +239,22 @@ class Player {
     if (this.weapon.isReloading()) this.sprite.pl.update();
 
     if (mouseDown) {
+      this.sprite.shoot.x = this.sprite.pl.x;
+      this.sprite.shoot.y = this.sprite.pl.y;
       switch (this.weapon.id) {
         case 0:
           this.sprite.shoot.indexFrameY = 0;
+          this.sprite.shoot.update();
           break;
         case 1:
           this.sprite.shoot.indexFrameY = 2;
+          this.sprite.shoot.update();
           break;
         case 2:
           this.sprite.shoot.indexFrameY = 1;
+          this.sprite.shoot.update();
           break;
       }
-      this.sprite.shoot.x = this.sprite.pl.x;
-      this.sprite.shoot.y = this.sprite.pl.y;
-      this.sprite.shoot.update();
 
       let k1 = 30;
       let k2 = 0;
@@ -278,18 +284,11 @@ class Player {
           let gun = item;
           item.pickUp();
           this.weapon.drop(gun.x, gun.y);
-          this.weapon = gun;
-          switch (this.weapon.id) {
-            case 0:
-              this.sprite.pl.indexFrameY = 0;
-              break;
-            case 1:
-              this.sprite.pl.indexFrameY = 4;
-              break;
-            case 2:
-              this.sprite.pl.indexFrameY = 2;
-              break;
-          }
+          this.changeWeapon(gun);
+          this.sprite.pl.counter = this.sprite.pl.speed - 1;
+          this.sprite.shoot.counter = this.sprite.shoot.speed - 1;
+          this.sprite.pl.update();
+          this.sprite.shoot.update();
           break;
         }
       }
@@ -311,17 +310,20 @@ class Player {
 
   }
 
-  changeWeapon(id) {
-    this.weapon = new Weapon(id);
+  changeWeapon(gun) {
+    this.weapon = gun;
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        this.sprite.shoot.indexFrameY = 0;
         break;
       case 1:
         this.sprite.pl.indexFrameY = 4;
+        this.sprite.shoot.indexFrameY = 2;
         break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
+        this.sprite.shoot.indexFrameY = 1;
         break;
     }
   }
