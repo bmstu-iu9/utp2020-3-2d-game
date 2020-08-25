@@ -61,3 +61,21 @@ let collisionCircleRect = (xC, yC, r, xR, yR, h, w) => {
 
   return f;
 }
+
+const collisionLineRect = (sx, sy, tx, ty, LUx, LUy, RLx, RLy) => {
+  return collisionSegment(sx, sy, tx, ty, LUx, LUy, LUx, RLy) ||
+         collisionSegment(sx, sy, tx, ty, LUx, LUy, RLx, LUy) ||
+         collisionSegment(sx, sy, tx, ty, RLx, LUy, RLx, RLy) ||
+         collisionSegment(sx, sy, tx, ty, LUx, RLy, RLx, RLy);
+}
+
+const collisionSegment = (seg11x, seg11y, seg12x, seg12y, seg21x, seg21y, seg22x, seg22y) => {
+  return crossProduct(seg12x - seg11x, seg12y - seg11y, seg21x - seg11x, seg21y - seg11y) *
+         crossProduct(seg12x - seg11x, seg12y - seg11y, seg22x - seg11x, seg22y - seg11y) < 0 &&
+         crossProduct(seg22x - seg21x, seg22y - seg21y, seg11x - seg21x, seg11y - seg21y) *
+         crossProduct(seg22x - seg21x, seg22y - seg21y, seg12x - seg21x, seg12y - seg21y) < 0;
+}
+
+const crossProduct = (x1, y1, x2, y2) => {
+  return x1 * y2 - x2 * y1;
+}
