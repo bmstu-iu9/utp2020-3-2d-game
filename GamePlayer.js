@@ -327,88 +327,28 @@ class Player {
   }
 
   vis(tx, ty) {
-    let degRad = Math.acos((tx - mesh[this.XBlock][this.YBlock].x) /
-                 Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
-                           Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2)));
-    if (ty < mesh[this.XBlock][this.YBlock].y) {
-      degRad = 2 * Math.PI - degRad;
-    }
-    let deg = degRad * 180 / Math.PI / 10
-    let deg1 = Math.floor(deg);
-    let deg2 = Math.ceil(deg) % 36;
-    let vx = this.realXCenter - mesh[this.XBlock][this.YBlock].x;
-    let vy = this.realYCenter - mesh[this.XBlock][this.YBlock].y;
-    let blocks = [];
-    if (vx > 0) {
-      if (vy > 0) {
-        blocks.push(mesh[this.XBlock][this.YBlock]);
-        blocks.push((this.YBlock + 1 > mesh[0].length - 1 ||
-                     mesh[this.XBlock][this.YBlock + 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock][this.YBlock + 1]);
-        blocks.push((this.XBlock + 1 > mesh.length - 1 ||
-                     mesh[this.XBlock + 1][this.YBlock].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock + 1][this.YBlock]);
-        blocks.push((this.YBlock + 1 > mesh[0].length - 1 ||
-                     this.XBlock + 1 > mesh.length - 1 ||
-                     mesh[this.XBlock + 1][this.YBlock + 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                           mesh[this.XBlock + 1][this.YBlock + 1]);
-      } else {
-        blocks.push((this.YBlock - 1 < 0 ||
-                     mesh[this.XBlock][this.YBlock - 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock][this.YBlock - 1]);
-        blocks.push(mesh[this.XBlock][this.YBlock]);
-        blocks.push((this.XBlock + 1 > mesh.length - 1 ||
-                     this.YBlock - 1 < 0 ||
-                     mesh[this.XBlock + 1][this.YBlock - 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                           mesh[this.XBlock + 1][this.YBlock - 1]);
-        blocks.push((this.XBlock + 1 > mesh.length - 1 ||
-                     mesh[this.XBlock + 1][this.YBlock].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock + 1][this.YBlock]);
-      }
-    } else {
-      if (vy > 0) {
-        blocks.push((this.XBlock - 1 < 0 ||
-                     mesh[this.XBlock - 1][this.YBlock].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock - 1][this.YBlock]);
-        blocks.push((this.XBlock - 1 < 0 ||
-                     this.YBlock + 1 > mesh[0].length - 1 ||
-                     mesh[this.XBlock - 1][this.YBlock + 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                           mesh[this.XBlock - 1][this.YBlock + 1]);
-        blocks.push(mesh[this.XBlock][this.YBlock]);
-        blocks.push((this.YBlock + 1 > mesh[0].length - 1 ||
-                     mesh[this.XBlock][this.YBlock + 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock][this.YBlock + 1]);
-      } else {
-        blocks.push((this.XBlock - 1 < 0 ||
-                     this.YBlock - 1 < 0 ||
-                     mesh[this.XBlock - 1][this.YBlock - 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                           mesh[this.XBlock - 1][this.YBlock - 1]);
-        blocks.push((this.XBlock - 1 < 0 ||
-                     mesh[this.XBlock - 1][this.YBlock].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock - 1][this.YBlock]);
-        blocks.push((this.YBlock - 1 < 0 ||
-                     mesh[this.XBlock][this.YBlock - 1].color === 1) ? mesh[this.XBlock][this.YBlock] :
-                                                                       mesh[this.XBlock][this.YBlock - 1]);
-        blocks.push(mesh[this.XBlock][this.YBlock]);
-      }
-    }
-    let visDist = [];
-    for (let i = 0; i < 4; i++) {
-      visDist.push(blocks[i].vision[deg1] + (blocks[i].vision[deg2] - blocks[i].vision[deg1]) * (deg - deg1));
-    }
-    let tempRes1 = ((blocks[3].x - this.realXCenter) * visDist[0] + (this.realXCenter - blocks[0].x) * visDist[2]) / 10;
-    let tempRes2 = ((blocks[3].x - this.realXCenter) * visDist[1] + (this.realXCenter - blocks[0].x) * visDist[3]) / 10;
-    let res = ((blocks[3].y - this.realYCenter) * tempRes1 + (this.realYCenter - blocks[0].y) * tempRes2) / 10;
-    //let res = mesh[this.XBlock][this.YBlock].vision[deg1] + (mesh[this.XBlock][this.YBlock].vision[deg2] - mesh[this.XBlock][this.YBlock].vision[deg1]) * (deg - deg1);
-    let dist = Math.sqrt(Math.pow((tx - mesh[this.XBlock][this.YBlock].x), 2) +
-                         Math.pow((ty - mesh[this.XBlock][this.YBlock].y), 2));
-    let vx1 = canvasToWorld(sight.x) - this.realXCenter;
+    let vx = (tx - this.realXCenter) / 2;
+    let vy = (ty - this.realYCenter) / 2;
+    let visCenterX = this.realXCenter + vx;
+    let visCenterY = this.realYCenter + vy;
+
+    let vx1 = canvasToWorld(sight.x, 0) - this.realXCenter;
     let vx2 = tx - this.realXCenter;
-    let vy1 = canvasToWorld(sight.y) - this.realYCenter;
+    let vy1 = canvasToWorld(sight.y, 1) - this.realYCenter;
     let vy2 = ty - this.realYCenter;
     let visAngle = Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
-                             (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                              Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
-    return res > dist && visAngle < Math.PI / 2;
+                              (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
+                               Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
+    let doorCheck = true;
+    for (let door of doors) {
+      doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,
+                                                  tx, ty,
+                                                  door.getX(), door.getY(),
+                                                  door.getX() + door.getW(), door.getY() + door.getH());
+    }
+    return visAngle < Math.PI / 2 &&
+           doorCheck &&
+           vision(visCenterX, visCenterY, tx, ty) &&
+           vision(visCenterX, visCenterY, this.realXCenter, this.realYCenter);
   }
 }

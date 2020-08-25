@@ -30,6 +30,9 @@ const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerHeight;
 
+const blockCenter = 5;
+const blockSize = 10;
+
 const cameraStartX = 0;
 const cameraStartY = 0;
 const moveBorder = 150;
@@ -96,7 +99,7 @@ const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
                           realOffsetX, realOffsetY, realW, realH, playerSpeed, spritePl);
 
 const targets = [];
-//targets.push(new Target(15, 30, 5));
+targets.push(new Target(1170, 980, 5));
 // targets.push(new Target(130, 100, 5));
 //targets.push(new Target(80, 285, 5));
 //targets.push(new Target(200, 100, 5));
@@ -122,7 +125,7 @@ const init = () => {
   player.init(playerStartX, playerStartY);
 
   targets.splice(0, targets.length);
-  //targets.push(new Target(15, 30, 5));
+  targets.push(new Target(1170, 980, 5));
   //targets.push(new Target(130, 100, 5));
   //targets.push(new Target(80, 285, 5));
   //targets.push(new Target(200, 100, 5));

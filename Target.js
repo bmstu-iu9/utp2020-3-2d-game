@@ -20,11 +20,13 @@ class Target {
     this.weapon = new Weapon(0);
     this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
     this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
+    this.sightX = 0;
+    this.sightY = 0;
   }
 
   update() {
     if (this.alive) {
-      switch(this.st) {
+      /*switch(this.st) {
         case 0:
         if (this.visible) {
           this.route = BFS(mesh[this.XBlock][this.YBlock]);
@@ -67,7 +69,7 @@ class Target {
           }
         }
         break;
-      }
+      }*/
       this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
       this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
     }
@@ -89,5 +91,31 @@ class Target {
       ctx.fill();
       ctx.closePath();
     }
+  }
+
+  vis(tx, ty) {
+    let vx = (tx - this.x) / 2;
+    let vy = (ty - this.y) / 2;
+    let visCenterX = this.x + vx;
+    let visCenterY = this.y + vy;
+
+    let vx1 = canvasToWorld(this.sightX, 0) - this.x;
+    let vx2 = tx - this.x;
+    let vy1 = canvasToWorld(this.sightY, 1) - this.y;
+    let vy2 = ty - this.y;
+    let visAngle = Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
+                              (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
+                               Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
+    let doorCheck = true;
+    for (let door of doors) {
+      doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,
+                                                  tx, ty,
+                                                  door.getX(), door.getY(),
+                                                  door.getX() + door.getW(), door.getY() + door.getH());
+    }
+    return visAngle < Math.PI / 2 &&
+           doorCheck &&
+           vision(visCenterX, visCenterY, tx, ty) &&
+           vision(visCenterX, visCenterY, this.x, this.y);
   }
 }
