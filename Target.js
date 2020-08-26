@@ -1,12 +1,11 @@
 class Target {
-  constructor(X, Y, R) {
+  constructor(X, Y, P) {
     this.x = X;
     this.y = Y;
-    this.r = R;
-    this.o = 10 * R;
-    this.s = 6 * R;
+    this.point = P;
+    this.r = 18;
     this.route = null;
-    this.p = 0;
+    this.routeP = 0;
     this.st = 0;
     // 0 - ожидание
     // 1 - движение в укрытие
@@ -31,41 +30,41 @@ class Target {
         if (this.visible) {
           this.route = BFS(mesh[this.XBlock][this.YBlock]);
           bfscount += 1;
-          this.p = this.route.length - 1;
+          this.routeP = this.route.length - 1;
           this.st = 1;
         }
         break;
 
         case 1:
-        this.dx = this.speed * (this.route[this.p].x - this.x) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
-        this.dy = this.speed * (this.route[this.p].y - this.y) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
+        this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
+        this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
         this.x += this.dx;
         this.y += this.dy;
-        if (Math.sqrt(Math.pow(this.x - this.route[this.p].x, 2) + Math.pow(this.y - this.route[this.p].y, 2)) <= 2) {
-          if (this.p - 1 === -1) {
+        if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 2) {
+          if (this.routeP - 1 === -1) {
             this.st = 2;
           } else {
-            this.p -= 1;
+            this.routeP -= 1;
           }
         }
         break;
 
         case 2:
         this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.XBlock][player.YBlock]);
-        this.p = this.route.length - 1;
+        this.routeP = this.route.length - 1;
         this.st = 3;
         break;
 
         case 3:
-        this.dx = this.speed * (this.route[this.p].x - this.x) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
-        this.dy = this.speed * (this.route[this.p].y - this.y) / Math.sqrt(Math.pow(this.route[this.p].x - this.x, 2) + Math.pow(this.route[this.p].y - this.y, 2));
+        this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
+        this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
         this.x += this.dx;
         this.y += this.dy;
-        if (Math.sqrt(Math.pow(this.x - this.route[this.p].x, 2) + Math.pow(this.y - this.route[this.p].y, 2)) <= 2) {
-          if (this.p - 1 === -1) {
+        if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 2) {
+          if (this.routeP - 1 === -1) {
             this.st = 0;
           } else {
-            this.p -= 1;
+            this.routeP -= 1;
           }
         }
         break;
@@ -117,5 +116,34 @@ class Target {
            doorCheck &&
            vision(visCenterX, visCenterY, tx, ty) &&
            vision(visCenterX, visCenterY, this.x, this.y);
+  }
+}
+
+class ControlPoint {
+  constructor(X, Y, R, botNum, incid, n) {
+    this.x = X;
+    this.y = Y;
+    this.r = R;
+    this.bots = botNum;
+    this.incidence = incid;
+    this.captured = false;
+    this.next = n;
+  }
+
+  update() {
+    let captureEnable = true;
+    for (let incid of this.incidence) {
+      if (incid === null) {
+        break;
+      }
+      captureEnable = captureEnable && incid.captured;
+    }
+    if (!this.captured &&
+        captureEnable &&
+        this.bots <= 0 &&
+        Math.sqrt(Math.pow(player.realXCenter - this.x, 2) +
+                  Math.pow(player.realYCenter - this.y, 2)) < this.r) {
+      this.captured = true;
+    }
   }
 }
