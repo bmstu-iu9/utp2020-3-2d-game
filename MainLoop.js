@@ -11,6 +11,9 @@ const update = () => {
   clouds.forEach(cloud => {
     cloud.update();
   });
+  glass.forEach(g => {
+    g.update();
+  });
 
   player.grenades.forEach(grenade => {
     grenade.update();
@@ -161,6 +164,12 @@ const draw = () => {
   ctx.closePath();
   sight.draw();
   drawPosit();
+  let g = glass[0];
+  ctx.beginPath();
+  ctx.rect(worldToCanvas(g.getX(), 0), worldToCanvas(g.getY(), 1), g.getW() / camera.scaleX, g.getH() / camera.scaleY)
+  ctx.strokeStyle = "red";
+  ctx.stroke();
+  ctx.closePath();
 }
 
 const loop = () => {

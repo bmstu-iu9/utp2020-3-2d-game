@@ -259,6 +259,16 @@ const init = () => {
   glass.splice(0, glass.length);
   glass.push(new Glass(1100, 770, 50, 10, Math.PI / 2, images["glass"]));
   glass.push(new Glass(1370, 770, 50, 10, -Math.PI / 2, images["glass"]));
-  glass.push(new Glass(1110, 950, 50, 10, 0, images["glass"]));
+  glass.push(new Glass(1110, 950, 60, 10, Math.PI, images["glass"]));
+  glass.push(new Glass(1310, 950, 60, 10, Math.PI, images["glass"]));
+  glass.push(new Glass(1620, 950, 60, 10, Math.PI, images["glass"]));
+  glass.push(new Glass(1820, 950, 60, 10, Math.PI, images["glass"]));
+  glass.push(new Glass(2640, 1390, 90, 10, Math.PI, images["glass"]));
+  glass.push(new Glass(1610, 770, 50, 10, Math.PI / 2, images["glass"]));
+  glass.push(new Glass(1310, 950, 60, 10, Math.PI, images["glass"]));
+  glass.push(new Glass(1880, 770, 50, 10, -Math.PI / 2, images["glass"]));
+  glass.push(new Glass(1610, 1150, 100, 10, Math.PI / 2, images["glass"]));
+  glass.push(new Glass(2410, 670, 70, 10, 0, images["glass"]));
+  glass.push(new Glass(2070, 1220, 100, 10, 0, images["glass"]));
 
 }

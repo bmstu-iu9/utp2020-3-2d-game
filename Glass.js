@@ -10,22 +10,21 @@ class Glass {
     this.img = img;
     this.broken = false;
     this.frame = 0;
+    this.frames = 9;
     this.srcW = 50;
     this.srcH = 50;
     this.srcOffsetX = 20;
     this.srcOffsetY = 9;
     this.lastTime = 0;
-    this.countTime = 0;
-    this.animTime = 1;
-    this.deltaTime = this.animTime / 9;
+    this.animTime = 0.5;
+    this.deltaTime = this.animTime / 8;
     this.scaleX = 1/5; //door/tile
     this.scaleY = 32/this.srcH;
   }
 
   update() {
-    if (this.broken && this.countTime < this.animTime &&
+    if (this.broken && this.frame < this.frames - 1 &&
         (performance.now() - this.lastTime) / 1000 > this.deltaTime) {
-      this.countTime += this.deltaTime;
       this.lastTime = performance.now();
       this.frame++;
     }
@@ -46,6 +45,14 @@ class Glass {
 
   }
 
+  getX() {
+    return this.x;
+  }
+
+  getY() {
+    return this.y;
+  }
+
   getW() {
     if (Math.abs(this.angle) === Math.PI / 2) {
       return this.h;
@@ -64,6 +71,8 @@ class Glass {
 
   breakGlass() {
     this.broken = true;
+    this.frame = 1;
+    this.lastTime = performance.now();
     //звук
   }
 }

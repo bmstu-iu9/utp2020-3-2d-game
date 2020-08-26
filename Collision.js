@@ -20,6 +20,15 @@ const collision = () => {
           f = true;
         }
         if (!f) {
+          for (let g = 0; g < glass.length; g++) {
+            if (!glass[g].broken && collisionCircleRect(x1, y1, bul.bulletRadius,
+                                    glass[g].getX(), glass[g].getY(),
+                                    glass[g].getH(), glass[g].getW())) {
+               glass[g].breakGlass();
+            }
+          }
+        }
+        if (!f) {
           let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
           let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
           if ((tileMap[yBlock][xBlock] === "black") ||
