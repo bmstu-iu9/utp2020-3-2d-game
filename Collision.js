@@ -69,15 +69,22 @@ const collision = () => {
     for (let i = 0; i < step; i++) {
       let x1 = grenade.x + (grenade.dx * i) / step;
       let y1 = grenade.y + (grenade.dy * i) / step;
-      if ((pointInBlock(x1, y1) && pointInBlock(x1, y1 + Grenade.height)) || (pointInBlock(x1 + Grenade.width, y1) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
-        grenade.speed *= Grenade.bounceKoef;
-        grenade.dx = -grenade.dx;
-        break;
-      }
-      if ((pointInBlock(x1, y1) && pointInBlock(x1 + Grenade.width, y1)) || (pointInBlock(x1, y1 + Grenade.height) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
-        grenade.speed *= Grenade.bounceKoef;
-        grenade.dy = -grenade.dy;
-        break;
+      if (x1 <= 0 ||
+          y1 <= 0 ||
+          x1 + Grenade.width >= images["map"].naturalWidth ||
+          y1 + Grenade.height >= images["map"].naturalHeight) {
+        grenades.delete(grenade);
+      } else {
+        if ((pointInBlock(x1, y1) && pointInBlock(x1, y1 + Grenade.height)) || (pointInBlock(x1 + Grenade.width, y1) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
+          grenade.speed *= Grenade.bounceKoef;
+          grenade.dx = -grenade.dx;
+          break;
+        }
+        if ((pointInBlock(x1, y1) && pointInBlock(x1 + Grenade.width, y1)) || (pointInBlock(x1, y1 + Grenade.height) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
+          grenade.speed *= Grenade.bounceKoef;
+          grenade.dy = -grenade.dy;
+          break;
+        }
       }
     }
   }
