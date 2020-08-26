@@ -109,7 +109,8 @@ let collisionPlayer = (x, y, w, h) => {
           tileMap[j][i] === "orange" ||
           tileMap[j][i] === "red") {
 
-            if (tileMap[j][i] === "red") {
+            if ((i >= 0) && (i < tileMap[0].length) &&
+                (j >= 0) && (j < tileMap.length) && (tileMap[j][i] === "red")) {
               nowRed = true;
             }
             f = false;
