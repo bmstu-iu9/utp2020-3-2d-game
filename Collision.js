@@ -90,12 +90,15 @@ const collision = () => {
   }
 }
 
+let lastRed = false;
 let collisionPlayer = (x, y, w, h) => {
   let xBlock = Math.floor(x / worldTileSize);
   let yBlock = Math.floor(y / worldTileSize);;
   let xBlock1 = Math.ceil((x + w) / worldTileSize);
   let yBlock1 = Math.ceil((y + h) / worldTileSize);
   let f = true;
+  let nowRed = false;
+  //console.log(lastRed);
 
   for (let i = xBlock; i != xBlock1; i++) {
     for (let j = yBlock; j != yBlock1; j++) {
@@ -105,11 +108,22 @@ let collisionPlayer = (x, y, w, h) => {
           (tileMap[j][i] === "cover") ||
           tileMap[j][i] === "orange" ||
           tileMap[j][i] === "red") {
+
+            if (tileMap[j][i] === "red") {
+              nowRed = true;
+            }
             f = false;
-          }
-      if (!f) break;
+        }
     }
-    if (!f) break;
   }
+
+  if ((!lastRed) && nowRed) {
+    player.hp -= 0.5;
+    if (player.hp < 0) {
+      player.hp = 0;
+    }
+  }
+
+  lastRed = nowRed;
   return f;
 }
