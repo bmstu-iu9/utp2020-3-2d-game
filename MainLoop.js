@@ -8,6 +8,14 @@ const update = () => {
   grenades.forEach(grenade => {
     grenade.update();
   });
+  clouds.forEach(cloud => {
+    cloud.update();
+  });
+
+  player.grenades.forEach(grenade => {
+    grenade.update();
+  });
+
 
   player.move();
 
@@ -111,6 +119,9 @@ const draw = () => {
   grenades.forEach(grenade => {
     grenade.draw();
   });
+  clouds.forEach(cloud => {
+    cloud.draw();
+  });
 
   doors.forEach(door => {
     door.draw();
@@ -137,7 +148,7 @@ const draw = () => {
   ctx.stroke();
   ctx.closePath();
 
-  let door = doors[0];
+  let door = doors[3];
   ctx.beginPath();
   ctx.rect(worldToCanvas(door.getX(), 0), worldToCanvas(door.getY(), 1), door.getW() / camera.scaleX, door.getH() / camera.scaleY);
   ctx.strokeStyle = "red";

@@ -107,6 +107,7 @@ targets.push(new Target(1170, 980, 5));
 const weapons = new Set();
 weapons.add(new Weapon(1, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829));
 const grenades = new Set();
+const clouds = [];
 
 const doors = [];
 doors.push(new Door(1200, 955, 80, 10, true, images["door"]));
@@ -116,6 +117,7 @@ doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
 doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
 
 const init = () => {
+  controlInit();
   bullets.clear();
   rounds.splice(0, rounds.length);
 
@@ -133,6 +135,7 @@ const init = () => {
   weapons.clear();
   weapons.add(new Weapon(1, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829));
   grenades.clear();
+  clouds.splice(0, clouds.length);
 
   doors.splice(0, doors.length);
   doors.push(new Door(1200, 955, 80, 10, true, images["door"]));

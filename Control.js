@@ -13,6 +13,21 @@ let throwTime = 0;
 let paused = true;
 let openDoor = false;
 
+const controlInit = () => {
+  rightPressed = false;
+  leftPressed = false;
+  downPressed = false;
+  upPressed = false;
+  mouseDown = false;
+  changeShootingMode = false;
+  reloadPending = false;
+  pickUp = false;
+  throwGrenade = false;
+  throwTime = 0;
+  paused = true;
+  openDoor = false;
+}
+
 const keyUpHandler = (e) => {
   if (!paused) {
     if (e.keyCode === 68) { //d
