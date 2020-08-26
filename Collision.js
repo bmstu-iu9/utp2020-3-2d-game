@@ -22,8 +22,8 @@ const collision = () => {
         if (!f) {
           let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
           let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
-          if ((tileMap[yBlock][xBlock] === "black") || (tileMap[yBlock][xBlock] === "cover" ||
-               tileMap[yBlock][xBlock] === "red")) {
+          if ((tileMap[yBlock][xBlock] === "black") ||
+              (tileMap[yBlock][xBlock] === "cover")) {
             f = true;
           }
           if (f) {
@@ -62,6 +62,23 @@ const collision = () => {
 
     if (f) {
       bullets.delete(bul);
+    }
+  }
+
+  for (let grenade of grenades) {
+    for (let i = 0; i < step; i++) {
+      let x1 = grenade.x + (grenade.dx * i) / step;
+      let y1 = grenade.y + (grenade.dy * i) / step;
+      if ((pointInBlock(x1, y1) && pointInBlock(x1, y1 + Grenade.height)) || (pointInBlock(x1 + Grenade.width, y1) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
+        grenade.speed *= Grenade.bounceKoef;
+        grenade.dx = -grenade.dx;
+        break;
+      }
+      if ((pointInBlock(x1, y1) && pointInBlock(x1 + Grenade.width, y1)) || (pointInBlock(x1, y1 + Grenade.height) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
+        grenade.speed *= Grenade.bounceKoef;
+        grenade.dy = -grenade.dy;
+        break;
+      }
     }
   }
 }
