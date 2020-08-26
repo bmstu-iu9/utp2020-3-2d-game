@@ -2,7 +2,7 @@
 
 
 let pointInRect = (x, y, xR, yR, h, w) => {
-  return (x >= xR) && (x <= xR + w) && (y >= yR) && (y <= xR + h);
+  return (x >= xR) && (x <= xR + w) && (y >= yR) && (y <= yR + h);
 }
 
 
@@ -78,4 +78,10 @@ const collisionSegment = (seg11x, seg11y, seg12x, seg12y, seg21x, seg21y, seg22x
 
 const crossProduct = (x1, y1, x2, y2) => {
   return x1 * y2 - x2 * y1;
+}
+
+const pointInBlock = (x, y) => {
+  let xBlock = (x - (x % worldTileSize)) / worldTileSize;
+  let yBlock = (y - (y % worldTileSize)) / worldTileSize;
+  return (tileMap[yBlock][xBlock] === "black") || (tileMap[yBlock][xBlock] === "cover");
 }

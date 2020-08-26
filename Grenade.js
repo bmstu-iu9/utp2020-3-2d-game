@@ -24,7 +24,7 @@ class Grenade {
     } else {
       this.x += this.dx * this.speed;
       this.y += this.dy * this.speed;
-      this.speed *= 0.95;  //как-то назвать переменную
+      this.speed *= Grenade.speedKoef;
     }
   }
 
@@ -206,7 +206,7 @@ class Cloud {
   }
 }
 
-Grenade.maxSpeed = 5;
+Grenade.maxSpeed = 10;
 Grenade.maxTime = 2; //sec
 Grenade.image = images["grenade"];
 Grenade.width = 10;
@@ -215,3 +215,5 @@ Grenade.explosionTime = 5; //sec
 Grenade.animTime = 4; //sec
 Grenade.explosionRadius = 20;
 Grenade.damage = 2;
+Grenade.speedKoef = 0.95;
+Grenade.bounceKoef = 0.8;
