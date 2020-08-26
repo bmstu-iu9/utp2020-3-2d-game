@@ -2,7 +2,7 @@
 
 
 let pointInRect = (x, y, xR, yR, h, w) => {
-  return (x >= xR) && (x <= xR + w) && (y >= yR) && (y <= xR + h);
+  return (x >= xR) && (x <= xR + w) && (y >= yR) && (y <= yR + h);
 }
 
 
