@@ -127,6 +127,11 @@ const draw = () => {
     door.draw();
   });
 
+  glass.forEach(gl => {
+    gl.draw();
+  });
+
+
   if (!throwGrenade && throwTime){
     Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
   }
