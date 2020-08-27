@@ -163,6 +163,7 @@ doors.push(new Door(1710, 955, 80, 10, true, images["door"]));
 doors.push(new Door(1700, 1135, 80, 10, true, images["door"]));
 doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
 doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
+doors.push(new Door(2215, 1340, 60, 10, false, images["door"]));
 
 const glass = [];
 glass.push(new Glass(1100, 770, 50, 10, Math.PI / 2, images["glass"]));
@@ -188,16 +189,52 @@ trees.push(new Tree(674, 126, 35, 30, 272, 168, 55, 45, images["trees"])); //р�
 trees.push(new Tree(740, 234, 80, 90, 0, 250, 102, 102, images["trees"])); //дерево 2
 trees.push(new Tree(769, 180, 80, 90, 0, 259, 102, 102, images["trees"]));
 trees.push(new Tree(550, 426, 80, 90, 0, 125, 110, 120, images["trees"])); //дерево 3
+trees.push(new Tree(143, 32, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(150, 110, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(147, 180, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(140, 250, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(150, 345, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(155, 295, 35, 30, 272, 168, 55, 45, images["trees"]));
+trees.push(new Tree(130, 420, 80, 90, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(133, 497, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(150, 620, 60, 60, 170, 308, 73, 73, images["trees"])); //куст 1
+trees.push(new Tree(162, 663, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(17, 417, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(9, 320, 60, 60, 170, 308, 73, 73, images["trees"]));
+trees.push(new Tree(5, 545, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(16, 680, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(274, 442, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(147, 770, 60, 70, 111, 130, 90, 80, images["trees"])); //куст 2
+trees.push(new Tree(179, 1097, 35, 30, 272, 168, 55, 45, images["trees"]));
+trees.push(new Tree(550, 1190, 35, 30, 272, 168, 55, 45, images["trees"]));
+trees.push(new Tree(621, 1123, 35, 30, 272, 168, 55, 45, images["trees"]));
+trees.push(new Tree(136, 731, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(137, 1124, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(223, 1120, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(484, 1169, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(588, 1160, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(40, 1320, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(160, 1325, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(260, 1318, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(330, 1300, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(430, 1315, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(550, 1288, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(620, 1300, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(740, 1318, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(840, 1290, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(977, 1241, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1100, 1289, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(1250, 1300, 100, 110, 0, 0, 110, 120, images["trees"]));
+
 const init = () => {
   controlInit();
+  lastRed = false;
+  lastWater = false;
   bullets.clear();
   rounds.splice(0, rounds.length);
 
-  camera.x = cameraStartX;
-  camera.y = cameraStartY;
-
-  player.init(playerStartX, playerStartY);
-
+  camera.init(cameraStartX, cameraStartY, cameraSpeed);
+  player.init(playerStartX, playerStartY, playerSpeed);
 
   controlPoints.splice(0, controlPoints.length);
   controlPoints.push(69, 137, 60, 3, [null], null);
@@ -264,6 +301,7 @@ const init = () => {
   doors.push(new Door(1700, 1135, 80, 10, true, images["door"]));
   doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
   doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
+  doors.push(new Door(2215, 1340, 60, 10, false, images["door"]));
 
   glass.splice(0, glass.length);
   glass.push(new Glass(1100, 770, 50, 10, Math.PI / 2, images["glass"]));

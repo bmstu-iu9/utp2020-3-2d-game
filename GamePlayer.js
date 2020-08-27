@@ -57,7 +57,8 @@ class Player {
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
   }
 
-  init(x, y) {
+  init(x, y, speed) {
+    this.speed = speed;
     let dx = x - this.x;
     let dy = y - this.y;
     this.x = x;

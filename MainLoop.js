@@ -96,6 +96,11 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
+
+  glass.forEach(gl => {
+    gl.draw();
+  });
+
   rounds.forEach(round => {
     round.draw();
   });
@@ -128,10 +133,6 @@ const draw = () => {
 
   doors.forEach(door => {
     door.draw();
-  });
-
-  glass.forEach(gl => {
-    gl.draw();
   });
 
   trees.forEach(tree => {

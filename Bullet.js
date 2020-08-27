@@ -106,9 +106,4 @@ class Bullet {
     this.y += this.dy;
     if (this.justShooted) this.justShooted = false;
   }
-
-  collide(tX, tY, tR) {
-    const dist = Math.sqrt(Math.pow(this.x - tX, 2) + Math.pow(this.y - tY, 2));
-    return dist < tR;
-  }
 }

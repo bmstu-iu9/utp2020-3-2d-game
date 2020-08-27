@@ -13,6 +13,13 @@ class Camera {
     this.scaleY = visibleHeight / canvas.height;
   }
 
+  init(x, y, speed) {
+    this.x = x;
+    this.y = y;
+    this.dx = speed;
+    this.dy = speed;
+  }
+
   drawVisibleMap() {
     ctx.drawImage(this.map, this.x, this.y,
                   this.visibleWidth, this.visibleHeight,
