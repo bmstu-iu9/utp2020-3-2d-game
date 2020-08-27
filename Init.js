@@ -179,6 +179,15 @@ glass.push(new Glass(1610, 1150, 100, 10, Math.PI / 2, images["glass"]));
 glass.push(new Glass(2410, 670, 70, 10, 0, images["glass"]));
 glass.push(new Glass(2070, 1220, 100, 10, 0, images["glass"]));
 
+const trees = [];
+trees.push(new Tree(540, 25, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
+trees.push(new Tree(535, 103, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(616, 114, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(727, 124, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(674, 126, 35, 30, 272, 168, 55, 45, images["trees"])); //растение 1
+trees.push(new Tree(740, 234, 80, 90, 0, 250, 102, 102, images["trees"])); //дерево 2
+trees.push(new Tree(769, 180, 80, 90, 0, 259, 102, 102, images["trees"]));
+trees.push(new Tree(550, 426, 80, 90, 0, 125, 110, 120, images["trees"])); //дерево 3
 const init = () => {
   controlInit();
   bullets.clear();
