@@ -55,6 +55,22 @@ class Player {
     this.sprite.shoot.speed = 10;
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
+    this.walkXBlock = this.XBlock;
+    this.walkYBlock = this.YBlock;
+    if (!mesh[this.XBlock][this.YBlock].walk) {
+      for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+          if (mesh[this.XBlock + i][this.YBlock + j].walk) {
+            this.walkXBlock = this.XBlock + i;
+            this.walkYBlock = this.YBlock + j;
+            break;
+          }
+        }
+        if (mesh[this.walkXBlock][this.walkYBlock].walk) {
+          break;
+        }
+      }
+    }
   }
 
   init(x, y, speed) {
@@ -198,6 +214,22 @@ class Player {
 
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
+    this.walkXBlock = this.XBlock;
+    this.walkYBlock = this.YBlock;
+    if (!mesh[this.XBlock][this.YBlock].walk) {
+      for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+          if (mesh[this.XBlock + i][this.YBlock + j].walk) {
+            this.walkXBlock = this.XBlock + i;
+            this.walkYBlock = this.YBlock + j;
+            break;
+          }
+        }
+        if (mesh[this.walkXBlock][this.walkYBlock].walk) {
+          break;
+        }
+      }
+    }
 
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
@@ -333,7 +365,7 @@ class Player {
     }
   }
 
-  vis(tx, ty) {
+  vis(tx, ty, key) {
     let vx = (tx - this.realXCenter) / 2;
     let vy = (ty - this.realYCenter) / 2;
     let visCenterX = this.realXCenter + vx;
@@ -343,9 +375,12 @@ class Player {
     let vx2 = tx - this.realXCenter;
     let vy1 = canvasToWorld(sight.y, 1) - this.realYCenter;
     let vy2 = ty - this.realYCenter;
-    let visAngle = Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
-                              (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                               Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
+    let dotProduct =  ((vx1) * (vx2) + (vy1) * (vy2)) /
+                       (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
+                         Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
+    dotProduct = dotProduct > 1 ? 1 : dotProduct;
+    dotProduct = dotProduct < -1 ? -1 : dotProduct;
+    let visAngle = Math.acos(dotProduct);
     let doorCheck = true;
     for (let door of doors) {
       doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,
@@ -353,9 +388,15 @@ class Player {
                                                   door.getX(), door.getY(),
                                                   door.getX() + door.getW(), door.getY() + door.getH());
     }
-    return visAngle < Math.PI / 2 &&
-           doorCheck &&
-           vision(visCenterX, visCenterY, tx, ty) &&
-           vision(visCenterX, visCenterY, this.realXCenter, this.realYCenter);
+    if (key === 0) {
+      return visAngle < Math.PI / 2 &&
+             doorCheck &&
+             vision(visCenterX, visCenterY, tx, ty) &&
+             vision(visCenterX, visCenterY, this.realXCenter, this.realYCenter);
+    } else {
+      return vision(visCenterX, visCenterY, tx, ty) &&
+             vision(visCenterX, visCenterY, this.realXCenter, this.realYCenter);
+    }
+
   }
 }

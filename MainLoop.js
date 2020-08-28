@@ -39,6 +39,9 @@ const update = () => {
     door.update();
   });
 
+  controlPoints.forEach(point => {
+    point.update();
+  });
 
   camera.updateCoordinates();
   collision();
@@ -117,11 +120,7 @@ const draw = () => {
 
   targets.forEach(target => {
     if (player.vis(target.x, target.y)) {
-      target.visible = true;
       target.draw(1 / camera.scaleX);
-    //} else {
-    // target.visible = false;
-    }
   });
 
   grenades.forEach(grenade => {
