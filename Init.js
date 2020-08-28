@@ -226,6 +226,8 @@ trees.push(new Tree(977, 1241, 120, 130, 0, 250, 102, 102, images["trees"]));
 trees.push(new Tree(1100, 1289, 100, 110, 0, 0, 110, 120, images["trees"]));
 trees.push(new Tree(1250, 1300, 100, 110, 0, 0, 110, 120, images["trees"]));
 
+const blood = [];
+
 const init = () => {
   controlInit();
   lastRed = false;
@@ -318,4 +320,5 @@ const init = () => {
   glass.push(new Glass(2410, 670, 70, 10, 0, images["glass"]));
   glass.push(new Glass(2070, 1220, 100, 10, 0, images["glass"]));
 
+  blood.splice(0, blood.length);
 }

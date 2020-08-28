@@ -5,8 +5,6 @@ class Bullet {
     this.x = x;
     this.y = y;
     this.damage = damage;
-    this.flies = false;
-    this.shooted = false;
     this.justShooted = true;
     this.bulletAnimationRadius = 4;
     this.bulletRadius = 0.4;           //нормирование и умножение на скорость \/

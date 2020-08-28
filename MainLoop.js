@@ -14,6 +14,10 @@ const update = () => {
   glass.forEach(g => {
     g.update();
   });
+  blood.forEach(b => {
+    b.update();
+  });
+
 
   player.grenades.forEach(grenade => {
     grenade.update();
@@ -104,6 +108,11 @@ const draw = () => {
   rounds.forEach(round => {
     round.draw();
   });
+
+  blood.forEach(b => {
+    b.draw();
+  });
+
 
   weapons.forEach(weapon => {
     weapon.draw();
