@@ -10,6 +10,12 @@
 // 0 - shoot ak47
 // 1 - shoot shotgun
 // 2 - shoot m16
+let timeForOneBul = [1.5 * 1000 / 20, 1.2 * 1000 / 20, 3.5 * 1000 / 6];
+let lTime = 0;
+let dT = 0;
+let noW = 0;
+let change = false;
+let steP = 0;
 
 class Player {
 
@@ -28,10 +34,7 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
-    this.xForCol = this.realX;
-    this.yForCol = this.realY;
-    this.xCenForCol = this.realXCenter;
-    this.yCenForCol = this.realYCenter;
+    this.action = false;
     this.angle = 0;
     this.actionRadius = rW;
     this.sprite = sprite;
@@ -42,20 +45,26 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.shooting = false;
-    this.weapon = new Weapon(0);
+    this.reloadId = null;
+    this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
 
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        this.sprite.shoot.indexFrameY = 0;
         break;
       case 1:
         this.sprite.pl.indexFrameY = 4;
+        this.sprite.shoot.indexFrameY = 2;
         break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
+        this.sprite.shoot.indexFrameY = 1;
         break;
     }
+    this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
+    this.sprite.shoot.srcY = this.sprite.shoot.height * this.sprite.shoot.indexFrameY;
     this.sprite.shoot.speed = 10;
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
@@ -79,7 +88,7 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.shooting = false;
-    this.weapon = new Weapon(0);
+    this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
@@ -94,6 +103,7 @@ class Player {
         this.sprite.pl.indexFrameY = 2;
         break;
     }
+    this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
   }
 
   drawDirection() {
@@ -149,7 +159,7 @@ class Player {
     ctx.closePath();
   }
 
-  move() {
+  move(dt) {
     if (downPressed && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
       this.realYCenter += this.speed;
@@ -159,6 +169,7 @@ class Player {
       this.sprite.down.x = worldToCanvas(this.X_Center, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
       this.sprite.pl.update();
+      this.action = true;
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
@@ -222,7 +233,7 @@ class Player {
       }
     }
 
-    if (reloadPending) {
+    if (reloadPending && !this.weapon.isReloading()) {
       this.weapon.reload();
       if (this.weapon.isReloading()) {
         switch (this.weapon.id) {
@@ -234,34 +245,77 @@ class Player {
           break;
         case 2:
           this.sprite.pl.indexFrameY = 3;
+        /*  this.reloadId = setInterval(() => {
+          //  if (this.sprite.pl.srcX / 64 === 11) {
+            //  this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
+          //  }
+            //this.sprite.pl.srcX = i * this.sprite.pl.width;
+            if (!this.weapon.isReloading()) {
+              clearInterval(this.reloadId);
+              this.reloadId = null;
+            } else {
+            console.log(this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY]);
+            this.sprite.pl.counter = this.sprite.pl.speed - 1;
+            this.sprite.pl.update();
+          }
+        }, (timeForOneBul[this.weapon.id] / 10)); */
           break;
         }
+        this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
+        this.sprite.pl.counter = 0;
+        this.sprite.pl.speed = 3;
+        lTime = this.weapon.lastReloadTime;
       }
       reloadPending = false;
     }
 
-    this.sprite.pl.x = worldToCanvas(this.X_Center, 0);
-    this.sprite.pl.y = worldToCanvas(this.Y_Center, 1);
-    if (this.weapon.isReloading()) this.sprite.pl.update();
+    this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
+    this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
+    if (this.weapon.isReloading()) {
+      //if (this.weapon.id !== 2) {
+        //this.sprite.pl.update();
+      //}
+      //this.sprite.pl.counter = 0;
+     noW = performance.now();
+      dT += (noW - lTime);
+      console.log(dt);
+        if (dT > 0.002 && steP < 1) {
+          steP += 1/20;
+          this.sprite.pl.counter = this.sprite.pl.speed - 1;
+          this.sprite.pl.update();
+          dT -= 0.001;
+        }
+        if (steP === 1) {
+          steP = 0;
+        }
+    console.log(this.sprite.pl.currentFrame[3]);
+      lTime = noW;
+      //this.sprite.pl.update();
+    //this.sprite.pl.update();
+//  } else {
+  //  if (this.weapon.id === 2) {
+    //  clearInterval(this.reloadId);
+    //}
+    //this.reloadId = null;
+  } else {
+    steP = 0;
+  }
 
     if (mouseDown) {
-      this.sprite.shoot.x = this.sprite.pl.x;
-      this.sprite.shoot.y = this.sprite.pl.y;
       switch (this.weapon.id) {
         case 0:
           this.sprite.shoot.indexFrameY = 0;
-          this.sprite.shoot.update();
           break;
         case 1:
           this.sprite.shoot.indexFrameY = 2;
-          this.sprite.shoot.update();
           break;
         case 2:
           this.sprite.shoot.indexFrameY = 1;
-          this.sprite.shoot.update();
           break;
       }
-
+      this.sprite.shoot.x = this.sprite.pl.x;
+      this.sprite.shoot.y = this.sprite.pl.y;
+      this.sprite.shoot.update();
       let k1 = 30;
       let k2 = 0;
       let k3 = (canvasToWorld(sight.x, 0) - this.realXCenter);
