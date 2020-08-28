@@ -14,7 +14,9 @@ let imagePromises = [ {"name": "map", "src" : "resources/jungle_carcass_v1.5.png
                  {"name" : "m16", "src" : "resources/m16_side_pixelized.png"},
                  {"name" : "remington870", "src" : "resources/remington_side_pixelized.png"},
                  {"name" : "grenade", "src" : "resources/grenade_without_check_pixelized.png"},
-                 {"name" : "door", "src" : "resources/door.png"}, ];
+                 {"name" : "door", "src" : "resources/door.png"},
+                 {"name" : "glass", "src" : "resources/window.png"},
+                 {"name" : "trees", "src" : "resources/trees_bushes_pixelized.png"}, ];
 
 let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" },
                       {"name" : "shot_ak47", "src" : "resources/shot_ak47.mp3"},

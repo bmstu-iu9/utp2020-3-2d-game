@@ -5,8 +5,6 @@ class Bullet {
     this.x = x;
     this.y = y;
     this.damage = damage;
-    this.flies = false;
-    this.shooted = false;
     this.justShooted = true;
     this.bulletAnimationRadius = 4;
     this.bulletRadius = 0.4;           //нормирование и умножение на скорость \/
@@ -105,10 +103,5 @@ class Bullet {
     this.x += this.dx;
     this.y += this.dy;
     if (this.justShooted) this.justShooted = false;
-  }
-
-  collide(tX, tY, tR) {
-    const dist = Math.sqrt(Math.pow(this.x - tX, 2) + Math.pow(this.y - tY, 2));
-    return dist < tR;
   }
 }

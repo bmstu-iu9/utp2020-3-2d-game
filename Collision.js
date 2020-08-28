@@ -20,6 +20,15 @@ const collision = () => {
           f = true;
         }
         if (!f) {
+          for (let g = 0; g < glass.length; g++) {
+            if (!glass[g].broken && collisionCircleRect(x1, y1, bul.bulletRadius,
+                                    glass[g].getX(), glass[g].getY(),
+                                    glass[g].getH(), glass[g].getW())) {
+               glass[g].breakGlass();
+            }
+          }
+        }
+        if (!f) {
           let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
           let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
           if ((tileMap[yBlock][xBlock] === "black") ||
@@ -69,40 +78,23 @@ const collision = () => {
     for (let i = 0; i < step; i++) {
       let x1 = grenade.x + (grenade.dx * i) / step;
       let y1 = grenade.y + (grenade.dy * i) / step;
-      if ((pointInBlock(x1, y1) && pointInBlock(x1, y1 + Grenade.height)) || (pointInBlock(x1 + Grenade.width, y1) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
-        grenade.speed *= Grenade.bounceKoef;
-        grenade.dx = -grenade.dx;
-        break;
-      }
-      if ((pointInBlock(x1, y1) && pointInBlock(x1 + Grenade.width, y1)) || (pointInBlock(x1, y1 + Grenade.height) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
-        grenade.speed *= Grenade.bounceKoef;
-        grenade.dy = -grenade.dy;
-        break;
+      if (x1 <= 0 ||
+          y1 <= 0 ||
+          x1 + Grenade.width >= images["map"].naturalWidth ||
+          y1 + Grenade.height >= images["map"].naturalHeight) {
+        grenades.delete(grenade);
+      } else {
+        if ((pointInBlock(x1, y1) && pointInBlock(x1, y1 + Grenade.height)) || (pointInBlock(x1 + Grenade.width, y1) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
+          grenade.speed *= Grenade.bounceKoef;
+          grenade.dx = -grenade.dx;
+          break;
+        }
+        if ((pointInBlock(x1, y1) && pointInBlock(x1 + Grenade.width, y1)) || (pointInBlock(x1, y1 + Grenade.height) && pointInBlock(x1 + Grenade.width, y1 + Grenade.height))) {
+          grenade.speed *= Grenade.bounceKoef;
+          grenade.dy = -grenade.dy;
+          break;
+        }
       }
     }
   }
-}
-
-let collisionPlayer = (x, y, w, h) => {
-  let xBlock = Math.floor(x / worldTileSize);
-  let yBlock = Math.floor(y / worldTileSize);;
-  let xBlock1 = Math.ceil((x + w) / worldTileSize);
-  let yBlock1 = Math.ceil((y + h) / worldTileSize);
-  let f = true;
-
-  for (let i = xBlock; i != xBlock1; i++) {
-    for (let j = yBlock; j != yBlock1; j++) {
-      if ((i < 0) || (i >= tileMap[0].length) ||
-          (j < 0) || (j >= tileMap.length) ||
-          (tileMap[j][i] === "black") ||
-          (tileMap[j][i] === "cover") ||
-          tileMap[j][i] === "orange" ||
-          tileMap[j][i] === "red") {
-            f = false;
-          }
-      if (!f) break;
-    }
-    if (!f) break;
-  }
-  return f;
 }

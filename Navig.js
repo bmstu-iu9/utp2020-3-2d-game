@@ -74,11 +74,11 @@ const checkDef = (node, st) => {
 }
 
 const checkNode = (node) => {
-  return (!player.vis(node.x, node.y) && mesh[player.XBlock][player.XBlock].x !== node.x && mesh[player.XBlock][player.XBlock].y !== node.y);
+  return (!player.vis(node.x, node.y, 1) && dist(player.realXCenter, node.x, player.realYCenter, node.y) > 20);
 }
 
 const checkDist = (st, node) => {
-  return Math.sqrt(Math.pow(st.x - node.x, 2) + Math.pow(st.y - node.y, 2)) > 200;
+  return Math.sqrt(Math.pow(st.x - node.x, 2) + Math.pow(st.y - node.y, 2)) > 500;
 }
 
 class Elem2 {
@@ -154,12 +154,13 @@ const A_Star = (start, goal) => {
   costSoFar.set(start, 0);
   while (!prQueue.isEmpty()) {
     cur = prQueue.dequeue();
+    //if (checkNodeAStar(cur, goal)) {
     if (cur === goal) {
       break;
     }
     for (let incid of cur.incidence) {
       let newCost = costSoFar.get(cur) + findCost(mesh[incid.i][incid.j]);
-      if (!costSoFar.has(mesh[incid.i][incid.j]) || newCost < costSoFar.get(mesh[incid.i][incid.j])) {
+      if ((!costSoFar.has(mesh[incid.i][incid.j]) || newCost < costSoFar.get(mesh[incid.i][incid.j]))) {
         costSoFar.set(mesh[incid.i][incid.j], newCost);
         let priority = newCost + heuristic(mesh[incid.i][incid.j], goal);
         prQueue.enqueue(mesh[incid.i][incid.j], priority);
@@ -168,6 +169,11 @@ const A_Star = (start, goal) => {
     }
   }
   return makeRoute(cameFrom, start, goal);
+}
+
+const checkNodeAStar = (node1, node2) => {
+  let distance = heuristic(node1, node2);
+  return distance <= 50 || node1 === node2;
 }
 
 const makeRoute = (cF, s, g) => {

@@ -8,6 +8,21 @@ const update = (dt) => {
   grenades.forEach(grenade => {
     grenade.update();
   });
+  clouds.forEach(cloud => {
+    cloud.update();
+  });
+  glass.forEach(g => {
+    g.update();
+  });
+  blood.forEach(b => {
+    b.update();
+  });
+
+
+  player.grenades.forEach(grenade => {
+    grenade.update();
+  });
+
 
   player.move(dt);
 
@@ -28,6 +43,9 @@ const update = (dt) => {
     door.update();
   });
 
+  controlPoints.forEach(point => {
+    point.update();
+  });
 
   camera.updateCoordinates();
   collision();
@@ -85,9 +103,19 @@ const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
   camera.drawVisibleMap();
+
+  glass.forEach(gl => {
+    gl.draw();
+  });
+
   rounds.forEach(round => {
     round.draw();
   });
+
+  blood.forEach(b => {
+    b.draw();
+  });
+
 
   weapons.forEach(weapon => {
     weapon.draw();
@@ -101,20 +129,26 @@ const draw = () => {
 
   targets.forEach(target => {
     if (player.vis(target.x, target.y)) {
-      target.visible = true;
       target.draw(1 / camera.scaleX);
-    //} else {
-    // target.visible = false;
     }
   });
 
   grenades.forEach(grenade => {
     grenade.draw();
   });
+  clouds.forEach(cloud => {
+    cloud.draw();
+  });
 
   doors.forEach(door => {
     door.draw();
   });
+
+  trees.forEach(tree => {
+    tree.draw();
+  });
+
+
 
   if (!throwGrenade && throwTime){
     Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
@@ -137,7 +171,7 @@ const draw = () => {
   ctx.stroke();
   ctx.closePath();
 
-  let door = doors[0];
+  let door = doors[3];
   ctx.beginPath();
   ctx.rect(worldToCanvas(door.getX(), 0), worldToCanvas(door.getY(), 1), door.getW() / camera.scaleX, door.getH() / camera.scaleY);
   ctx.strokeStyle = "red";
@@ -145,6 +179,12 @@ const draw = () => {
   ctx.closePath();
   sight.draw();
   drawPosit();
+  let g = glass[0];
+  ctx.beginPath();
+  ctx.rect(worldToCanvas(g.getX(), 0), worldToCanvas(g.getY(), 1), g.getW() / camera.scaleX, g.getH() / camera.scaleY)
+  ctx.strokeStyle = "red";
+  ctx.stroke();
+  ctx.closePath();
 }
 
 const loop = () => {
