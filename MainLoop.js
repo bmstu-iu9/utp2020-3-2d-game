@@ -130,6 +130,7 @@ const draw = () => {
   targets.forEach(target => {
     if (player.vis(target.x, target.y)) {
       target.draw(1 / camera.scaleX);
+    }
   });
 
   grenades.forEach(grenade => {
