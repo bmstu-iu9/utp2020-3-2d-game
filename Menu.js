@@ -99,6 +99,14 @@ soundContainer.append(soundText);
 soundContainer.append(soundRange);
 let settingsOpened = false;
 
+const deadInfo = document.createElement("div");
+deadInfo.className = "in";
+deadInfo.style.fontSize = "50px";
+deadInfo.style.position = "relative";
+deadInfo.style.top = "10%";
+const deadText = document.createTextNode("Вас убили!");
+deadInfo.append(deadText);
+
 const toggleSettings = () => {
   if (!settingsOpened) {
     settingsOpened = true;
@@ -150,8 +158,24 @@ const closeMenu = () => {
     lastTime = performance.now();
     requestId = RAF(loop);
   }
+  if (dead) {
+    dead = false;
+    divMenu.append(resume);
+    divMenu.append(settings);
+    deadInfo.remove();
+    restart.style.bottom = "15%";
+  }
   paused = false;
   firstStart = false;
+}
+
+const gameOver = () => {
+  dead = true;
+  resume.remove();
+  settings.remove();
+  divMenu.append(deadInfo);
+  restart.style.bottom = "50%";
+  openMenu();
 }
 
 openMenu();

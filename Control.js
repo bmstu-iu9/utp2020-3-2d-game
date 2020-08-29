@@ -11,6 +11,7 @@ let pickUp = false;
 let throwGrenade = false;
 let throwTime = 0;
 let paused = true;
+let dead = false;
 let openDoor = false;
 
 const controlInit = () => {

@@ -188,6 +188,8 @@ const draw = () => {
 }
 
 const loop = () => {
+  requestId = RAF(loop);
+  //if (paused) return;
   now = performance.now();
   dt += Math.min(1, (now - lastTime) / 1000);
 
@@ -199,7 +201,7 @@ const loop = () => {
   draw();
   lastTime = now;
 
-  requestId = RAF(loop);
+  // requestId = RAF(loop);
 }
 
 let lastTime = performance.now();

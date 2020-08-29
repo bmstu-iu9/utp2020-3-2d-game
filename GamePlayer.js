@@ -211,6 +211,10 @@ class Player {
       this.sprite.left.update();
     }
 
+    if (this.hp === 0) {
+      gameOver();
+      return;
+    }
 
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
