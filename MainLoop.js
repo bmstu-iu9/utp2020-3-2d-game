@@ -200,12 +200,8 @@ const loop = () => {
 
   draw();
   lastTime = now;
-<<<<<<< HEAD
-
+  
   // requestId = RAF(loop);
-=======
-  requestId = RAF(loop);
->>>>>>> 86101ad4932f3c103ae9d4193c7244af4983bed1
 }
 
 let lastTime = performance.now();
