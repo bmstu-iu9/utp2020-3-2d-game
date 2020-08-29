@@ -10,16 +10,18 @@
 // 0 - shoot ak47
 // 1 - shoot shotgun
 // 2 - shoot m16
+let timeForOneBul = [1.5 * 1000 / 20, 1.2 * 1000 / 20, 3.5 * 1000 / 6];
+let lTime = 0;
+let dT = 0;
+let noW = 0;
+let change = false;
+let steP = 0;
 
 class Player {
 
   constructor (x, y, width, height, offsetX, offsetY, rW, rH, speed, sprite) {
     this.x = x;
     this.y = y;
-    this.w_World = width; // размеры спрайта в мире
-    this.h_World = height; //
-    this.w = this.w_World * (1 / camera.scaleX);  //размеры на канвасе
-    this.h = this.h_World * (1 / camera.scaleY); //
     this.realX = this.x + offsetX; //для коллизии
     this.realY = this.y + offsetY; //
     this.realW = rW; // размеры для коллизии
@@ -28,6 +30,7 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
+    this.action = false;
     this.angle = 0;
     this.actionRadius = rW;
     this.sprite = sprite;
@@ -38,20 +41,27 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.shooting = false;
-    this.weapon = new Weapon(0);
+    this.reloadId = null;
+    this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
+    this.sound = "nothing";
 
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        this.sprite.shoot.indexFrameY = 0;
         break;
       case 1:
         this.sprite.pl.indexFrameY = 4;
+        this.sprite.shoot.indexFrameY = 2;
         break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
+        this.sprite.shoot.indexFrameY = 1;
         break;
     }
+    this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
+    this.sprite.shoot.srcY = this.sprite.shoot.height * this.sprite.shoot.indexFrameY;
     this.sprite.shoot.speed = 10;
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
@@ -92,7 +102,7 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.shooting = false;
-    this.weapon = new Weapon(0);
+    this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
@@ -107,6 +117,7 @@ class Player {
         this.sprite.pl.indexFrameY = 2;
         break;
     }
+    this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
   }
 
   drawDirection() {
@@ -162,7 +173,7 @@ class Player {
     ctx.closePath();
   }
 
-  move() {
+  move(dt) {
     if (downPressed && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
       this.realYCenter += this.speed;
@@ -172,6 +183,7 @@ class Player {
       this.sprite.down.x = worldToCanvas(this.X_Center, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
       this.sprite.pl.update();
+      this.action = true;
       this.direction = "Down";
       this.sprite.down.update();
     } else if (upPressed && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
@@ -255,7 +267,7 @@ class Player {
       }
     }
 
-    if (reloadPending) {
+    if (reloadPending && !this.weapon.isReloading()) {
       this.weapon.reload();
       if (this.weapon.isReloading()) {
         switch (this.weapon.id) {
@@ -269,13 +281,33 @@ class Player {
           this.sprite.pl.indexFrameY = 3;
           break;
         }
+        this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
+        this.sprite.pl.counter = 0;
+        lTime = this.weapon.lastReloadTime;
       }
       reloadPending = false;
     }
 
-    this.sprite.pl.x = worldToCanvas(this.X_Center, 0);
-    this.sprite.pl.y = worldToCanvas(this.Y_Center, 1);
-    if (this.weapon.isReloading()) this.sprite.pl.update();
+    this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
+    this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
+    if (this.weapon.isReloading()) {
+     noW = performance.now();
+      dT = (noW - lTime);
+    //  console.log(dt);
+        if (dT > timeForOneBul[this.weapon.id] / 20 && steP < 1) {
+          steP += 1/20;
+          this.sprite.pl.counter = this.sprite.pl.speed - 1;
+          this.sprite.pl.update();
+          //dT -= 0.001;
+        }
+        if (steP === 1) {
+          steP = 0;
+        }
+  //  console.log(this.sprite.pl.currentFrame[3]);
+      lTime = noW;
+  } else {
+    steP = 0;
+  }
 
     if (mouseDown) {
       switch (this.weapon.id) {
@@ -292,7 +324,6 @@ class Player {
       this.sprite.shoot.x = this.sprite.pl.x;
       this.sprite.shoot.y = this.sprite.pl.y;
       this.sprite.shoot.update();
-
       let k1 = 30;
       let k2 = 0;
       let k3 = (canvasToWorld(sight.x, 0) - this.realXCenter);
@@ -321,18 +352,11 @@ class Player {
           let gun = item;
           item.pickUp();
           this.weapon.drop(gun.x, gun.y);
-          this.weapon = gun;
-          switch (this.weapon.id) {
-            case 0:
-              this.sprite.pl.indexFrameY = 0;
-              break;
-            case 1:
-              this.sprite.pl.indexFrameY = 4;
-              break;
-            case 2:
-              this.sprite.pl.indexFrameY = 2;
-              break;
-          }
+          this.changeWeapon(gun);
+          this.sprite.pl.counter = this.sprite.pl.speed - 1;
+          this.sprite.shoot.counter = this.sprite.shoot.speed - 1;
+          this.sprite.pl.update();
+          this.sprite.shoot.update();
           break;
         }
       }
@@ -352,19 +376,28 @@ class Player {
       openDoor = false;
     }
 
+    if (this.sound === "water") {
+      if (playerSounds[this.sound].onPause());
+      {
+        playerSounds[this.sound].play();
+      }
+    }
   }
 
-  changeWeapon(id) {
-    this.weapon = new Weapon(id);
+  changeWeapon(gun) {
+    this.weapon = gun;
     switch (this.weapon.id) {
       case 0:
         this.sprite.pl.indexFrameY = 0;
+        this.sprite.shoot.indexFrameY = 0;
         break;
       case 1:
         this.sprite.pl.indexFrameY = 4;
+        this.sprite.shoot.indexFrameY = 2;
         break;
       case 2:
         this.sprite.pl.indexFrameY = 2;
+        this.sprite.shoot.indexFrameY = 1;
         break;
     }
   }

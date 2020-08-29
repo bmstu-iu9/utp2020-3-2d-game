@@ -1,5 +1,5 @@
 class Target {
-  constructor(X, Y, P) {
+  constructor(X, Y, P, I) {
     this.x = X;
     this.y = Y;
     this.initialX = X;
@@ -35,6 +35,21 @@ class Target {
     this.knowPlPos = false;
     this.underAttack = false;
     this.recon = false;
+    this.index = I;
+    this.sprite = spritesForBots[I];
+    this.angle = 0;
+    this.w = realW;
+    this.h = realH;
+    this.rX = this.x - realOffsetX - this.w / 2;
+    this.rY = this.y - realOffsetY - this.h / 2;
+
+    this.sprite.bot.x = worldToCanvas(this.x, 0);
+    this.sprite.bot.y = worldToCanvas(this.y, 1);
+    this.sprite.shoot.x = worldToCanvas(this.x, 0);
+    this.sprite.shoot.y = worldToCanvas(this.y, 1);
+    this.sprite.right.x = worldToCanvas(this.x, 0);
+    this.sprite.right.y = worldToCanvas(this.y, 1);
+    this.sprite.shoot.speed = 10;
   }
 
   update() {
@@ -187,6 +202,31 @@ class Target {
       }
       if (this.onPosition) {
         this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
+        let x1 = worldToCanvas(this.x, 0);
+        let y1 = worldToCanvas(this.y, 1);
+        let x2 = worldToCanvas(player.realXCenter, 0);
+        let y2 = worldToCanvas(player.realYCenter, 1);
+        let deg = 0;
+        if (y2 > y1) {
+          if (x2 < x1) {
+            deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
+          } else {
+            deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
+          }
+        } else {
+          if (x2 > x1) {
+            deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
+          } else {
+            deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
+          }
+        }
+        this.angle = deg;
+        this.sprite.shoot.x = worldToCanvas(this.x, 0);
+        this.sprite.shoot.y = worldToCanvas(this.y, 1);
+        this.sprite.right.x = worldToCanvas(this.x, 0);
+        this.sprite.right.y = worldToCanvas(this.y, 1);
+        this.sprite.shoot.update();
+        this.sprite.right.update();
       } else {
         this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock]);
         this.routeP = this.route.length - 1;
@@ -214,8 +254,37 @@ class Target {
       //this.sightY = this.route[this.routeP].y;
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
+
+      let x1 = worldToCanvas(this.x, 0);
+      let y1 = worldToCanvas(this.y, 1);
+      let x2 = worldToCanvas(this.x + this.dx, 0);
+      let y2 = worldToCanvas(this.y + this.dy, 1);
+      let deg = 0;
+      if (y2 > y1) {
+        if (x2 < x1) {
+          deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
+        } else {
+          deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
+        }
+      } else {
+        if (x2 > x1) {
+          deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
+        } else {
+          deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
+        }
+      }
+      this.angle = deg;
+      this.sprite.bot.x = worldToCanvas(this.x, 0);
+      this.sprite.bot.y = worldToCanvas(this.y, 1);
+      this.sprite.right.x = worldToCanvas(this.x, 0);
+      this.sprite.right.y = worldToCanvas(this.y, 1);
+      this.sprite.bot.update();
+      this.sprite.right.update();
+
       this.x += this.dx;
       this.y += this.dy;
+      this.rX += this.dx;
+      this.rY += this.dy;
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1) {
           this.moving = false;
@@ -229,7 +298,7 @@ class Target {
   }
 
   draw(scale) {
-    if (this.alive) {
+    /*if (this.alive) {
       ctx.beginPath();
       ctx.lineWidth = 0.5;
       ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.r * scale, 0, Math.PI * 2);
@@ -250,8 +319,20 @@ class Target {
       ctx.fillStyle = "red";
       ctx.fill();
       ctx.closePath();
+    }*/
+    if (this.alive) {
+      if (!this.underAttack && this.onPosition) {
+        this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
+        this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
+      }
+      else {
+        if (this.moving) {
+          this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
+          this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
+      }
     }
   }
+}
 
   vis(tx, ty) {
     let vx = (tx - this.x) / 2;

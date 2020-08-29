@@ -30,6 +30,12 @@ class Sprite {
       this.counter = (this.counter + 1) % this.speed;
   }
 
+  reverseUpdate() {
+    this.srcX -= this.width;
+    this.srcY = this.framesY[this.indexFrameY] * this.height;
+    if (this.srcX < 0) this.srcX = 0;
+  }
+
   drawSprite() {
     ctx.drawImage(
         this.image,
@@ -63,18 +69,37 @@ class Sprite {
     }
     player.angle = deg;
     ctx.rotate(deg);
+    ctx.translate(-this.x, -this.y);
     ctx.drawImage(
         this.image,
         this.srcX,
         this.srcY,
         this.width,
         this.height,
-        -this.canvasW / 2,
-        -this.canvasH / 2,
+        worldToCanvas(player.x, 0),
+        worldToCanvas(player.y, 1),
         this.canvasW,
         this.canvasH
     );
+    ctx.restore();
+  }
 
+  drawBot(deg, x, y) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(deg);
+    ctx.translate(-this.x, -this.y);
+    ctx.drawImage(
+        this.image,
+        this.srcX,
+        this.srcY,
+        this.width,
+        this.height,
+        worldToCanvas(x, 0),
+        worldToCanvas(y, 1),
+        this.canvasW,
+        this.canvasH
+    );
     ctx.restore();
   }
 

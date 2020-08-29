@@ -31,6 +31,7 @@ let collisionPlayer = (x, y, w, h) => {
         else {
           if (tileMap[j][i] === "water") {
             nowWater = true;
+            player.sound = "water";
           }
         }
     }
@@ -45,12 +46,14 @@ let collisionPlayer = (x, y, w, h) => {
     player.speed = playerSpeed;
     camera.dx = cameraSpeed;
     camera.dy = cameraSpeed;
+    player.sound = "nothing";
   }
 
   if ((!lastRed) && nowRed) {
     player.hp -= 0.5;
     if (player.hp < 0) {
       player.hp = 0;
+      player.dead = true;
     }
   }
 

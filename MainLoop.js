@@ -1,6 +1,6 @@
 'use strict';
 
-const update = () => {
+const update = (dt) => {
   bullets.forEach(bullet => {
     bullet.updateCoordinates();
   });
@@ -24,7 +24,7 @@ const update = () => {
   });
 
 
-  player.move();
+  player.move(dt);
 
   for (let i = 0; i < rounds.length; i++) {
     let round = rounds[i];
@@ -195,13 +195,17 @@ const loop = () => {
 
   while (dt > gameStep) {
     dt -= gameStep;
-    update();
+    update(dt);
   }
 
   draw();
   lastTime = now;
+<<<<<<< HEAD
 
   // requestId = RAF(loop);
+=======
+  requestId = RAF(loop);
+>>>>>>> 86101ad4932f3c103ae9d4193c7244af4983bed1
 }
 
 let lastTime = performance.now();
@@ -209,5 +213,4 @@ let now = 0;
 let dt = 0;
 let fps = 60;
 let gameStep = 1 / fps;
-
 let requestId = RAF(loop);
