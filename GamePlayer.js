@@ -186,6 +186,12 @@ class Player {
       this.action = true;
       this.direction = "Down";
       this.sprite.down.update();
+
+      if (this.sound === "water") {
+        if (playerSounds[this.sound].onPause()) {
+          playerSounds[this.sound].play();
+        }
+      }
     } else if (upPressed && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
       this.y -= this.speed;
       this.realY -= this.speed;
@@ -197,6 +203,12 @@ class Player {
       this.sprite.pl.update();
       this.direction = "Up";
       this.sprite.up.update();
+
+      if (this.sound === "water") {
+        if (playerSounds[this.sound].onPause()) {
+          playerSounds[this.sound].play();
+        }
+      }
     }
 
     if (rightPressed && collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH)) {
@@ -210,6 +222,12 @@ class Player {
       this.sprite.pl.update();
       this.direction = "Right";
       this.sprite.right.update();
+
+      if (this.sound === "water") {
+        if (playerSounds[this.sound].onPause()) {
+          playerSounds[this.sound].play();
+        }
+      }
     } else if (leftPressed && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
       this.x -= this.speed;
       this.realX -= this.speed;
@@ -221,6 +239,12 @@ class Player {
       this.sprite.pl.update();
       this.direction = "Left";
       this.sprite.left.update();
+
+      if (this.sound === "water") {
+        if (playerSounds[this.sound].onPause()) {
+          playerSounds[this.sound].play();
+        }
+      }
     }
 
     if (this.hp === 0) {
@@ -376,12 +400,6 @@ class Player {
       openDoor = false;
     }
 
-    if (this.sound === "water") {
-      if (playerSounds[this.sound].onPause());
-      {
-        playerSounds[this.sound].play();
-      }
-    }
   }
 
   changeWeapon(gun) {

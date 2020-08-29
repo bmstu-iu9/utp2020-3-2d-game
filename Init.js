@@ -54,7 +54,7 @@ const bullets = new Set();
 const rounds = [];
 
 const playerSounds = {
-  water : new Sound(sounds["water"], 0, 0.8, 0.5, 0.05),
+  water : new Sound(sounds["water"], 0, 0.8, 0.5),
 };
 const playerStartX = 218;
 const playerStartY = 52;
@@ -157,9 +157,9 @@ controlPoints.push(new ControlPoint(2685, 1113, 200, 4, [10, 11], 13));
 controlPoints.push(new ControlPoint(3705, 745, 100, 0, [9, 12], null));*/
 
 const targets = [];
-//targets.push(new Target(107, 41, 0, getRandom()));
-//targets.push(new Target(29, 241, 0, getRandom()));
-//targets.push(new Target(101, 669, 0, getRandom()));
+targets.push(new Target(107, 41, 0, getRandom()));
+targets.push(new Target(29, 241, 0, getRandom()));
+targets.push(new Target(101, 669, 0, getRandom()));
 //targets.push(new Target(449, 785, 1));
 //targets.push(new Target(443, 327, 1));
 //targets.push(new Target(703, 201, 1));
@@ -297,9 +297,9 @@ const init = () => {
   controlPoints.push(new ControlPoint(3705, 745, 100, 0, [9, 12], null));*/
 
   targets.splice(0, targets.length);
-  targets.push(new Target(107, 41, 0));
-  targets.push(new Target(29, 241, 0));
-  targets.push(new Target(101, 669, 0));
+  targets.push(new Target(107, 41, 0, getRandom()));
+  targets.push(new Target(29, 241, 0, getRandom()));
+  targets.push(new Target(101, 669, 0, getRandom()));
   //targets.push(new Target(449, 785, 1));
   //targets.push(new Target(443, 327, 1));
   //targets.push(new Target(703, 201, 1));
