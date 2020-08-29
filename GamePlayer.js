@@ -22,10 +22,6 @@ class Player {
   constructor (x, y, width, height, offsetX, offsetY, rW, rH, speed, sprite) {
     this.x = x;
     this.y = y;
-    this.w_World = width; // размеры спрайта в мире
-    this.h_World = height; //
-    this.w = this.w_World * (1 / camera.scaleX);  //размеры на канвасе
-    this.h = this.h_World * (1 / camera.scaleY); //
     this.realX = this.x + offsetX; //для коллизии
     this.realY = this.y + offsetY; //
     this.realW = rW; // размеры для коллизии
@@ -48,6 +44,7 @@ class Player {
     this.reloadId = null;
     this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
+    this.sound = "nothing";
 
     switch (this.weapon.id) {
       case 0:
@@ -278,25 +275,10 @@ class Player {
           break;
         case 2:
           this.sprite.pl.indexFrameY = 3;
-        /*  this.reloadId = setInterval(() => {
-          //  if (this.sprite.pl.srcX / 64 === 11) {
-            //  this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
-          //  }
-            //this.sprite.pl.srcX = i * this.sprite.pl.width;
-            if (!this.weapon.isReloading()) {
-              clearInterval(this.reloadId);
-              this.reloadId = null;
-            } else {
-            console.log(this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY]);
-            this.sprite.pl.counter = this.sprite.pl.speed - 1;
-            this.sprite.pl.update();
-          }
-        }, (timeForOneBul[this.weapon.id] / 10)); */
           break;
         }
         this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
         this.sprite.pl.counter = 0;
-        this.sprite.pl.speed = 3;
         lTime = this.weapon.lastReloadTime;
       }
       reloadPending = false;
@@ -305,31 +287,20 @@ class Player {
     this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
     this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
     if (this.weapon.isReloading()) {
-      //if (this.weapon.id !== 2) {
-        //this.sprite.pl.update();
-      //}
-      //this.sprite.pl.counter = 0;
      noW = performance.now();
-      dT += (noW - lTime);
-      console.log(dt);
-        if (dT > 0.002 && steP < 1) {
+      dT = (noW - lTime);
+    //  console.log(dt);
+        if (dT > timeForOneBul[this.weapon.id] / 20 && steP < 1) {
           steP += 1/20;
           this.sprite.pl.counter = this.sprite.pl.speed - 1;
           this.sprite.pl.update();
-          dT -= 0.001;
+          //dT -= 0.001;
         }
         if (steP === 1) {
           steP = 0;
         }
-    console.log(this.sprite.pl.currentFrame[3]);
+  //  console.log(this.sprite.pl.currentFrame[3]);
       lTime = noW;
-      //this.sprite.pl.update();
-    //this.sprite.pl.update();
-//  } else {
-  //  if (this.weapon.id === 2) {
-    //  clearInterval(this.reloadId);
-    //}
-    //this.reloadId = null;
   } else {
     steP = 0;
   }
@@ -401,6 +372,12 @@ class Player {
       openDoor = false;
     }
 
+    if (this.sound === "water") {
+      if (playerSounds[this.sound].onPause());
+      {
+        playerSounds[this.sound].play();
+      }
+    }
   }
 
   changeWeapon(gun) {

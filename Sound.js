@@ -8,6 +8,7 @@ class Sound {                                //fadeout start in sec
     this.fadeout = fadeout - start;  //waiting for fadeout
     this.fadeoutStep = 0.1;  //sec
     this.dt = volume / (end - fadeout) * this.fadeoutStep;
+    this.pause = true;
   }
 
   play() {
@@ -18,9 +19,11 @@ class Sound {                                //fadeout start in sec
     clearInterval(this.fadeoutSteps);
     this.audio.currentTime = this.start;
     this.audio.play();
+    this.pause = false;
 
     this.timeout = setTimeout(() => {
       this.audio.pause();
+      this.pause = true;
       clearTimeout(this.timeout);
     }, (this.end - this.start) * 1000);
 
@@ -32,6 +35,8 @@ class Sound {                                //fadeout start in sec
         }, this.fadeoutStep * 1000)
     }, this.fadeout * 1000)
   }
+
+  onPause() { return this.pause };
 }
 
 Sound.globalVolume = 100;

@@ -25,6 +25,10 @@ const rotate = (x, y, angle) => {
            "y": x * Math.sin(angle) + y * Math.cos(angle) };
 }
 
+const getRandom = () => {
+  return Math.round(Math.random());
+}
+
 const ctx = canvas.getContext("2d");
 
 canvas.height = window.innerHeight;
@@ -49,6 +53,9 @@ let sightHeight = 2;
 const bullets = new Set();
 const rounds = [];
 
+const playerSounds = {
+  water : new Sound(sounds["water"], 0, 0.8, 0.5, 0.05),
+};
 const playerStartX = 218;
 const playerStartY = 52;
 const playerWidth = 56;
@@ -71,8 +78,8 @@ const realW = playerWidth / spriteTileW * srcRealW;
 const realH = playerHeight / spriteTileH * srcRealH;
 const gunOffsetX = 88;
 const gunOffsetY = 48;
-let xDeg = 24;
-let yDeg = 40;
+let xDeg = 12; //24
+let yDeg = 42; //40
 const gunOffset = Math.atan( (gunOffsetY - yDeg) / (gunOffsetX - xDeg));
 
 const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
@@ -87,6 +94,42 @@ const spritePl = {
   left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [1]),
   strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1]),
 };
+
+const spriteBot1 = {
+  bot : new Sprite(images["bot1"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+  shoot : new Sprite(images["botshoot"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+};
+
+const spriteBot2 = {
+  bot : new Sprite(images["bot2"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+  shoot : new Sprite(images["botshoot"], 0, spriteTileH, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+};
+
+let spritesForBots = [spriteBot1, spriteBot2];
+
+spriteBot1.bot.setWorldSize(playerWidth, playerHeight);
+spriteBot1.shoot.setWorldSize(playerWidth, playerHeight);
+spriteBot1.up.setWorldSize(FeetH, FeetW);
+spriteBot1.down.setWorldSize(FeetH, FeetW);
+spriteBot1.left.setWorldSize(FeetW, FeetH);
+spriteBot1.right.setWorldSize(FeetW, FeetH);
+
+spriteBot2.bot.setWorldSize(playerWidth, playerHeight);
+spriteBot2.shoot.setWorldSize(playerWidth, playerHeight);
+spriteBot2.up.setWorldSize(FeetH, FeetW);
+spriteBot2.down.setWorldSize(FeetH, FeetW);
+spriteBot2.left.setWorldSize(FeetW, FeetH);
+spriteBot2.right.setWorldSize(FeetW, FeetH);
 
 spritePl.pl.setWorldSize(playerWidth, playerHeight);
 spritePl.shoot.setWorldSize(playerWidth, playerHeight);
@@ -114,9 +157,9 @@ controlPoints.push(new ControlPoint(2685, 1113, 200, 4, [10, 11], 13));
 controlPoints.push(new ControlPoint(3705, 745, 100, 0, [9, 12], null));*/
 
 const targets = [];
-targets.push(new Target(107, 41, 0));
-targets.push(new Target(29, 241, 0));
-targets.push(new Target(101, 669, 0));
+//targets.push(new Target(107, 41, 0, getRandom()));
+//targets.push(new Target(29, 241, 0, getRandom()));
+//targets.push(new Target(101, 669, 0, getRandom()));
 //targets.push(new Target(449, 785, 1));
 //targets.push(new Target(443, 327, 1));
 //targets.push(new Target(703, 201, 1));
