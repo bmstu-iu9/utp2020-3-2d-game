@@ -37,14 +37,14 @@ let collisionPlayer = (x, y, w, h) => {
   }
 
   if ((f) && nowWater && (!lastWater)) {
-    player.speed /= 2;
-    camera.dx /= 2;
-    camera.dy /= 2;
+    player.speed = playerSpeed/2;
+    camera.dx = cameraSpeed/2;
+    camera.dy = cameraSpeed/2;
   }
   else if ((f) && lastWater && !nowWater) {
-    player.speed *= 2;
-    camera.dx *= 2;
-    camera.dy *= 2;
+    player.speed = playerSpeed;
+    camera.dx = cameraSpeed;
+    camera.dy = cameraSpeed;
   }
 
   if ((!lastRed) && nowRed) {
