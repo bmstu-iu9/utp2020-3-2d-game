@@ -20,9 +20,9 @@ const generateTileMap = () => {
                   getImageData(0, 0, mapCanvas.width, mapCanvas.height).data;
   const findDominant = (x, y, w, h) => {
     let distinctRGB = [ [0, 162, 232], [237, 28, 36], [185, 122, 87], [0, 0, 0], [255, 127, 39], [255, 255, 255], [153, 217, 234],
-                        [255, 242, 0] ];
-    let distinctColors = ["water", "red", "door", "black", "orange", "white", "glass", "cover"];
-    let count = [0, 0, 0, 0, 0, 0, 0, 0];
+                        [255, 242, 0], [63, 72, 204], ];
+    let distinctColors = ["water", "red", "door", "black", "orange", "white", "glass", "cover", "tile", ];
+    let count = [0, 0, 0, 0, 0, 0, 0, 0, 0];  //!!!не забывать добавлять сюда элементы!!!
     const checkColor = (r, g, b) => {
       //https://stackoverflow.com/questions/44189508/finding-which-color-is-the-closest-to-the-given-rgb-values-in-c
       let res = 0;
