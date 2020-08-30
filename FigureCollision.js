@@ -16,7 +16,9 @@ let collisionRect = (x1, y1, h1, w1, x2, y2, h2, w2) => {
 
   for (let i = 0; i < 2; i++) {
     for (let j = 0; j < 2; j++) {
-      f = pointInRect (x1 + w1 * i, y1 + h1 * j, x2, y2, h2, w2);
+      if (pointInRect (x1 + w1 * i, y1 + h1 * j, x2, y2, h2, w2)) {
+        f = true;
+      }
       if (f) break;
     }
     if (f) break;
@@ -24,7 +26,9 @@ let collisionRect = (x1, y1, h1, w1, x2, y2, h2, w2) => {
 
   for (let i = 0; i < 2; i++) {
     for (let j = 0; j < 2; j++) {
-      f = pointInRect (x2 + w2 * i, y2 + h2 * j, x1, y1, h1, w1);
+      if (pointInRect (x2 + w2 * i, y2 + h2 * j, x1, y1, h1, w1)) {
+        f = true;
+      }
       if (f) break;
     }
     if (f) break;

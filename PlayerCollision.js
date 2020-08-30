@@ -40,7 +40,6 @@ let collisionPlayer = (x, y, w, h) => {
   for (let i = 0; i < doors.length; i++) {
     let d = doors[i];
     if (collisionRect(x, y, h, w, d.getX(), d.getY(), d.getH(), d.getW())) {
-      console.log(x, y, h, w, d.getX(), d.getY(), d.getH(), d.getW())
       f = false;
     }
   }
