@@ -128,7 +128,11 @@ const draw = () => {
   });
 
   targets.forEach(target => {
-    if (player.vis(target.x, target.y)) {
+    let v = player.vis(target.x, target.y, 0);
+    if (v) {
+      target.lastTimeSeen = performance.now();
+    }
+    if (v || performance.now() - target.lastTimeSeen < 1000) {
       target.draw(1 / camera.scaleX);
     }
   });
@@ -200,7 +204,7 @@ const loop = () => {
 
   draw();
   lastTime = now;
-  
+
   // requestId = RAF(loop);
 }
 

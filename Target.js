@@ -25,16 +25,15 @@ class Target {
     this.initYBlock = (Y - (Y % worldTileSize)) / worldTileSize;
     this.sightX = 0;
     this.sightY = 0;
-    this.plX = 0;
-    this.plY = 0;
+    this.plwalkXBlock = 0;
+    this.plwalkXBlock = 0;
     this.seesPlayer = false;
     this.lastPlTime = 0;
-    this.priorityRoute = false;
     this.moving = false;
     this.onPosition = false;
     this.knowPlPos = false;
     this.underAttack = false;
-    this.recon = false;
+    this.lastTimeSeen = 0;
     this.index = I;
     this.sprite = spritesForBots[I];
     this.angle = 0;
@@ -56,32 +55,24 @@ class Target {
     if (this.alive) {
       this.sightX = player.realXCenter;
       this.sightY = player.realYCenter;
-      /*if (this.vis(player.realXCenter, player.realYCenter)) {
-      //if (player.vis(this.x, this.y, 1)) {
-        this.hide();
-      }*/
       this.analyzeSituation();
-      if (this.underAttack) {
-        this.hide()
-      } else {
-        this.attack();
-      }
-      //A_Star(mesh[2][2], mesh[15][54]);
-      /*if (this.priorityRoute) {
-        this.movement();
-      } else if (this.seesPlayer) {
-        if (this.underAttack) {
+      switch(this.st) {
+        case 1:
           this.hide();
-        } else {
+          break;
+        case 2:
           this.attack();
-        }
-      } else if (this.underAttack) {
-        this.hide();
-      } else if (this.knowPlPos) {
-        //this.reconnoiter();
-      } else {
-        //this.comeBack();
-      }*/
+          break;
+        case 3:
+          this.retreat();
+          break;
+        case 4:
+          this.reconnoiter();
+          break;
+        case 5:
+          this.comeBack();
+          break;
+      }
     } else {
       if (this.weapon !== null) {
         controlPoints[this.point].bots -= 1;
@@ -98,86 +89,66 @@ class Target {
     }
     if (this.seesPlayer || performance.now() - this.lastPlTime < 1000) {
       this.knowPlPos = true;
-
-      this.plX = player.realXCenter;
-      this.plY = player.realYCenter;
-      let angle = findAngle(this.plX, this.plY,
+      this.plwalkXBlock = player.walkXBlock;
+      this.plwalkYBlock = player.walkYBlock;
+      let angle = findAngle(player.realXCenter, player.realYCenter,
                             this.x, this.y,
                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
-      this.underAttack = this.underAttack || (angle < 0.939 && player.shooting); //|| angle < 0.985;
+      this.underAttack = (angle < 0.7 && player.shooting) || angle < 0.35;
     } else {
-      //this.knowPlPos = true;
       this.underAttack = false;
     }
 
-    if (this.recon && !this.moving) {
-      this.knowPlPos = false;
-    }
-
-    /*if (controlPoints[this.point].captured && !this.priorityRoute) {
-      if (controlPoints[this.point].next !== null) {
-        this.priorityRoute = true;
-        let XB = controlPoints[controlPoints[this.point].next].XBlock;
-        let YB = controlPoints[controlPoints[this.point].next].XBlock;
-        this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB]);
-        this.routeP = this.route.length - 1;
-        this.moving = true;
-      } else if (!this.moving) {
-        let tx = Math.random() * controlPoints[this.point].r;
-        let ty = Math.random() * controlPoints[this.point].r;
-        if (Math.random() > 0.5) {
-          tx = controlPoints[this.point].x + tx;
-        } else {
-          tx = controlPoints[this.point].x - tx;
-        }
-        if (Math.random() > 0.5) {
-          ty = controlPoints[this.point].y + ty;
-        } else {
-          ty = controlPoints[this.point].y - ty;
-        }
-        let XB = (tx - (tx % worldTileSize)) / worldTileSize;
-        let YB = (ty - (ty % worldTileSize)) / worldTileSize;
-        while (mesh[XB][YB].color === 1) {
-          tx = Math.random() * controlPoints[this.point].r;
-          ty = Math.random() * controlPoints[this.point].r;
-          if (Math.random() > 0.5) {
-            tx = controlPoints[this.point].x + tx;
-          } else {
-            tx = controlPoints[this.point].x - tx;
-          }
-          if (Math.random() > 0.5) {
-            ty = controlPoints[this.point].y + ty;
-          } else {
-            ty = controlPoints[this.point].y - ty;
-          }
-          XB = (tx - (tx % worldTileSize)) / worldTileSize;
-          YB = (ty - (ty % worldTileSize)) / worldTileSize;
-        }
-        this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB]);
-        this.routeP = this.route.length - 1;
-        this.moving = true;
+    if (!this.moving || !(this.st === 3 || this.st === 1)) {
+      if (dist(this.x, this.initialX, this.y, this.initialY) <= 10) {
+        this.st = 0;
       } else {
-        this.movement();
+        this.st = 5;
+      }
+      if (this.knowPlPos) {
+        this.st = 4;
+      }
+      if (this.seesPlayer) {
+        this.st = 2;
+      }
+      if (this.underAttack) {
+        this.st = 1;
+      }
+      if (controlPoints[this.point].captured) {
+        this.st = 3;
       }
     }
-    if (!this.moving && this.priorityRoute) {
-      this.priorityRoute = false;
-      controlPoints[this.point].bots -= 1;
-      this.point = controlPoints[this.point].next;
-      controlPoints[this.point].bots += 1;
-    }*/
+  }
+
+  retreat() {
+    if (!this.moving) {
+      let x1 = 0;
+      let y1 = 0;
+      let XB = (x1 - (x1 % worldTileSize)) / worldTileSize;
+      let YB = (y1 - (y1 % worldTileSize)) / worldTileSize;
+      while (!mesh[XB][YB].walk || mesh[XB][YB].color !== 0) {
+        let nextPoint = controlPoints[controlPoints[this.point].next];
+        x1 = nextPoint.x + (Math.random() > 0.5 ? nextPoint.r * Math.random() : -nextPoint.r * Math.random());
+        y1 = nextPoint.y + (Math.random() > 0.5 ? nextPoint.r * Math.random() : -nextPoint.r * Math.random());
+        XB = (x1 - (x1 % worldTileSize)) / worldTileSize;
+        YB = (y1 - (y1 % worldTileSize)) / worldTileSize;
+      }
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB]);
+      this.routeP = this.route.length - 1;
+      this.moving = true;
+    } else {
+      this.movement(3);
+    }
   }
 
   reconnoiter() {
     if (!this.moving) {
-      let XB = (this.plX - (this.plX % worldTileSize)) / worldTileSize;
-      let YB = (this.plY - (this.plY % worldTileSize)) / worldTileSize;
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.plwalkXBlock][this.plwalkYBlock]);
       this.routeP = this.route.length - 1;
       this.moving = true;
       this.recon = true;
     } else {
-      this.movement();
+      this.movement(4);
     }
   }
 
@@ -187,7 +158,7 @@ class Target {
       this.routeP = this.route.length - 1;
       this.moving = true;
     } else {
-      this.movement();
+      this.movement(5);
     }
   }
 
@@ -233,7 +204,7 @@ class Target {
         this.moving = true;
       }
     } else {
-      this.movement();
+      this.movement(2);
     }
   }
 
@@ -244,11 +215,11 @@ class Target {
       this.routeP = this.route.length - 1;
       this.moving = true;
     } else {
-      this.movement();
+      this.movement(1);
     }
   }
 
-  movement() {
+  movement(key) {
     if (this.moving) {
       //this.sightX = this.route[this.routeP].x;
       //this.sightY = this.route[this.routeP].y;
@@ -288,17 +259,33 @@ class Target {
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1) {
           this.moving = false;
+
+          this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
+          this.YBlock = (this.route[this.routeP].y - (this.route[this.routeP].y % worldTileSize)) / worldTileSize;
+
+          if (key === 4) {
+            this.knowPlPos = false;
+          } else if (key === 3) {
+            controlPoints[this.point].bots -= 1;
+            this.point = controlPoints[this.point].next;
+            controlPoints[this.point].bots += 1;
+            this.initialX = this.x;
+            this.initialY = this.y;
+            this.initXBlock = this.XBlock;
+            this.initYBlock = this.YBlock;
+          }
+
         } else {
           this.routeP -= 1;
+          this.XBlock = (this.route[this.routeP + 1].x - (this.route[this.routeP + 1].x % worldTileSize)) / worldTileSize;
+          this.YBlock = (this.route[this.routeP + 1].y - (this.route[this.routeP + 1].y % worldTileSize)) / worldTileSize;
         }
       }
-      this.XBlock = (this.x - (this.x % worldTileSize)) / worldTileSize;
-      this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
     }
   }
 
   draw(scale) {
-    /*if (this.alive) {
+    if (this.alive) {
       ctx.beginPath();
       ctx.lineWidth = 0.5;
       ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.r * scale, 0, Math.PI * 2);
@@ -319,8 +306,8 @@ class Target {
       ctx.fillStyle = "red";
       ctx.fill();
       ctx.closePath();
-    }*/
-    if (this.alive) {
+    }
+    /*if (this.alive) {
       if (!this.underAttack && this.onPosition) {
         this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
         this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
@@ -331,7 +318,7 @@ class Target {
           this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
       }
     }
-  }
+  }*/
 }
 
   vis(tx, ty) {
@@ -397,8 +384,8 @@ class ControlPoint {
 const findAngle = (x1, y1, x2, y2, x3, y3) => {
   let vx1 = x2 - x1;
   let vx2 = x3 - x1;
-  let vy1 = y2 - x1;
-  let vy2 = y3 - x1;
+  let vy1 = y2 - y1;
+  let vy2 = y3 - y1;
   return  Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
                     (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
                      Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));

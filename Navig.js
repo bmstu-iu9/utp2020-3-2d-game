@@ -70,7 +70,7 @@ const BFS = (st) => {
 }
 
 const checkDef = (node, st) => {
-  return heuristic(node, mesh[player.XBlock][player.YBlock]) * Math.sqrt(2) + 10 > heuristic(st, mesh[player.XBlock][player.YBlock]);
+  return heuristic(node, mesh[player.walkXBlock][player.walkYBlock]) * Math.sqrt(2) > heuristic(st, mesh[player.walkXBlock][player.walkYBlock]);
 }
 
 const checkNode = (node) => {
@@ -189,7 +189,7 @@ const makeRoute = (cF, s, g) => {
 }
 
 const findCost = (elem) => {
-  if (player.vis(elem.x, elem.y)) {
+  if (player.vis(elem.x, elem.y, 0)) {
     return elem.def + 100;
   } else {
     return elem.def;
@@ -203,7 +203,7 @@ const heuristic = (block1, block2) => {
 const vision = (sx, sy, tx, ty) => {
   let XBlock = (sx - (sx % worldTileSize)) / worldTileSize;
   let YBlock = (sy - (sy % worldTileSize)) / worldTileSize;
-  if (mesh[XBlock][YBlock].color !== 1) {
+  if (mesh[XBlock][YBlock] !== 1) {
     let vx = sx - mesh[XBlock][YBlock].x;
     let vy = sy - mesh[XBlock][YBlock].y;
     let blocks = [];
