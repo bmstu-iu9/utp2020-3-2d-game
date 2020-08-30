@@ -30,6 +30,13 @@ let collisionRect = (x1, y1, h1, w1, x2, y2, h2, w2) => {
     if (f) break;
   }
 
+  if (!f && (x1 >= x2) && (x1 + w1 <= x2 + w2) && (y1 <= y2) && (y1 + h1 >= y2 + h2)) {
+    f = true;
+  }
+  if (!f && (x2 >= x1) && (x2 + w2 <= x1 + w1) && (y2 <= y1) && (y2 + h2 >= y1 + h1)) {
+    f = true;
+  }
+
   return f;
 }
 

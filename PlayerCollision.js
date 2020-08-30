@@ -37,6 +37,21 @@ let collisionPlayer = (x, y, w, h) => {
     }
   }
 
+  for (let i = 0; i < doors.length; i++) {
+    let d = doors[i];
+    if (collisionRect(x, y, h, w, d.getX(), d.getY(), d.getH(), d.getW())) {
+      console.log(x, y, h, w, d.getX(), d.getY(), d.getH(), d.getW())
+      f = false;
+    }
+  }
+
+  for (let i = 0; i < glass.length; i++) {
+    let g = glass[i];
+    if (!g.broken && collisionRect(x, y, h, w, g.getX(), g.getY(), g.getH(), g.getW())) {
+      f = false;
+    }
+  }
+
   if ((f) && nowWater && (!lastWater)) {
     player.speed = playerSpeed/2;
     camera.dx = cameraSpeed/2;
