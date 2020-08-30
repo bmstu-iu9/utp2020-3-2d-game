@@ -43,6 +43,7 @@ const collision = () => {
           if (bul.justShooted == false) {
             if (collisionCircleRect(x1, y1, bul.bulletRadius, player.realX, player.realY, player.realH, player.realW)){
               f = true;
+              blood.push(new Blood(x1, y1, bul.dx, bul.dy, bul.damage, true))
             }
           }
         }
@@ -53,6 +54,7 @@ const collision = () => {
                   targets[j].alive == true) {
                 f = true;
                 targets[j].alive = false;
+                blood.push(new Blood(x1, y1, bul.dx, bul.dy, bul.damage, true));
               }
               if (f) {
                 break;
