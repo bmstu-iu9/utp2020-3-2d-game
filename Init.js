@@ -39,7 +39,7 @@ const blockSize = 10;
 
 const cameraStartX = 0;
 const cameraStartY = 0;
-const moveBorder = 150;
+const moveBorder = canvas.width / 3;
 const visiblePart = 500;
 let cameraSpeed = 4;
 
@@ -207,6 +207,13 @@ doors.push(new Door(1700, 1135, 80, 10, true, images["door"]));
 doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
 doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
 doors.push(new Door(2215, 1340, 60, 10, false, images["door"]));
+doors.push(new Door(1860, 155, 70, 10, true, images["door"]));
+doors.push(new Door(2425, 280, 60, 10, false, images["door"]));
+doors.push(new Door(3740, 225, 60, 10, true, images["door"]));
+doors.push(new Door(3460, 235, 70, 10, true, images["door"]));
+doors.push(new Door(3410, 465, 60, 10, true, images["door"]));
+doors.push(new Door(3370, 815, 70, 10, true, images["door"]));
+doors.push(new Door(3370, 945, 70, 10, true, images["door"]));
 
 const glass = [];
 glass.push(new Glass(1100, 770, 50, 10, Math.PI / 2, images["glass"]));
@@ -222,6 +229,12 @@ glass.push(new Glass(1880, 770, 50, 10, -Math.PI / 2, images["glass"]));
 glass.push(new Glass(1610, 1150, 100, 10, Math.PI / 2, images["glass"]));
 glass.push(new Glass(2410, 670, 70, 10, 0, images["glass"]));
 glass.push(new Glass(2070, 1220, 100, 10, 0, images["glass"]));
+glass.push(new Glass(1740, 60, 60, 10, Math.PI / 2, images["glass"]));
+glass.push(new Glass(3600, 100, 60, 10, Math.PI / 2, images["glass"]));
+glass.push(new Glass(3260, 280, 60, 10, Math.PI / 2, images["glass"]));
+glass.push(new Glass(3260, 370, 60, 10, Math.PI / 2, images["glass"]));
+glass.push(new Glass(3260, 840, 80, 10, Math.PI / 2, images["glass"]));
+
 
 const trees = [];
 trees.push(new Tree(540, 25, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
@@ -347,6 +360,13 @@ const init = () => {
   doors.push(new Door(2015, 1170, 80, 10, false, images["door"]));
   doors.push(new Door(2770, 805, 60, 10, true, images["door"]));
   doors.push(new Door(2215, 1340, 60, 10, false, images["door"]));
+  doors.push(new Door(1860, 155, 70, 10, true, images["door"]));
+  doors.push(new Door(2425, 280, 60, 10, false, images["door"]));
+  doors.push(new Door(3740, 225, 60, 10, true, images["door"]));
+  doors.push(new Door(3460, 235, 70, 10, true, images["door"]));
+  doors.push(new Door(3410, 465, 60, 10, true, images["door"]));
+  doors.push(new Door(3370, 815, 70, 10, true, images["door"]));
+  doors.push(new Door(3370, 945, 70, 10, true, images["door"]));
 
   glass.splice(0, glass.length);
   glass.push(new Glass(1100, 770, 50, 10, Math.PI / 2, images["glass"]));
@@ -362,6 +382,11 @@ const init = () => {
   glass.push(new Glass(1610, 1150, 100, 10, Math.PI / 2, images["glass"]));
   glass.push(new Glass(2410, 670, 70, 10, 0, images["glass"]));
   glass.push(new Glass(2070, 1220, 100, 10, 0, images["glass"]));
+  glass.push(new Glass(1740, 60, 60, 10, Math.PI / 2, images["glass"]));
+  glass.push(new Glass(3600, 100, 60, 10, Math.PI / 2, images["glass"]));
+  glass.push(new Glass(3260, 280, 60, 10, Math.PI / 2, images["glass"]));
+  glass.push(new Glass(3260, 370, 60, 10, Math.PI / 2, images["glass"]));
+  glass.push(new Glass(3260, 840, 80, 10, Math.PI / 2, images["glass"]));
 
   blood.splice(0, blood.length);
 }
