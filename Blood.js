@@ -8,14 +8,13 @@ class Blood {
     this.dx = dx / len;
     this.dy = dy / len;
     this.deadly = deadly;
-    this.flyLen = 15;
     this.firstR = 2;
     this.lastR = 6;
     this.st = 0;
-    this.speed = 5;
-    this.animTime0 = 0.5;
+    this.speed = 12;
+    this.animTime0 = 0.3;
     this.countTime0 = 0;
-    this.deltaTime0 = this.animTime0 / this.flyLen;
+    this.deltaTime0 = 0.1;
     this.animTime1 = 2;
     this.countTime1 = 0;
     this.deltaTime1 = this.animTime1 / (this.lastR - this.firstR);
@@ -84,8 +83,8 @@ class Blood {
       let unitDy = this.dy / this.speed;
 
       let maxLen = 0.2;
-      let mainStep = 1/4;
-      let normStep = 0.3;
+      let mainStep = 1/2;
+      let normStep = 1;
       let gap = 5.2;
       let mainLen = this.speed * gap; //поменять gap, чтобы увеличить расстояние
       let iterateLen = 0;

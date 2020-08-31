@@ -16,7 +16,7 @@ class Glass {
     this.srcOffsetX = 20;
     this.srcOffsetY = 9;
     this.lastTime = 0;
-    this.animTime = 0.5;
+    this.animTime = 0.3;
     this.deltaTime = this.animTime / 8;
     this.scaleX = 1/5; //door/tile
     this.scaleY = 32/this.srcH;

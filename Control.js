@@ -13,6 +13,7 @@ let throwTime = 0;
 let paused = true;
 let dead = false;
 let openDoor = false;
+let getInCover = false;
 
 const controlInit = () => {
   rightPressed = false;
@@ -27,6 +28,7 @@ const controlInit = () => {
   throwTime = 0;
   paused = true;
   openDoor = false;
+  getInCover = false;
 }
 
 const keyUpHandler = (e) => {
@@ -42,8 +44,10 @@ const keyUpHandler = (e) => {
     } else if (e.keyCode === 71 && !throwGrenade) { //g
       throwGrenade = true;
       throwTime = performance.now() - throwTime;
-    } else if (e.keyCode === 70) {
+    } else if (e.keyCode === 70) { //f
       openDoor = true;
+    } else if (e.keyCode === 81) { //q
+      getInCover = true;
     }
   }
   if (e.keyCode === 27 && !firstStart) { //esc

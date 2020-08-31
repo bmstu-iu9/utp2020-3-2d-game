@@ -12,6 +12,7 @@ class Bullet {
     this.dx = speed * (sightX - x) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.dy = speed * (sightY - y) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.speed = speed;
+    this.coverId = -1;
   }
 
   draw() {
