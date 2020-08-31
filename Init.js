@@ -319,13 +319,23 @@ trees.push(new Tree(2333, 85, 120, 130, 0, 250, 102, 102, images["trees"]));
 trees.push(new Tree(3563, 677, 60, 70, 111, 130, 90, 80, images["trees"]));
 trees.push(new Tree(3564, 634, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
 trees.push(new Tree(3573, 574, 120, 130, 0, 250, 102, 102, images["trees"]));
-
 trees.push(new Tree(3545, 965, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
 trees.push(new Tree(3689, 925, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
 trees.push(new Tree(3561, 885, 110, 130, 0, 250, 102, 102, images["trees"]));
 trees.push(new Tree(3614, 972, 110, 130, 0, 250, 102, 102, images["trees"]));
 
 const blood = [];
+
+const covers = [];
+covers.push(new Cover(910, 1020, 10, 70, 0));
+covers.push(new Cover(1150, 1180, 10, 70, 1));
+covers.push(new Cover(1250, 1080, 50, 80, 2));
+covers.push(new Cover(1410, 560, 80, 50, 3));
+covers.push(new Cover(2210, 140, 10, 70, 4));
+covers.push(new Cover(2100, 720, 30, 70, 5));
+covers.push(new Cover(2100, 840, 30, 70, 6));
+covers.push(new Cover(2510, 910, 70, 30, 7));
+covers.push(new Cover(3400, 620, 70, 10, 8));
 
 const init = () => {
   controlInit();

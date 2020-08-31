@@ -8,9 +8,14 @@ class Target {
     this.r = 18;
     this.route = null;
     this.routeP = 0;
+    this.lastUpdate = 0;
     this.st = 0;
     // 0 - ожидание
     // 1 - движение в укрытие
+    // 2 - атака
+    // 3 - отступление
+    // 4 - поиск игрока
+    // 5 - возвращение
     this.visible = false;
     this.alive = true;
     this.speed = player.speed;
@@ -30,6 +35,7 @@ class Target {
     this.seesPlayer = false;
     this.lastPlTime = 0;
     this.moving = false;
+    this.priority = false;
     this.onPosition = false;
     this.knowPlPos = false;
     this.underAttack = false;
@@ -58,6 +64,12 @@ class Target {
       this.sightX = player.realXCenter;
       this.sightY = player.realYCenter;
       this.analyzeSituation();
+
+      if (performance.now() - this.lastUpdate > 4000) {
+        this.lastUpdate = performance.now();
+        this.moving = false;
+      }
+
       switch(this.st) {
         case 1:
           this.hide();
@@ -111,19 +123,20 @@ class Target {
     if (this.seesPlayer) {
       this.lastPlTime = performance.now();
     }
-    if (this.seesPlayer || performance.now() - this.lastPlTime < 1000) {
+    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < 1000;
+    if (this.seesPlayer) {
       this.knowPlPos = true;
       this.plwalkXBlock = player.walkXBlock;
       this.plwalkYBlock = player.walkYBlock;
       let angle = findAngle(player.realXCenter, player.realYCenter,
                             this.x, this.y,
                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
-      this.underAttack = (angle < 0.7 && player.shooting) || angle < 0.35;
+      this.underAttack = (angle < 1.05 && player.shooting); //|| angle < 0.35;
     } else {
       this.underAttack = false;
     }
-
-    if (!this.moving || !(this.st === 3 || this.st === 1)) {
+    let oldSt = this.st;
+    if (!this.priority) {
       if (dist(this.x, this.initialX, this.y, this.initialY) <= 10) {
         this.st = 0;
       } else {
@@ -136,11 +149,16 @@ class Target {
         this.st = 2;
       }
       if (this.underAttack) {
+        this.priority = true;
         this.st = 1;
       }
       if (controlPoints[this.point].captured) {
+        this.priority = true;
         this.st = 3;
       }
+    }
+    if (this.st !== oldSt) {
+      this.moving = false;
     }
   }
 
@@ -249,8 +267,41 @@ class Target {
             this.initYBlock = this.YBlock;
           }
 
+          if (key === 1 || key === 3) {
+            this.priority = false;
+          }
+
         } else {
           this.routeP -= 1;
+          for (let door of doors) {
+            if (collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
+                                  this.route[this.routeP].x, this.route[this.routeP].y,
+                                  door.getX(), door.getY(),
+                                  door.getX() + door.getW(), door.getY() + door.getH())) {
+              if (!door.moving) {
+                door.toggle();
+              }
+            }
+          }
+          for (let gl of glass) {
+            let breakGL = null;
+            if (this.routeP - 5 <= - 1) {
+              breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
+                                          this.route[this.routeP].x, this.route[this.routeP].y,
+                                          gl.getX(), gl.getY(),
+                                          gl.getX() + gl.getW(), gl.getY() + gl.getH());
+            } else {
+              breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
+                                          this.route[this.routeP - 2].x, this.route[this.routeP - 2].y,
+                                          gl.getX(), gl.getY(),
+                                          gl.getX() + gl.getW(), gl.getY() + gl.getH());
+            }
+            if (breakGL) {
+              if (!gl.broken) {
+                this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
+              }
+            }
+          }
           this.XBlock = (this.route[this.routeP + 1].x - (this.route[this.routeP + 1].x % worldTileSize)) / worldTileSize;
           this.YBlock = (this.route[this.routeP + 1].y - (this.route[this.routeP + 1].y % worldTileSize)) / worldTileSize;
         }
@@ -263,13 +314,6 @@ class Target {
       ctx.beginPath();
       ctx.lineWidth = 0.5;
       ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.r * scale, 0, Math.PI * 2);
-      ctx.fillStyle = "yellow";
-      ctx.fill();
-      ctx.closePath();
-
-      ctx.beginPath();
-      ctx.lineWidth = 0.5;
-      ctx.arc(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), 3, 0, Math.PI * 2);
       ctx.fillStyle = "yellow";
       ctx.fill();
       ctx.closePath();

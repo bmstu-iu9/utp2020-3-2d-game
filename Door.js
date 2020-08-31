@@ -10,9 +10,9 @@ class Door {
     this.horizontal = horizontal;
     this.opened = false;
     this.img = img;
-    this.maxTime = 1;
-    this.time = 1; //sec
-    this.delta = 0.01 //sec
+    this.maxTime = 0.6;
+    this.time = 0.6; //sec
+    this.delta = 0.016 //sec
     if (horizontal) {
      this.direction = "down";
      this.angle = 0;

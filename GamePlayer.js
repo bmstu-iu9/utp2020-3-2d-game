@@ -41,6 +41,8 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.shooting = false;
+    this.inCover = false;
+    this.coverId = -1;
     this.reloadId = null;
     this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
@@ -102,6 +104,8 @@ class Player {
     this.dead = false;
     this.fire = false;
     this.shooting = false;
+    this.inCover = false;
+    this.coverId = -1;
     this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
@@ -165,16 +169,10 @@ class Player {
         this.sprite.pl.drawBodySprite();
       }
     }
-    ctx.beginPath();
-    ctx.lineWidth = 0.5;
-    ctx.arc(worldToCanvas(this.realXCenter, 0), worldToCanvas(this.realYCenter, 1), 5, 0, Math.PI * 2);
-    ctx.fillStyle = "blue";
-    ctx.fill();
-    ctx.closePath();
   }
 
   move(dt) {
-    if (downPressed && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
+    if (downPressed && !this.inCover && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
       this.realYCenter += this.speed;
       this.y += this.speed;
@@ -192,7 +190,7 @@ class Player {
           playerSounds[this.sound].play();
         }
       }
-    } else if (upPressed && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
+    } else if (upPressed && !this.inCover && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
       this.y -= this.speed;
       this.realY -= this.speed;
       this.realYCenter -= this.speed;
@@ -211,7 +209,7 @@ class Player {
       }
     }
 
-    if (rightPressed && collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH)) {
+    if (rightPressed && !this.inCover && collisionPlayer(this.realX + this.speed, this.realY, this.realW, this.realH)) {
       this.x += this.speed;
       this.realX += this.speed;
       this.realXCenter += this.speed;
@@ -228,7 +226,7 @@ class Player {
           playerSounds[this.sound].play();
         }
       }
-    } else if (leftPressed && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
+    } else if (leftPressed && !this.inCover && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
       this.x -= this.speed;
       this.realX -= this.speed;
       this.realXCenter -= this.speed;
@@ -403,6 +401,38 @@ class Player {
       openDoor = false;
     }
 
+    if (getInCover) {
+      if (this.inCover) {
+        this.inCover = false;
+        this.coverId = -1;
+      } else {
+        let blocks = this.getBlocksByRadius();
+        for (let block of blocks) {
+          let coverId = Cover.defineCover(block.x, block.y);
+          if (coverId !== -1) {
+            this.inCover = true;
+            this.coverId = coverId;
+          }
+        }
+      }
+      getInCover = false;
+    }
+
+  }
+
+  getBlocksByRadius() {
+    let step = Math.PI / 4;
+    let blocks = [];
+    for (let angle = 0; angle < 2 * Math.PI; angle += step) {
+      let end = Math.ceil(this.actionRadius / 2 / worldTileSize);
+      for (let i = 0; i < end; i++) {
+        let v = rotate(i * worldTileSize + this.actionRadius / 2, 0, angle);
+        let xBlock = Math.floor((this.realXCenter + v.x) / worldTileSize);
+        let yBlock = Math.floor((this.realYCenter + v.y) / worldTileSize);
+        blocks.push({"x" : xBlock, "y" : yBlock});
+      }
+    }
+    return blocks;
   }
 
   changeWeapon(gun) {
