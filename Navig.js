@@ -203,7 +203,7 @@ const heuristic = (block1, block2) => {
 const vision = (sx, sy, tx, ty) => {
   let XBlock = (sx - (sx % worldTileSize)) / worldTileSize;
   let YBlock = (sy - (sy % worldTileSize)) / worldTileSize;
-  if (mesh[XBlock][YBlock] !== 1) {
+  if (mesh[XBlock][YBlock].color !== 1) {
     let vx = sx - mesh[XBlock][YBlock].x;
     let vy = sy - mesh[XBlock][YBlock].y;
     let blocks = [];

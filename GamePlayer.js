@@ -165,12 +165,6 @@ class Player {
         this.sprite.pl.drawBodySprite();
       }
     }
-    ctx.beginPath();
-    ctx.lineWidth = 0.5;
-    ctx.arc(worldToCanvas(this.realXCenter, 0), worldToCanvas(this.realYCenter, 1), 5, 0, Math.PI * 2);
-    ctx.fillStyle = "blue";
-    ctx.fill();
-    ctx.closePath();
   }
 
   move(dt) {
