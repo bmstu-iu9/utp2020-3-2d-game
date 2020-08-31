@@ -247,7 +247,10 @@ class Player {
       }
     }
 
-    if (this.hp === 0) {
+    if (this.death === true) {
+      this.sprite.death.x = worldToCanvas(this.realXCenter, 0);
+      this.sprite.death.y = worldToCanvas(this.realYCenter, 1);
+      this.sprite.death.drawBodySprite();
       gameOver();
       return;
     }

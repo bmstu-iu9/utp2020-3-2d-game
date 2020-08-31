@@ -44,6 +44,8 @@ class Target {
 
     this.sprite.bot.x = worldToCanvas(this.x, 0);
     this.sprite.bot.y = worldToCanvas(this.y, 1);
+    this.sprite.death.x = worldToCanvas(this.x, 0);
+    this.sprite.death.y = worldToCanvas(this.y, 1);
     this.sprite.shoot.x = worldToCanvas(this.x, 0);
     this.sprite.shoot.y = worldToCanvas(this.y, 1);
     this.sprite.right.x = worldToCanvas(this.x, 0);
@@ -73,12 +75,34 @@ class Target {
           this.comeBack();
           break;
       }
+      let x1 = worldToCanvas(this.x, 0);
+      let y1 = worldToCanvas(this.y, 1);
+      let x2 = worldToCanvas(this.sightX, 0);
+      let y2 = worldToCanvas(this.sightY, 1);
+      this.angle = checkDeg(x1, y1, x2, y2);
+      this.sprite.bot.x = x1;
+      this.sprite.bot.y = y1;
+      this.sprite.shoot.x = x1;
+      this.sprite.shoot.y = y1;
+      if (this.moving) {
+        this.sprite.bot.update();
+      }
+      if (this.st === 2 && this.onPosition) {
+        this.sprite.shoot.update();
+      }
     } else {
       if (this.weapon !== null) {
         controlPoints[this.point].bots -= 1;
         this.weapon.drop(this.x, this.y);
         this.weapon = null;
       }
+      let x1 = worldToCanvas(this.x, 0);
+      let y1 = worldToCanvas(this.y, 1);
+      let x2 = worldToCanvas(this.sightX, 0);
+      let y2 = worldToCanvas(this.sightY, 1);
+      this.angle = checkDeg(x1, y1, x2, y2);
+      this.sprite.death.x = x1;
+      this.sprite.death.y = y1;
     }
   }
 
@@ -173,31 +197,6 @@ class Target {
       }
       if (this.onPosition) {
         this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
-        let x1 = worldToCanvas(this.x, 0);
-        let y1 = worldToCanvas(this.y, 1);
-        let x2 = worldToCanvas(player.realXCenter, 0);
-        let y2 = worldToCanvas(player.realYCenter, 1);
-        let deg = 0;
-        if (y2 > y1) {
-          if (x2 < x1) {
-            deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
-          } else {
-            deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
-          }
-        } else {
-          if (x2 > x1) {
-            deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
-          } else {
-            deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
-          }
-        }
-        this.angle = deg;
-        this.sprite.shoot.x = worldToCanvas(this.x, 0);
-        this.sprite.shoot.y = worldToCanvas(this.y, 1);
-        this.sprite.right.x = worldToCanvas(this.x, 0);
-        this.sprite.right.y = worldToCanvas(this.y, 1);
-        this.sprite.shoot.update();
-        this.sprite.right.update();
       } else {
         this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock]);
         this.routeP = this.route.length - 1;
@@ -226,36 +225,11 @@ class Target {
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
 
-      let x1 = worldToCanvas(this.x, 0);
-      let y1 = worldToCanvas(this.y, 1);
-      let x2 = worldToCanvas(this.x + this.dx, 0);
-      let y2 = worldToCanvas(this.y + this.dy, 1);
-      let deg = 0;
-      if (y2 > y1) {
-        if (x2 < x1) {
-          deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
-        } else {
-          deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
-        }
-      } else {
-        if (x2 > x1) {
-          deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
-        } else {
-          deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
-        }
-      }
-      this.angle = deg;
-      this.sprite.bot.x = worldToCanvas(this.x, 0);
-      this.sprite.bot.y = worldToCanvas(this.y, 1);
-      this.sprite.right.x = worldToCanvas(this.x, 0);
-      this.sprite.right.y = worldToCanvas(this.y, 1);
-      this.sprite.bot.update();
-      this.sprite.right.update();
-
       this.x += this.dx;
       this.y += this.dy;
       this.rX += this.dx;
       this.rY += this.dy;
+
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1) {
           this.moving = false;
@@ -308,17 +282,21 @@ class Target {
       ctx.closePath();
     }
     /*if (this.alive) {
-      if (!this.underAttack && this.onPosition) {
-        this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
-        this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
-      }
-      else {
-        if (this.moving) {
+      /*if (this.moving) {
+        this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
+      } else {
+        if (this.seesPlayer && this.onPosition) {
+          this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
+        } else {
           this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
-          this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
-      }
-    }
-  }*/
+        }
+      } */
+    /*  if (this.st === 2 && this.onPosition) {
+        this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
+      } else this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
+  } else {
+    this.sprite.death.drawBot(this.angle, this.rX, this.rY);
+  } */
 }
 
   vis(tx, ty) {
@@ -389,4 +367,22 @@ const findAngle = (x1, y1, x2, y2, x3, y3) => {
   return  Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
                     (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
                      Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
+}
+
+const checkDeg = (x1, y1, x2, y2) => {
+  let deg = 0;
+  if (y2 > y1) {
+    if (x2 < x1) {
+      deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
+    } else {
+      deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
+    }
+  } else {
+    if (x2 > x1) {
+      deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
+    } else {
+      deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
+    }
+  }
+  return deg;
 }
