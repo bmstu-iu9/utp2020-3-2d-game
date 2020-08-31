@@ -324,7 +324,7 @@ class Target {
             }
             if (breakGL) {
               if (!gl.broken) {
-                this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW()) / 2) / 2, (this.sightY + (gl.getY() + gl.getH()) / 2) / 2);
+                this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
               }
             }
           }
