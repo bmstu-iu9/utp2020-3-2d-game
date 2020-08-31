@@ -281,6 +281,43 @@ trees.push(new Tree(840, 1290, 120, 130, 0, 250, 102, 102, images["trees"]));
 trees.push(new Tree(977, 1241, 120, 130, 0, 250, 102, 102, images["trees"]));
 trees.push(new Tree(1100, 1289, 100, 110, 0, 0, 110, 120, images["trees"]));
 trees.push(new Tree(1250, 1300, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(823, 937, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(865, 856, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(903, 805, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(925, 704, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(965, 564, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1006, 463, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1050, 356, 100, 110, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(1062, 286, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1165, 284, 100, 110, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(1237, 283, 120, 130, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(1123, 354, 100, 110, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(1185, 358, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1296, 327, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1090, 426, 100, 110, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(1521, 270, 60, 60, 170, 308, 73, 73, images["trees"]));
+trees.push(new Tree(1468, 262, 100, 110, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(1570, 287, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(1734, 278, 60, 60, 170, 308, 73, 73, images["trees"])); //куст 1
+trees.push(new Tree(1866, 252, 60, 70, 111, 130, 90, 80, images["trees"])); //куст 2
+trees.push(new Tree(1800, 273, 150, 150, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(1992, 367, 90, 90, 170, 308, 73, 73, images["trees"])); //куст 1
+trees.push(new Tree(2137, 362, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(2287, 365, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(2480, 367, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(2655, 368, 60, 60, 170, 308, 73, 73, images["trees"])); //куст 1
+trees.push(new Tree(2710, 360, 60, 70, 111, 130, 90, 80, images["trees"])); //куст 2
+trees.push(new Tree(2237, 76, 80, 90, 0, 250, 102, 102, images["trees"])); //дерево 2
+trees.push(new Tree(2410, 94, 60, 60, 170, 308, 73, 73, images["trees"]));
+trees.push(new Tree(2333, 85, 120, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(3563, 677, 60, 70, 111, 130, 90, 80, images["trees"]));
+trees.push(new Tree(3564, 634, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
+trees.push(new Tree(3573, 574, 120, 130, 0, 250, 102, 102, images["trees"]));
+
+trees.push(new Tree(3545, 965, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
+trees.push(new Tree(3689, 925, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
+trees.push(new Tree(3561, 885, 110, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(3614, 972, 110, 130, 0, 250, 102, 102, images["trees"]));
 
 const blood = [];
 
