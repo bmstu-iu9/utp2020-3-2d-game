@@ -19,6 +19,7 @@ const collision = () => {
             y1 <= 0 || y1 >= images["map"].naturalHeight) {
           f = true;
         }
+
         if (!f) {
           for (let g = 0; g < glass.length; g++) {
             if (!glass[g].broken && collisionCircleRect(x1, y1, bul.bulletRadius,
@@ -28,6 +29,7 @@ const collision = () => {
             }
           }
         }
+
         if (!f) {
           let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
           let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
@@ -38,16 +40,22 @@ const collision = () => {
             bul.coverId = Cover.defineCover(xBlock, yBlock);
           }
         }
+
         if (!f) {
           if (bul.justShooted == false) {
             if (collisionCircleRect(x1, y1, bul.bulletRadius, player.realX, player.realY, player.realH, player.realW) &&
                 !(player.coverId !== -1 && bul.coverId !== -1 && player.coverId == bul.coverId)) {
               console.log("hit");
               f = true;
-              blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true))
+              blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
+              /*player.hp -= bul.damage;
+              if (player.hp < 0) {
+                player.hp = 0;
+              }*/
             }
           }
         }
+
         if (!f) {
           if (bul.justShooted == false) {
             for (let j = 0; j < targets.length; j++) {
@@ -60,6 +68,15 @@ const collision = () => {
               if (f) {
                 break;
               }
+            }
+          }
+        }
+
+        if (!f) {
+          for (let j = 0; j < doors.length; j++) {
+            if (collisionCircleRect(x1, y1, bul.bulletRadius,
+                doors[j].getX(), doors[j].getY(), doors[j].getH(), doors[j].getW())) {
+              f = true;
             }
           }
         }
