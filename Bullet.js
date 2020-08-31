@@ -1,10 +1,11 @@
 'use strict';
 
 class Bullet {
-  constructor(x, y, sightX, sightY, speed, damage) {
+  constructor(x, y, sightX, sightY, speed, damage, drawFire) {
     this.x = x;
     this.y = y;
     this.damage = damage;
+    this.drawFire =  drawFire;
     this.justShooted = true;
     this.bulletAnimationRadius = 4;
     this.bulletRadius = 0.4;           //нормирование и умножение на скорость \/
@@ -14,7 +15,7 @@ class Bullet {
   }
 
   draw() {
-    if (this.justShooted){
+    if (this.justShooted && this.drawFire){
       this.drawRandomFire();
     } else this.drawRandomTail();
   }

@@ -34,6 +34,7 @@ class Weapon {
       case 2:
         this.damage = 1;
         this.fireRate = 1;
+        this.bulletSpread = Math.PI / 50;
         this.bullets = 6;
         this.maxBullets = 6;
         this.magazines = [];
@@ -86,7 +87,13 @@ class Weapon {
     if (!this.reloading && this.bullets > 0 &&
        (now - this.lastBulletTime) / 1000 > this.fireRate &&
         this.shootingEnabled) {
-      bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed, this.damage));
+      bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed, this.damage, true));
+      if (this.id === 2) {
+        let v1 = rotate(targetX - x, targetY - y, this.bulletSpread);
+        let v2 = rotate(targetX - x, targetY - y, -this.bulletSpread);
+        bullets.add(new Bullet(x, y, x + v1.x, y + v1.y, this.bulletSpeed, this.damage, false));
+        bullets.add(new Bullet(x, y, x + v2.x, y + v2.y, this.bulletSpeed, this.damage, false));
+      }
       this.bullets--;
 
       let k1 = targetX - x;
@@ -95,7 +102,6 @@ class Weapon {
       let offsetLen = 3/5 * this.width;
       rounds.push(new Round(x - k1 / len * offsetLen, y - k2 / len * offsetLen,
                             targetX, targetY, this.roundImage));
-
       this.lastBulletTime = performance.now();
       this.shotSound.play();
 
