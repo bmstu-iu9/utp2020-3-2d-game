@@ -11,10 +11,10 @@ class Blood {
     this.firstR = 2;
     this.lastR = 6;
     this.st = 0;
-    this.speed = 12;
-    this.animTime0 = 0.3;
+    this.speed = 3;
+    this.animTime0 = 0.2;
     this.countTime0 = 0;
-    this.deltaTime0 = 0.1;
+    this.deltaTime0 = 0.016;
     this.animTime1 = 2;
     this.countTime1 = 0;
     this.deltaTime1 = this.animTime1 / (this.lastR - this.firstR);
