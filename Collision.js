@@ -115,6 +115,33 @@ const collision = () => {
           grenade.dy = -grenade.dy;
           break;
         }
+
+        for (let j = 0; j < doors.length; j++) {
+          let d = doors[j];
+          if ((pointInRect(x1, y1, d.getX(), d.getY(), d.getH(), d.getW()) &&
+               pointInRect(x1, y1 + Grenade.height, d.getX(), d.getY(), d.getH(), d.getW())) ||
+              (pointInRect(x1 + Grenade.width, y1, d.getX(), d.getY(), d.getH(), d.getW()) &&
+               pointInRect(x1 + Grenade.width, y1 + Grenade.height, d.getX(), d.getY(), d.getH(), d.getW()))) {
+            grenade.speed *= Grenade.bounceKoef;
+            grenade.dx = -grenade.dx;
+            break;
+          }
+          if ((pointInRect(x1, y1, d.getX(), d.getY(), d.getH(), d.getW()) &&
+               pointInRect(x1 + Grenade.width, y1, d.getX(), d.getY(), d.getH(), d.getW())) ||
+              (pointInBlock(x1, y1 + Grenade.height, d.getX(), d.getY(), d.getH(), d.getW()) &&
+               pointInBlock(x1 + Grenade.width, y1 + Grenade.height, d.getX(), d.getY(), d.getH(), d.getW()))) {
+            grenade.speed *= Grenade.bounceKoef;
+            grenade.dy = -grenade.dy;
+            break;
+          }
+        }
+
+        for (let j = 0; j < glass.length; j++) {
+          let g = glass[j];
+          if (collisionCircleRect(x1, y1, grenade.animRadius, g.getX(), g.getY(), g.getH(), g.getW())) {
+            g.broken = true;
+          }
+        }
       }
     }
   }
