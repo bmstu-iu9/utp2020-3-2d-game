@@ -44,7 +44,7 @@ class Player {
     this.inCover = false;
     this.coverId = -1;
     this.reloadId = null;
-    this.weapon = new Weapon(2);
+    this.weapon = new Weapon(0);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
 
@@ -106,7 +106,7 @@ class Player {
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
-    this.weapon = new Weapon(2);
+    this.weapon = new Weapon(0);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;

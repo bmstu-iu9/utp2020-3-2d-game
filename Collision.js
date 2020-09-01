@@ -139,7 +139,9 @@ const collision = () => {
 
         for (let j = 0; j < glass.length; j++) {
           let g = glass[j];
-          if (collisionCircleRect(x1, y1, grenade.animRadius, g.getX(), g.getY(), g.getH(), g.getW())) {
+          if (!g.broken &&
+              collisionCircleRect(x1 + Grenade.width / 2, y1 + Grenade.height / 2, Grenade.width / 2,
+                                  g.getX(), g.getY(), g.getH(), g.getW())) {
             g.broken = true;
           }
         }

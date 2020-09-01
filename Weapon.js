@@ -135,8 +135,7 @@ class Weapon {
           clearTimeout(this.reloadId);
           this.reloadId = null;
           this.reloading = false;
-          let neededBullets = this.maxBullets - this.bullets;
-          this.load(neededBullets);
+          this.autoLoad();
         }, this.reloadTime * 1000);
       }
     };
@@ -163,6 +162,18 @@ class Weapon {
       let bulletReloadTime = this.reloadTime / this.maxBullets;
       let neededBullets = Math.floor(delta / bulletReloadTime);
       this.load(neededBullets);
+    }
+  }
+
+
+  autoLoad() {
+    if (this.bullets === 0) {
+      this.bullets = this.magazines[0];
+      this.magazines.shift();
+    } else {
+      this.magazines.push(this.bullets);
+      this.bullets = this.magazines[0];
+      this.magazines.shift();
     }
   }
 

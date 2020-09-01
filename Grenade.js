@@ -2,7 +2,7 @@
 
 class Grenade {
   constructor(x, y) {
-    this.x = x;
+    this.x = x; //левый верхний угол
     this.y = y;
     this.activated = false;
     this.explode = false;
@@ -58,27 +58,27 @@ class Grenade {
     }
     this.explode = true;
     clouds.push(new Cloud(this.x + 10, this.y + 5, Math.cos(-Math.PI / 4), Math.sin(-Math.PI / 4),
-                               0.05, 8, "49, 49, 49", 1, 1));
+                               0.15, 16, "49, 49, 49", 1, 5));
     clouds.push(new Cloud(this.x + 5, this.y + 10, Math.cos(Math.PI / 6), Math.sin(Math.PI / 6),
-                               0.05, 16, "208, 208, 208", 1, 3));
+                               0.15, 46, "208, 208, 208", 1, 6));
     clouds.push(new Cloud(this.x + 1, this.y + 3, Math.cos(Math.PI), Math.sin(Math.PI),
-                               0.07, 16, "208, 208, 208", 1, 3));
+                               0.57, 36, "208, 208, 208", 1, 4));
     clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(-3 * Math.PI / 4), Math.sin(- 3 * Math.PI / 4),
-                               0.07, 16, "208, 208, 208", 1, 2.5));
+                               0.77, 46, "208, 208, 208", 1, 4.5));
     clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(-Math.PI / 2), Math.sin(-Math.PI / 2),
-                               0.07, 20, "49, 49, 49", 1, 2.5));
+                               0.97, 30, "49, 49, 49", 1, 4.5));
     clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4),
-                               0.03, 16, "49, 49, 49", 1, 2))
+                               0.1, 26, "49, 49, 49", 1, 3))
     clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4),
-                               0.07, 16, "208, 208, 208", 1, 4));
+                               0.2, 56, "208, 208, 208", 1, 6));
     clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(0), Math.sin(0),
-                               0.05, 16, "208, 208, 208", 1, 3));
+                               0.1, 46, "208, 208, 208", 1, 5));
     clouds.push(new Cloud(this.x + 3, this.y + 6, Math.cos(-3 * Math.PI / 4), Math.sin(- 3 * Math.PI / 4),
-                               0.07, 16, "192, 192, 192", 1, 4.5));
+                               0.17, 36, "192, 192, 192", 1, 4.5));
     clouds.push(new Cloud(this.x + 7, this.y + 2, Math.cos(-Math.PI), Math.sin(-Math.PI),
-                               0.1, 16, "192, 192, 192", 1, 4.5));
+                               0.19, 36, "192, 192, 192", 1, 4.5));
     clouds.push(new Cloud(this.x + 8, this.y + 8, Math.cos(0), Math.sin(0),
-                               0.09, 16, "192, 192, 192", 1, 4.5));
+                               0.019, 56, "192, 192, 192", 1, 4.5));
   }
 
   isActivated() {
@@ -94,8 +94,8 @@ class Grenade {
       if (!this.count){
       this.count = 1;
       let step = 0.6;
-      let x = this.x + Grenade.width;
-      let y = this.y + Grenade.height;
+      let x = this.x + Grenade.width / 2;
+      let y = this.y + Grenade.height / 2;
 
       for (let pxY = y - this.animRadius; pxY < y + this.animRadius; pxY += step) {
         for (let pxX = x - this.animRadius; pxX < x + this.animRadius; pxX += step){
@@ -176,7 +176,7 @@ class Cloud {
   }
 
   draw() {
-    let step = 0.8;
+    let step = 1.8;
     for (let pxY = this.y - this.r; pxY < this.y + this.r; pxY += step) {
       for (let pxX = this.x - this.r; pxX < this.x + this.r; pxX += step){
         let dist = Math.sqrt(Math.pow(pxX - this.x, 2) + Math.pow(pxY - this.y, 2)) +
@@ -204,14 +204,14 @@ class Cloud {
   }
 }
 
-Grenade.maxSpeed = 10;
+Grenade.maxSpeed = 15;
 Grenade.maxTime = 2; //sec
 Grenade.image = images["grenade"];
 Grenade.width = 10;
 Grenade.height = 10;
-Grenade.explosionTime = 5; //sec
+Grenade.explosionTime = 4; //sec
 Grenade.animTime = 4; //sec
-Grenade.explosionRadius = 20;
+Grenade.explosionRadius = 120;
 Grenade.damage = 2;
 Grenade.speedKoef = 0.95;
 Grenade.bounceKoef = 0.8;

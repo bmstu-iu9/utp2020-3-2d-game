@@ -85,6 +85,11 @@ class Target {
     this.rX = this.x - realOffsetX - this.w / 2;
     this.rY = this.y - realOffsetY - this.h / 2;
 
+    this.shootingPause = 1000;
+    this.shootingTime = 500;
+    this.firstShoot = 0;
+    this.lastShoot = 0;
+
     this.sprite.bot.x = worldToCanvas(this.x, 0);
     this.sprite.bot.y = worldToCanvas(this.y, 1);
     this.sprite.death.x = worldToCanvas(this.rX, 0);
@@ -224,7 +229,7 @@ class Target {
         XB = (x1 - (x1 % worldTileSize)) / worldTileSize;
         YB = (y1 - (y1 % worldTileSize)) / worldTileSize;
       }
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB], this);
       this.routeP = this.route.length - 1;
       this.moving = true;
     } else {
@@ -234,7 +239,7 @@ class Target {
 
   reconnoiter() {
     if (!this.moving) {
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.plwalkXBlock][this.plwalkYBlock]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.plwalkXBlock][this.plwalkYBlock], this);
       this.routeP = this.route.length - 1;
       this.moving = true;
       this.recon = true;
@@ -245,7 +250,7 @@ class Target {
 
   comeBack() {
     if (!this.moving && mesh[this.initXBlock][this.initYBlock] !== mesh[this.XBlock][this.YBlock]) {
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.initXBlock][this.initYBlock]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.initXBlock][this.initYBlock], this);
       this.routeP = this.route.length - 1;
       this.moving = true;
     } else {
@@ -263,10 +268,39 @@ class Target {
         this.onPosition = false;
       }
       if (this.onPosition) {
+<<<<<<< HEAD
         this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
         this.shooting = true;
+=======
+        this.shoot(this.x, this.y, this.sightX, this.sightY);
+        let x1 = worldToCanvas(this.x, 0);
+        let y1 = worldToCanvas(this.y, 1);
+        let x2 = worldToCanvas(player.realXCenter, 0);
+        let y2 = worldToCanvas(player.realYCenter, 1);
+        let deg = 0;
+        if (y2 > y1) {
+          if (x2 < x1) {
+            deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
+          } else {
+            deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
+          }
+        } else {
+          if (x2 > x1) {
+            deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
+          } else {
+            deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
+          }
+        }
+        this.angle = deg;
+        this.sprite.shoot.x = worldToCanvas(this.x, 0);
+        this.sprite.shoot.y = worldToCanvas(this.y, 1);
+        this.sprite.right.x = worldToCanvas(this.x, 0);
+        this.sprite.right.y = worldToCanvas(this.y, 1);
+        this.sprite.shoot.update();
+        this.sprite.right.update();
+>>>>>>> 92d7fbc83ff65a4cf73b278e2e774446fd1d9c32
       } else {
-        this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock]);
+        this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock], this);
         this.routeP = this.route.length - 1;
         this.moving = true;
         this.shooting = false;
@@ -322,7 +356,8 @@ class Target {
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1) {
           this.moving = false;
-
+          this.sightX = this.route[this.routeP + 1].x;
+          this.sightY = this.route[this.routeP + 1].y;
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
           this.YBlock = (this.route[this.routeP].y - (this.route[this.routeP].y % worldTileSize)) / worldTileSize;
 
@@ -369,10 +404,14 @@ class Target {
             }
             if (breakGL) {
               if (!gl.broken) {
+<<<<<<< HEAD
                 this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
                 this.shooting = true;
               } else {
                 this.shooting = false;
+=======
+                this.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
+>>>>>>> 92d7fbc83ff65a4cf73b278e2e774446fd1d9c32
               }
             }
           }
@@ -400,6 +439,7 @@ class Target {
       ctx.fill();
       ctx.closePath();
     }
+<<<<<<< HEAD
     if (this.alive) {
       if (this.shooting && !this.weapon.isReloading()) {
         this.sprite.shoot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);
@@ -409,6 +449,30 @@ class Target {
     this.sprite.death.drawSprite();
   }
 }
+=======
+    /*if (this.alive) {
+      if (!this.underAttack && this.onPosition) {
+        this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
+        this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
+      }
+      else {
+        if (this.moving) {
+          this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
+          this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
+        }
+      }
+    }*/
+  }
+
+  shoot(x, y, tx, ty) {
+    if (performance.now() - this.firstShoot < this.shootingTime) {
+      this.weapon.shoot(x, y, tx, ty);
+      this.lastShoot = performance.now()
+    } else if (performance.now() - this.lastShoot >= this.shootingPause) {
+      this.firstShoot = performance.now();
+    }
+  }
+>>>>>>> 92d7fbc83ff65a4cf73b278e2e774446fd1d9c32
 
   vis(tx, ty) {
     let vx = (tx - this.x) / 2;
