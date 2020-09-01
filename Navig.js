@@ -145,7 +145,7 @@ class PriorityQueue {
   }
 }
 
-const A_Star = (start, goal) => {
+const A_Star = (start, goal, bot) => {
   let prQueue = new PriorityQueue();
   let cur = null;
   prQueue.enqueue(start, 0);
@@ -159,7 +159,7 @@ const A_Star = (start, goal) => {
       break;
     }
     for (let incid of cur.incidence) {
-      let newCost = costSoFar.get(cur) + findCost(mesh[incid.i][incid.j]);
+      let newCost = costSoFar.get(cur) + findCost(mesh[incid.i][incid.j], bot);
       if ((!costSoFar.has(mesh[incid.i][incid.j]) || newCost < costSoFar.get(mesh[incid.i][incid.j]))) {
         costSoFar.set(mesh[incid.i][incid.j], newCost);
         let priority = newCost + heuristic(mesh[incid.i][incid.j], goal);
@@ -188,8 +188,8 @@ const makeRoute = (cF, s, g) => {
   return route;
 }
 
-const findCost = (elem) => {
-  if (player.vis(elem.x, elem.y, 0)) {
+const findCost = (elem, bot) => {
+  if (player.vis(elem.x, elem.y, 0) && bot.seesPlayer) {
     return elem.def + 100;
   } else {
     return elem.def;

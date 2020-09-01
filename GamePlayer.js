@@ -44,7 +44,7 @@ class Player {
     this.inCover = false;
     this.coverId = -1;
     this.reloadId = null;
-    this.weapon = new Weapon(2);
+    this.weapon = new Weapon(0);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
 

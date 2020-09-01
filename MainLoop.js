@@ -51,11 +51,90 @@ const update = (dt) => {
   collision();
 }
 
-const drawPosit = () => {
-  ctx.font = "16px Arial";
-  ctx.fillStyle = "#0095DD";
-  ctx.fillText("Ammo: " + player.weapon.bullets + " / " +
-               player.weapon.magazines.reduce( (accumulator, currentValue) => accumulator + currentValue, 0), 20, 20);
+const drawData = () => {
+  let step = 0;
+  let sx = 0;
+  let sy = 0;
+  for (let i = 1; i < player.hp + 1; i++) {
+    sx = i * Math.sqrt(i) * 1.3 * 30;
+    sy = 16;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.bezierCurveTo(sx, 14, sx, 10, sx - 10, 10);
+    ctx.bezierCurveTo(sx - 22, 10, sx - 22, 26, sx - 22, 26);
+    ctx.bezierCurveTo(sx - 22, 32, sx - 14, 40, sx, 48);
+    ctx.bezierCurveTo(sx + 14, 40, sx + 22, 32, sx + 22, 26);
+    ctx.bezierCurveTo(sx + 22, 26, sx + 22, 10, sx + 10, 10);
+    ctx.bezierCurveTo(sx + 4, 10, sx, 14, sx, sy);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  sx = 15;
+  sy = 60;
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.fillRect(sx, sy, 120, 10);
+  ctx.fillStyle = "yellow";
+  ctx.fillRect(sx, sy, player.weapon.bullets / player.weapon.maxBullets * 120, 10);
+  for (let i = 0; i < player.weapon.maxBullets; i++) {
+    step = 120 / player.weapon.maxBullets;
+    ctx.strokeRect(sx + i * step , sy, step, 10);
+  }
+  ctx.closePath();
+
+  for (let i = 0; i < player.weapon.magazines.length; i++) {
+    sy = i * 10 + 75;
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+    ctx.fillRect(sx, sy, 90, 7);
+    ctx.fillStyle = "yellow";
+    ctx.fillRect(sx, sy, player.weapon.magazines[i] / player.weapon.maxBullets * 90, 7);
+    for (let i = 0; i < player.weapon.maxBullets; i++) {
+      step = 90 / player.weapon.maxBullets;
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(sx + i * step , sy, step, 7);
+    }
+    ctx.closePath();
+  }
+
+  if (player.weapon.id !== 2) {
+    ctx.font = "10px Arial";
+    ctx.fillStyle = "black";
+    ctx.fillText("АВ", 15, 110);
+    ctx.fillText("ОД", 15, 125);
+
+    ctx.strokeStyle = "white";
+
+    if (player.weapon.singleShoot) {
+      ctx.beginPath();
+      ctx.arc(100, 106, 7, 3 * Math.PI / 2 - 0.4, Math.PI / 2 - 0.4);
+      ctx.lineTo(42, 124);
+      ctx.lineTo(40, 117);
+      ctx.lineTo(100 - 2, 106 - 7);
+      ctx.fill();
+      ctx.arc(100, 106, 5, 3 * Math.PI / 2 - 0.4, Math.PI / 2 - 0.4);
+      ctx.lineTo(44, 122);
+      ctx.lineTo(42, 119);
+      ctx.lineTo(100, 106 - 5);
+      ctx.stroke();
+      ctx.closePath();
+    } else {
+      ctx.beginPath();
+      ctx.arc(100, 106, 7, 3 * Math.PI / 2, Math.PI / 2);
+      ctx.lineTo(40, 109);
+      ctx.lineTo(40, 103);
+      ctx.lineTo(100, 106 - 7);
+      ctx.fill()
+      ctx.arc(100, 106, 5, 3 * Math.PI / 2, Math.PI / 2);
+      ctx.lineTo(42, 107);
+      ctx.lineTo(42, 105);
+      ctx.lineTo(100, 106 - 5);
+      ctx.stroke();
+      ctx.closePath();
+    }
+  }
 }
 
 const drawTileTypes = () => {
@@ -115,7 +194,6 @@ const draw = () => {
   blood.forEach(b => {
     b.draw();
   });
-
 
   weapons.forEach(weapon => {
     weapon.draw();
@@ -181,14 +259,17 @@ const draw = () => {
   ctx.strokeStyle = "red";
   ctx.stroke();
   ctx.closePath();
+
   sight.draw();
-  drawPosit();
+
   let g = glass[0];
   ctx.beginPath();
   ctx.rect(worldToCanvas(g.getX(), 0), worldToCanvas(g.getY(), 1), g.getW() / camera.scaleX, g.getH() / camera.scaleY)
   ctx.strokeStyle = "red";
   ctx.stroke();
   ctx.closePath();
+
+  drawData();
 }
 
 const loop = () => {

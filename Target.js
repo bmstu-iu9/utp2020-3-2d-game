@@ -48,6 +48,11 @@ class Target {
     this.rX = this.x - realOffsetX - this.w / 2;
     this.rY = this.y - realOffsetY - this.h / 2;
 
+    this.shootingPause = 1000;
+    this.shootingTime = 500;
+    this.firstShoot = 0;
+    this.lastShoot = 0;
+
     this.sprite.bot.x = worldToCanvas(this.x, 0);
     this.sprite.bot.y = worldToCanvas(this.y, 1);
     this.sprite.shoot.x = worldToCanvas(this.x, 0);
@@ -151,7 +156,7 @@ class Target {
         XB = (x1 - (x1 % worldTileSize)) / worldTileSize;
         YB = (y1 - (y1 % worldTileSize)) / worldTileSize;
       }
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[XB][YB], this);
       this.routeP = this.route.length - 1;
       this.moving = true;
     } else {
@@ -161,7 +166,7 @@ class Target {
 
   reconnoiter() {
     if (!this.moving) {
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.plwalkXBlock][this.plwalkYBlock]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.plwalkXBlock][this.plwalkYBlock], this);
       this.routeP = this.route.length - 1;
       this.moving = true;
       this.recon = true;
@@ -172,7 +177,7 @@ class Target {
 
   comeBack() {
     if (!this.moving && mesh[this.initXBlock][this.initYBlock] !== mesh[this.XBlock][this.YBlock]) {
-      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.initXBlock][this.initYBlock]);
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.initXBlock][this.initYBlock], this);
       this.routeP = this.route.length - 1;
       this.moving = true;
     } else {
@@ -190,7 +195,7 @@ class Target {
         this.onPosition = false;
       }
       if (this.onPosition) {
-        this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
+        this.shoot(this.x, this.y, this.sightX, this.sightY);
         let x1 = worldToCanvas(this.x, 0);
         let y1 = worldToCanvas(this.y, 1);
         let x2 = worldToCanvas(player.realXCenter, 0);
@@ -217,7 +222,7 @@ class Target {
         this.sprite.shoot.update();
         this.sprite.right.update();
       } else {
-        this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock]);
+        this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock], this);
         this.routeP = this.route.length - 1;
         this.moving = true;
       }
@@ -277,7 +282,8 @@ class Target {
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1) {
           this.moving = false;
-
+          this.sightX = this.route[this.routeP + 1].x;
+          this.sightY = this.route[this.routeP + 1].y;
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
           this.YBlock = (this.route[this.routeP].y - (this.route[this.routeP].y % worldTileSize)) / worldTileSize;
 
@@ -324,7 +330,7 @@ class Target {
             }
             if (breakGL) {
               if (!gl.broken) {
-                this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
+                this.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
               }
             }
           }
@@ -360,10 +366,19 @@ class Target {
         if (this.moving) {
           this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
           this.sprite.right.drawBot(this.angle, this.rX + 20, this.rY + 20);
+        }
       }
+    }*/
+  }
+
+  shoot(x, y, tx, ty) {
+    if (performance.now() - this.firstShoot < this.shootingTime) {
+      this.weapon.shoot(x, y, tx, ty);
+      this.lastShoot = performance.now()
+    } else if (performance.now() - this.lastShoot >= this.shootingPause) {
+      this.firstShoot = performance.now();
     }
-  }*/
-}
+  }
 
   vis(tx, ty) {
     let vx = (tx - this.x) / 2;
