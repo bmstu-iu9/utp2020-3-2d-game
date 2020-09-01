@@ -100,7 +100,7 @@ const drawData = () => {
   }
 
   if (player.weapon.id !== 2) {
-    ctx.font = "10px Arial";
+    ctx.font = "11px Arial";
     ctx.fillStyle = "black";
     ctx.fillText("АВ", 15, 110);
     ctx.fillText("ОД", 15, 125);
@@ -135,6 +135,25 @@ const drawData = () => {
       ctx.closePath();
     }
   }
+
+  for (let i = 1; i < player.grenades.length + 1; i++) {
+    sx = 124;
+    sy = 60 + 30 * i;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 10, 0, 2 * Math.PI);
+    ctx.fillStyle = "#808000";
+    ctx.fill();
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+    ctx.fillStyle = "gray";
+    ctx.fillRect(sx - 2, sy - 4, 5, -10);
+    ctx.strokeRect(sx - 2, sy - 4, 5, -10);
+    ctx.font = "8px Arial";
+    ctx.fillStyle = "yellow";
+    ctx.fillText("G", sx - 3, sy + 5);
+    ctx.closePath();
+  }
+
 }
 
 const drawTileTypes = () => {
@@ -233,7 +252,7 @@ const draw = () => {
 
 
 
-  if (!throwGrenade && throwTime){
+  if (!throwGrenade && throwTime && player.grenades.length) {
     Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
   }
 
