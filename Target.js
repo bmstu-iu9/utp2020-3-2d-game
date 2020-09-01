@@ -1,5 +1,5 @@
 class Target {
-  constructor(X, Y, P, I) {
+  constructor(X, Y, P, I, realW, realH, realOffsetX, realOffsetY) {
     this.x = X;
     this.y = Y;
     this.initialX = X;
@@ -39,6 +39,7 @@ class Target {
     this.onPosition = false;
     this.knowPlPos = false;
     this.underAttack = false;
+    this.shooting = false;
     this.lastTimeSeen = 0;
     this.index = I;
     this.sprite = spritesForBots[I];
@@ -50,8 +51,8 @@ class Target {
 
     this.sprite.bot.x = worldToCanvas(this.x, 0);
     this.sprite.bot.y = worldToCanvas(this.y, 1);
-    this.sprite.death.x = worldToCanvas(this.x, 0);
-    this.sprite.death.y = worldToCanvas(this.y, 1);
+    this.sprite.death.x = worldToCanvas(this.rX, 0);
+    this.sprite.death.y = worldToCanvas(this.rY, 1);
     this.sprite.shoot.x = worldToCanvas(this.x, 0);
     this.sprite.shoot.y = worldToCanvas(this.y, 1);
     this.sprite.right.x = worldToCanvas(this.x, 0);
@@ -99,7 +100,7 @@ class Target {
       if (this.moving) {
         this.sprite.bot.update();
       }
-      if (this.st === 2 && this.onPosition) {
+      if (this.shooting) {
         this.sprite.shoot.update();
       }
     } else {
@@ -108,11 +109,8 @@ class Target {
         this.weapon.drop(this.x, this.y);
         this.weapon = null;
       }
-      let x1 = worldToCanvas(this.x, 0);
-      let y1 = worldToCanvas(this.y, 1);
-      let x2 = worldToCanvas(this.sightX, 0);
-      let y2 = worldToCanvas(this.sightY, 1);
-      this.angle = checkDeg(x1, y1, x2, y2);
+      let x1 = worldToCanvas(this.rX, 0);
+      let y1 = worldToCanvas(this.rY, 1);
       this.sprite.death.x = x1;
       this.sprite.death.y = y1;
     }
@@ -215,10 +213,12 @@ class Target {
       }
       if (this.onPosition) {
         this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
+        this.shooting = true;
       } else {
         this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock]);
         this.routeP = this.route.length - 1;
         this.moving = true;
+        this.shooting = false;
       }
     } else {
       this.movement(2);
@@ -299,6 +299,9 @@ class Target {
             if (breakGL) {
               if (!gl.broken) {
                 this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
+                this.shooting = true;
+              } else {
+                this.shooting = false;
               }
             }
           }
@@ -325,7 +328,7 @@ class Target {
       ctx.fill();
       ctx.closePath();
     }
-    /*if (this.alive) {
+    if (this.alive) {
       /*if (this.moving) {
         this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
       } else {
@@ -335,12 +338,13 @@ class Target {
           this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
         }
       } */
-    /*  if (this.st === 2 && this.onPosition) {
+      this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
+      if (this.shooting) {
         this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
-      } else this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
+      }
   } else {
-    this.sprite.death.drawBot(this.angle, this.rX, this.rY);
-  } */
+    this.sprite.death.drawSprite();
+  }
 }
 
   vis(tx, ty) {
