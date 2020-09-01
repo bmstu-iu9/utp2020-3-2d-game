@@ -195,15 +195,19 @@ const draw = () => {
     b.draw();
   });
 
+  grenades.forEach(grenade => {
+    grenade.draw();
+  });
+
   weapons.forEach(weapon => {
     weapon.draw();
   });
 
-  player.drawDirection();
-
   bullets.forEach(bullet => {
     bullet.draw();
   });
+
+  player.drawDirection();
 
   targets.forEach(target => {
     let v = player.vis(target.x, target.y, 0);
@@ -215,15 +219,12 @@ const draw = () => {
     }
   });
 
-  grenades.forEach(grenade => {
-    grenade.draw();
-  });
-  clouds.forEach(cloud => {
-    cloud.draw();
-  });
-
   doors.forEach(door => {
     door.draw();
+  });
+
+  clouds.forEach(cloud => {
+    cloud.draw();
   });
 
   trees.forEach(tree => {

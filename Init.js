@@ -41,7 +41,7 @@ const cameraStartX = 0;
 const cameraStartY = 0;
 const moveBorder = canvas.width / 3;
 const visiblePart = 500;
-let cameraSpeed = 4;
+let cameraSpeed = 3;
 
 const worldTileSize = 10;
 const canvasTileSize = worldTileSize / (visiblePart / canvas.width);
