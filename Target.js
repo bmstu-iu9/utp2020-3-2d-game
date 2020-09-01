@@ -62,8 +62,8 @@ class Target {
 
   update() {
     if (this.alive) {
-      this.sightX = player.realXCenter;
-      this.sightY = player.realYCenter;
+      //this.sightX = player.realXCenter;
+      //this.sightY = player.realYCenter;
       this.analyzeSituation();
 
       if (performance.now() - this.lastUpdate > 4000) {
@@ -238,8 +238,8 @@ class Target {
 
   movement(key) {
     if (this.moving) {
-      //this.sightX = this.route[this.routeP].x;
-      //this.sightY = this.route[this.routeP].y;
+      this.sightX = this.route[this.routeP].x;
+      this.sightY = this.route[this.routeP].y;
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
 
@@ -285,23 +285,27 @@ class Target {
           }
           for (let gl of glass) {
             let breakGL = null;
-            if (this.routeP - 5 <= - 1) {
+            if (this.routeP - 3 <= - 1) {
               breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
                                           this.route[this.routeP].x, this.route[this.routeP].y,
                                           gl.getX(), gl.getY(),
                                           gl.getX() + gl.getW(), gl.getY() + gl.getH());
             } else {
               breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
-                                          this.route[this.routeP - 2].x, this.route[this.routeP - 2].y,
+                                          this.route[this.routeP - 3].x, this.route[this.routeP - 3].y,
                                           gl.getX(), gl.getY(),
                                           gl.getX() + gl.getW(), gl.getY() + gl.getH());
             }
             if (breakGL) {
               if (!gl.broken) {
+<<<<<<< HEAD
                 this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
                 this.shooting = true;
               } else {
                 this.shooting = false;
+=======
+                this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
+>>>>>>> 19e46168668d6ca057a0dd16c9aa98dd6bada8f1
               }
             }
           }
