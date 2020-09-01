@@ -84,10 +84,28 @@ class Sprite {
     ctx.restore();
   }
 
-  drawBot(deg, x, y) {
+  drawBot(sightX, sightY, x, y, angle) {
     ctx.save();
     ctx.translate(this.x, this.y);
+    if (angle === 0) {
+    let deg = 0;
+    if (sightY > this.y) {
+      if (sightX < this.x) {
+        deg = Math.PI / 2 + Math.atan((this.x - sightX) / (sightY - this.y)) - gunOffset;
+      } else {
+        deg = Math.PI / 2 - Math.atan((sightX - this.x) / (sightY - this.y)) - gunOffset;
+      }
+    } else {
+      if (sightX > this.x) {
+        deg = 2 * Math.PI - Math.atan((this.y - sightY) / (sightX - this.x)) - gunOffset;
+      } else {
+        deg = Math.PI + Math.atan((this.y - sightY) / (this.x - sightX)) - gunOffset;
+      }
+    }
     ctx.rotate(deg);
+  } else {
+    ctx.rotate(angle);
+  }
     ctx.translate(-this.x, -this.y);
     ctx.drawImage(
         this.image,

@@ -161,8 +161,8 @@ class Weapon {
       this.reloading = false;
       let delta = (performance.now() - this.lastReloadTime) / 1000;
       let bulletReloadTime = this.reloadTime / this.maxBullets;
-      let neededBullets = Math.floor(delta / bulletsReloadTime);
-      load(neededBullets);
+      let neededBullets = Math.floor(delta / bulletReloadTime);
+      this.load(neededBullets);
     }
   }
 

@@ -1,5 +1,5 @@
 class Target {
-  constructor(X, Y, P, I, realW, realH, realOffsetX, realOffsetY) {
+  constructor(X, Y, P, I) {
     this.x = X;
     this.y = Y;
     this.initialX = X;
@@ -42,7 +42,43 @@ class Target {
     this.shooting = false;
     this.lastTimeSeen = 0;
     this.index = I;
-    this.sprite = spritesForBots[I];
+    switch (I) {
+      case 0:
+      let sprite = {
+        bot : new Sprite(images["bot1"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+        shoot : new Sprite(images["botshoot"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+        up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+        down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+        right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+        left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+        strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+        death : new Sprite(images["death"], 0, spriteTileH, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+      };
+      sprite.bot.setWorldSize(playerWidth, playerHeight);
+      sprite.shoot.setWorldSize(playerWidth, playerHeight);
+      sprite.death.setWorldSize(playerWidth, playerHeight);
+      sprite.right.setWorldSize(FeetW, FeetH);
+      this.sprite = sprite;
+        break;
+      case 1:
+      let sprite1 = {
+        bot : new Sprite(images["bot2"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+        shoot : new Sprite(images["botshoot"], 0, spriteTileH, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+        up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+        down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+        right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
+        left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
+        strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
+        death : new Sprite(images["death"], 0, spriteTileH * 2, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [2]),
+      };
+      sprite1.bot.setWorldSize(playerWidth, playerHeight);
+      sprite1.shoot.setWorldSize(playerWidth, playerHeight);
+      sprite1.death.setWorldSize(playerWidth, playerHeight);
+      sprite1.right.setWorldSize(FeetW, FeetH);
+      this.sprite = sprite1;
+        break;
+
+    }
     this.angle = 0;
     this.w = realW;
     this.h = realH;
@@ -90,19 +126,34 @@ class Target {
       }
       let x1 = worldToCanvas(this.x, 0);
       let y1 = worldToCanvas(this.y, 1);
-      let x2 = worldToCanvas(this.sightX, 0);
-      let y2 = worldToCanvas(this.sightY, 1);
-      this.angle = checkDeg(x1, y1, x2, y2);
       this.sprite.bot.x = x1;
       this.sprite.bot.y = y1;
       this.sprite.shoot.x = x1;
       this.sprite.shoot.y = y1;
-      if (this.moving) {
+
+      if (this.weapon.emptyMagazine() && !this.weapon.isReloading()) {
+        this.weapon.reload();
+        if (this.weapon.isReloading()) {
+          this.sprite.bot.indexFrameY = 1;
+          this.sprite.bot.currentFrame[1] = 0;
+        }
+      }
+
+      if (this.moving || this.weapon.isReloading()) {
+        if (!this.weapon.isReloading()) {
+          this.sprite.bot.indexFrameY = 0;
+        }
         this.sprite.bot.update();
       }
+
       if (this.shooting) {
-        this.sprite.shoot.update();
+        if (!this.weapon.isReloading()) {
+          if (!this.weapon.emptyMagazine()) {
+            this.sprite.shoot.update();
+          }
       }
+    }
+
     } else {
       if (this.weapon !== null) {
         controlPoints[this.point].bots -= 1;
@@ -248,6 +299,26 @@ class Target {
       this.rX += this.dx;
       this.rY += this.dy;
 
+      let x1 = worldToCanvas(this.x - this.dx, 0);
+      let y1 = worldToCanvas(this.y - this.dy, 1);
+      let x2 = worldToCanvas(this.sightX, 0);
+      let y2 = worldToCanvas(this.sightY, 1);
+      let deg = 0;
+      if (y2 > y1) {
+        if (x2 < x1) {
+          deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
+        } else {
+          deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
+        }
+      } else {
+        if (x2 > x1) {
+          deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
+        } else {
+          deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
+        }
+      }
+      this.angle = deg;
+
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1) {
           this.moving = false;
@@ -298,14 +369,10 @@ class Target {
             }
             if (breakGL) {
               if (!gl.broken) {
-<<<<<<< HEAD
-                this.weapon.shoot(this.x, this.y, this.sightX, this.sightY);
+                this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
                 this.shooting = true;
               } else {
                 this.shooting = false;
-=======
-                this.weapon.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
->>>>>>> 19e46168668d6ca057a0dd16c9aa98dd6bada8f1
               }
             }
           }
@@ -324,6 +391,7 @@ class Target {
       ctx.fillStyle = "yellow";
       ctx.fill();
       ctx.closePath();
+
     } else {
       ctx.beginPath();
       ctx.lineWidth = 0.5;
@@ -333,19 +401,10 @@ class Target {
       ctx.closePath();
     }
     if (this.alive) {
-      /*if (this.moving) {
-        this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
-      } else {
-        if (this.seesPlayer && this.onPosition) {
-          this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
-        } else {
-          this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
-        }
-      } */
-      this.sprite.bot.drawBot(this.angle, this.rX, this.rY);
-      if (this.shooting) {
-        this.sprite.shoot.drawBot(this.angle, this.rX, this.rY);
-      }
+      if (this.shooting && !this.weapon.isReloading()) {
+        this.sprite.shoot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);
+      } else this.sprite.bot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);
+      this.angle = 0;
   } else {
     this.sprite.death.drawSprite();
   }
@@ -419,22 +478,4 @@ const findAngle = (x1, y1, x2, y2, x3, y3) => {
   return  Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
                     (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
                      Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
-}
-
-const checkDeg = (x1, y1, x2, y2) => {
-  let deg = 0;
-  if (y2 > y1) {
-    if (x2 < x1) {
-      deg = Math.PI / 2 + Math.atan((x1 - x2) / (y2 - y1));
-    } else {
-      deg = Math.PI / 2 - Math.atan((x2 - x1) / (y2 - y1));
-    }
-  } else {
-    if (x2 > x1) {
-      deg = 2 * Math.PI - Math.atan((y1 - y2) / (x2 - x1));
-    } else {
-      deg = Math.PI + Math.atan((y1 - y2) / (x1 - x2));
-    }
-  }
-  return deg;
 }

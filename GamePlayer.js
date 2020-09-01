@@ -246,6 +246,7 @@ class Player {
     }
 
     if (this.death === true) {
+      this.weapon.drop(this.realXCenter, this.realYCenter);
       this.sprite.death.x = worldToCanvas(this.realXCenter, 0);
       this.sprite.death.y = worldToCanvas(this.realYCenter, 1);
       this.sprite.death.drawBodySprite();

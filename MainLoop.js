@@ -23,7 +23,6 @@ const update = (dt) => {
     grenade.update();
   });
 
-
   player.move(dt);
 
   for (let i = 0; i < rounds.length; i++) {

@@ -51,7 +51,8 @@ const collision = () => {
               /*player.hp -= bul.damage;
               if (player.hp < 0) {
                 player.hp = 0;
-              }*/
+                player.dead = true;
+              } */
             }
           }
         }

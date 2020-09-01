@@ -7,6 +7,7 @@ let imagePromises = [ {"name": "map", "src" : "resources/jungle_carcass_v1.9.png
                  {"name" : "bot1", "src" : "resources/bot1.png"},
                  {"name" : "bot2", "src" : "resources/bot2.png"},
                  {"name" : "botshoot", "src" : "resources/botshoot.png"},
+                 {"name" : "death", "src" : "resources/death.png"},
                  {"name" : "12gauge", "src" : "resources/12gauge_pixelized.png"},
                  {"name" : "5.56gauge", "src" : "resources/5.56gauge_pixelized.png"},
                  {"name" : "7.62gauge", "src" : "resources/7.62gauge_pixelized.png"},

@@ -96,45 +96,6 @@ const spritePl = {
   death : new Sprite(images["death"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0])
 };
 
-const spriteBot1 = {
-  bot : new Sprite(images["bot1"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
-  shoot : new Sprite(images["botshoot"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
-  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
-  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
-  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
-  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
-  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
-  death : new Sprite(images["death"], 0, spriteTileH, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
-};
-
-const spriteBot2 = {
-  bot : new Sprite(images["bot2"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
-  shoot : new Sprite(images["botshoot"], 0, spriteTileH, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
-  up : new Sprite(images["walk_UD"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
-  down : new Sprite(images["walk_UD"], 0, spriteFeetW, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
-  right : new Sprite(images["walk_RL"], 0, 0, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0]),
-  left : new Sprite(images["walk_RL"], 0, spriteFeetH, spriteFeetW, spriteFeetH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
-  strafe : new Sprite(images["strafe"], 0, 0, spriteFeetH, spriteFeetW, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
-  death : new Sprite(images["death"], 0, spriteTileH * 2, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [2]),
-};
-
-let spritesForBots = [spriteBot1, spriteBot2];
-
-spriteBot1.bot.setWorldSize(playerWidth, playerHeight);
-spriteBot1.shoot.setWorldSize(playerWidth, playerHeight);
-spriteBot1.death.setWorldSize(playerWidth, playerHeight);
-spriteBot1.up.setWorldSize(FeetH, FeetW);
-spriteBot1.down.setWorldSize(FeetH, FeetW);
-spriteBot1.left.setWorldSize(FeetW, FeetH);
-spriteBot1.right.setWorldSize(FeetW, FeetH);
-
-spriteBot2.bot.setWorldSize(playerWidth, playerHeight);
-spriteBot2.shoot.setWorldSize(playerWidth, playerHeight);
-spriteBot2.death.setWorldSize(playerWidth, playerHeight);
-spriteBot2.up.setWorldSize(FeetH, FeetW);
-spriteBot2.down.setWorldSize(FeetH, FeetW);
-spriteBot2.left.setWorldSize(FeetW, FeetH);
-spriteBot2.right.setWorldSize(FeetW, FeetH);
 
 spritePl.pl.setWorldSize(playerWidth, playerHeight);
 spritePl.shoot.setWorldSize(playerWidth, playerHeight);
