@@ -2,7 +2,7 @@
 
 class Grenade {
   constructor(x, y) {
-    this.x = x;
+    this.x = x; //левый верхний угол
     this.y = y;
     this.activated = false;
     this.explode = false;
@@ -94,8 +94,8 @@ class Grenade {
       if (!this.count){
       this.count = 1;
       let step = 0.6;
-      let x = this.x + Grenade.width;
-      let y = this.y + Grenade.height;
+      let x = this.x + Grenade.width / 2;
+      let y = this.y + Grenade.height / 2;
 
       for (let pxY = y - this.animRadius; pxY < y + this.animRadius; pxY += step) {
         for (let pxX = x - this.animRadius; pxX < x + this.animRadius; pxX += step){
@@ -204,12 +204,12 @@ class Cloud {
   }
 }
 
-Grenade.maxSpeed = 10;
+Grenade.maxSpeed = 15;
 Grenade.maxTime = 2; //sec
 Grenade.image = images["grenade"];
 Grenade.width = 10;
 Grenade.height = 10;
-Grenade.explosionTime = 5; //sec
+Grenade.explosionTime = 4; //sec
 Grenade.animTime = 4; //sec
 Grenade.explosionRadius = 20;
 Grenade.damage = 2;
