@@ -5,7 +5,7 @@ class Bullet {
     this.x = x;
     this.y = y;
     this.damage = damage;
-    this.drawFire =  drawFire;
+    this.drawFire = drawFire;
     this.justShooted = true;
     this.bulletAnimationRadius = 4;
     this.bulletRadius = 0.4;           //нормирование и умножение на скорость \/
@@ -18,7 +18,9 @@ class Bullet {
   draw() {
     if (this.justShooted && this.drawFire){
       this.drawRandomFire();
-    } else this.drawRandomTail();
+    } else {
+      this.drawRandomTail();
+    }
   }
 
   drawRandomFire() {
@@ -30,7 +32,7 @@ class Bullet {
         if (Math.random() < 0.8){
           if (dist < this.bulletAnimationRadius / 2) {
             ctx.beginPath();
-            ctx.fillStyle = "blue";
+            ctx.fillStyle = "yellow";
             ctx.fillRect(worldToCanvas(pxX, 0), worldToCanvas(pxY, 1), 1, 1);
             ctx.closePath();
           } else if (dist < this.bulletAnimationRadius) {
@@ -76,7 +78,7 @@ class Bullet {
            pxX += norm1Dx * normStep, pxY += norm1Dy * normStep, iterateNorm1Len += normStep) {
           ctx.beginPath();
           ctx.rect(worldToCanvas(this.x + pxX + dx, 0), worldToCanvas(this.y + pxY + dy, 1), 1, 1);
-          ctx.fillStyle = "blue";
+          ctx.fillStyle = "yellow";
           ctx.strokeStyle = "black";
           ctx.lineWidth = 0.5;
           //ctx.stroke();
@@ -88,7 +90,7 @@ class Bullet {
            pxX += norm2Dx * normStep, pxY += norm2Dy * normStep, iterateNorm2Len += normStep) {
           ctx.beginPath();
           ctx.rect(worldToCanvas(this.x + pxX + dx, 0), worldToCanvas(this.y + pxY + dy, 1), 1, 1);
-          ctx.fillStyle = "blue";
+          ctx.fillStyle = "yellow";
           ctx.strokeStyle = "black";
           ctx.lineWidth = 0.5;
           //ctx.stroke();
@@ -104,6 +106,8 @@ class Bullet {
   updateCoordinates() {
     this.x += this.dx;
     this.y += this.dy;
-    if (this.justShooted) this.justShooted = false;
+    if (this.justShooted) {
+      this.justShooted = false;
+    }
   }
 }
