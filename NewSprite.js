@@ -91,15 +91,15 @@ class Sprite {
     let deg = 0;
     if (sightY > this.y) {
       if (sightX < this.x) {
-        deg = Math.PI / 2 + Math.atan((this.x - sightX) / (sightY - this.y)) - gunOffset;
+        deg = Math.PI / 2 + Math.atan((this.x - sightX) / (sightY - this.y));
       } else {
-        deg = Math.PI / 2 - Math.atan((sightX - this.x) / (sightY - this.y)) - gunOffset;
+        deg = Math.PI / 2 - Math.atan((sightX - this.x) / (sightY - this.y));
       }
     } else {
       if (sightX > this.x) {
-        deg = 2 * Math.PI - Math.atan((this.y - sightY) / (sightX - this.x)) - gunOffset;
+        deg = 2 * Math.PI - Math.atan((this.y - sightY) / (sightX - this.x));
       } else {
-        deg = Math.PI + Math.atan((this.y - sightY) / (this.x - sightX)) - gunOffset;
+        deg = Math.PI + Math.atan((this.y - sightY) / (this.x - sightX));
       }
     }
     ctx.rotate(deg);

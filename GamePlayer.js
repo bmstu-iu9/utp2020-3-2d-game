@@ -125,6 +125,9 @@ class Player {
   }
 
   drawDirection() {
+    if (this.dead === true) {
+      this.sprite.death.drawSprite();
+    } else {
     if (this.direction === "Down") {
       this.sprite.down.drawBodySprite();
     }
@@ -169,6 +172,7 @@ class Player {
         this.sprite.pl.drawBodySprite();
       }
     }
+  }
   }
 
   move(dt) {
@@ -245,11 +249,11 @@ class Player {
       }
     }
 
-    if (this.death === true) {
+    if (this.dead === true) {
       this.weapon.drop(this.realXCenter, this.realYCenter);
-      this.sprite.death.x = worldToCanvas(this.realXCenter, 0);
-      this.sprite.death.y = worldToCanvas(this.realYCenter, 1);
-      this.sprite.death.drawBodySprite();
+      this.sprite.death.x = worldToCanvas(this.x, 0);
+      this.sprite.death.y = worldToCanvas(this.y, 1);
+      //this.sprite.death.drawSprite();
       gameOver();
       return;
     }

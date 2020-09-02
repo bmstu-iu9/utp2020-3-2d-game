@@ -48,11 +48,11 @@ const collision = () => {
               console.log("hit");
               f = true;
               blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
-              /*player.hp -= bul.damage;
+              player.hp -= bul.damage;
               if (player.hp < 0) {
                 player.hp = 0;
                 player.dead = true;
-              } */
+              }
             }
           }
         }
