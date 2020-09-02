@@ -154,7 +154,6 @@ const A_Star = (start, goal, bot) => {
   costSoFar.set(start, 0);
   while (!prQueue.isEmpty()) {
     cur = prQueue.dequeue();
-    //if (checkNodeAStar(cur, goal)) {
     if (cur === goal) {
       break;
     }
@@ -169,11 +168,6 @@ const A_Star = (start, goal, bot) => {
     }
   }
   return makeRoute(cameFrom, start, goal);
-}
-
-const checkNodeAStar = (node1, node2) => {
-  let distance = heuristic(node1, node2);
-  return distance <= 50 || node1 === node2;
 }
 
 const makeRoute = (cF, s, g) => {

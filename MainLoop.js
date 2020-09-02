@@ -231,8 +231,8 @@ const draw = () => {
     if (v) {
       target.lastTimeSeen = performance.now();
     }
-    if (v || performance.now() - target.lastTimeSeen < 1000) {
-      target.draw(1 / camera.scaleX);
+    if (v || performance.now() - target.lastTimeSeen < 200) {
+      target.draw();
     }
   });
 

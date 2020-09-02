@@ -30,6 +30,8 @@ class Target {
     this.initYBlock = (Y - (Y % worldTileSize)) / worldTileSize;
     this.sightX = 0;
     this.sightY = 0;
+    this.expSightX = 0;
+    this.expSightY = 0;
     this.plwalkXBlock = 0;
     this.plwalkXBlock = 0;
     this.seesPlayer = false;
@@ -103,8 +105,6 @@ class Target {
 
   update() {
     if (this.alive) {
-      //this.sightX = player.realXCenter;
-      //this.sightY = player.realYCenter;
       this.analyzeSituation();
 
       if (performance.now() - this.lastUpdate > 4000) {
@@ -262,14 +262,16 @@ class Target {
     if (!this.moving) {
       this.sightX = player.realXCenter;
       this.sightY = player.realYCenter;
-      if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < 100) {
+      if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < 150) {
         this.onPosition = true;
       } else {
         this.onPosition = false;
       }
       if (this.onPosition) {
-        this.shoot(this.x, this.y, this.sightX, this.sightY);
-        this.shooting = true;
+        //if (this.checkSight() < 0.17) {
+          this.shoot(this.x, this.y, this.sightX, this.sightY);
+          this.shooting = true;
+        //}
       } else {
         this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock], this);
         this.routeP = this.route.length - 1;
@@ -294,8 +296,23 @@ class Target {
 
   movement(key) {
     if (this.moving) {
-      this.sightX = this.route[this.routeP].x;
-      this.sightY = this.route[this.routeP].y;
+      if (this.seesPlayer) {
+        this.sightX = player.realXCenter;
+        this.sightY = player.realYCenter;
+        let d = dist(this.x, player.realXCenter, this.y, player.realYCenter);
+        if (d < 250 && this.trySingleShoot()) {
+          let koef1 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
+                                            (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
+          let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
+                                            (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
+          this.sightX += koef1;
+          this.sightY += koef2;
+          this.singleShoot(this.x, this.y, this.sightX, this.sightY);
+        }
+      } else {
+        this.sightX = this.x + 5 * (this.route[this.routeP].x - this.x);
+        this.sightY = this.y + 5 * (this.route[this.routeP].y - this.y);
+      }
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
 
@@ -326,10 +343,13 @@ class Target {
 
 
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
-        if (this.routeP - 1 === -1) {
+        if (this.routeP - 1 === -1 ||
+            (key === 2 && this.seesPlayer && dist(this.x, player.realXCenter, this.y, player.realYCenter) < 120)) {
           this.moving = false;
-          this.sightX = this.route[this.routeP + 1].x;
-          this.sightY = this.route[this.routeP + 1].y;
+          if (!(key == 2 || key === 4)) {
+            this.sightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
+            this.sightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
+          }
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
           this.YBlock = (this.route[this.routeP].y - (this.route[this.routeP].y % worldTileSize)) / worldTileSize;
 
@@ -390,16 +410,32 @@ class Target {
     }
   }
 
-  draw(scale) {
+  draw() {
     if (this.alive) {
       if (this.shooting && !this.weapon.isReloading()) {
         this.sprite.shoot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);
       } else this.sprite.bot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);
       this.angle = 0;
-  } else {
-    this.sprite.death.drawSprite();
+    } else {
+      this.sprite.death.drawSprite();
+    }
   }
-}
+
+  trySingleShoot() {
+    if (performance.now() - this.lastShoot >= 1000) {
+      this.firstShoot = performance.now();
+    }
+    return performance.now() - this.firstShoot < 5;
+  }
+
+  singleShoot(x, y, tx, ty) {
+    if (performance.now() - this.firstShoot < 5) {
+      this.weapon.shoot(x, y, tx, ty);
+      this.lastShoot = performance.now()
+    } else if (performance.now() - this.lastShoot >= 1000) {
+      this.firstShoot = performance.now();
+    }
+  }
 
   shoot(x, y, tx, ty) {
     if (performance.now() - this.firstShoot < this.shootingTime) {
@@ -408,7 +444,15 @@ class Target {
     } else if (performance.now() - this.lastShoot >= this.shootingPause) {
       this.firstShoot = performance.now();
     }
-}
+  }
+
+  checkSight() {
+    return findAngle(this.x, this.y, this.sightX, this.sightY, this.expSightX, this.expSightY);
+  }
+
+  /*turn() {
+
+  }*/
 
   vis(tx, ty) {
     let vx = (tx - this.x) / 2;
@@ -422,7 +466,7 @@ class Target {
     let vy2 = ty - this.y;
     let dotProduct =  ((vx1) * (vx2) + (vy1) * (vy2)) /
                        (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                         Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
+                        Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
     dotProduct = dotProduct > 1 ? 1 : dotProduct;
     dotProduct = dotProduct < -1 ? -1 : dotProduct;
     let visAngle = Math.acos(dotProduct);
