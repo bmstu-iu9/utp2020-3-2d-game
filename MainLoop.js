@@ -18,7 +18,6 @@ const update = (dt) => {
     b.update();
   });
 
-
   player.grenades.forEach(grenade => {
     grenade.update();
   });
@@ -249,51 +248,17 @@ const draw = () => {
     tree.draw();
   });
 
-
-
   if (!throwGrenade && throwTime && player.grenades.length) {
     Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
   }
 
-  ctx.beginPath();
-  ctx.rect(worldToCanvas(player.realX, 0), worldToCanvas(player.realY, 1), player.realW / camera.scaleX, player.realH / camera.scaleY);
-  ctx.strokeStyle = "red";
-  ctx.stroke();
-  ctx.closePath();
-  ctx.beginPath();
-  ctx.rect(worldToCanvas(player.x, 0), worldToCanvas(player.y, 1), player.w, player.h);
-  ctx.strokeStyle = "blue";
-  ctx.stroke();
-  ctx.closePath();
-
-  ctx.beginPath();
-  ctx.arc(worldToCanvas(player.realXCenter, 0), worldToCanvas(player.realYCenter, 1), player.actionRadius / camera.scaleX, 0, 2 * Math.PI, false);
-  ctx.strokeStyle = "red";
-  ctx.stroke();
-  ctx.closePath();
-
-  let door = doors[3];
-  ctx.beginPath();
-  ctx.rect(worldToCanvas(door.getX(), 0), worldToCanvas(door.getY(), 1), door.getW() / camera.scaleX, door.getH() / camera.scaleY);
-  ctx.strokeStyle = "red";
-  ctx.stroke();
-  ctx.closePath();
-
   sight.draw();
-
-  let g = glass[0];
-  ctx.beginPath();
-  ctx.rect(worldToCanvas(g.getX(), 0), worldToCanvas(g.getY(), 1), g.getW() / camera.scaleX, g.getH() / camera.scaleY)
-  ctx.strokeStyle = "red";
-  ctx.stroke();
-  ctx.closePath();
 
   drawData();
 }
 
 const loop = () => {
   requestId = RAF(loop);
-  //if (paused) return;
   now = performance.now();
   dt += Math.min(1, (now - lastTime) / 1000);
 
@@ -304,8 +269,6 @@ const loop = () => {
 
   draw();
   lastTime = now;
-
-  // requestId = RAF(loop);
 }
 
 let lastTime = performance.now();

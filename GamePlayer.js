@@ -492,4 +492,12 @@ class Player {
     }
 
   }
+
+  subHp(dmg) {
+    this.hp -= dmg;
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.dead = true;
+    }
+  }
 }

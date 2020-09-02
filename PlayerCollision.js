@@ -64,11 +64,7 @@ let collisionPlayer = (x, y, w, h) => {
   }
 
   if ((!lastRed) && nowRed) {
-    player.hp -= 0.5;
-    if (player.hp < 0) {
-      player.hp = 0;
-      player.dead = true;
-    }
+    player.subHp(barbedWireDmg);
   }
 
   lastRed = nowRed;

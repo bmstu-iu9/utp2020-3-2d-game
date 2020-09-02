@@ -44,15 +44,11 @@ const collision = () => {
         if (!f) {
           if (bul.justShooted == false) {
             if (collisionCircleRect(x1, y1, bul.bulletRadius, player.realX, player.realY, player.realH, player.realW) &&
-                !(player.coverId !== -1 && bul.coverId !== -1 && player.coverId == bul.coverId)) {
+                !(player.coverId !== -1 && bul.coverId !== -1 && player.coverId === bul.coverId)) {
               console.log("hit");
               f = true;
               blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
-              player.hp -= bul.damage;
-              if (player.hp < 0) {
-                player.hp = 0;
-                player.dead = true;
-              }
+              player.subHp(bul.damage);
             }
           }
         }

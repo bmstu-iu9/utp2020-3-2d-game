@@ -392,22 +392,6 @@ class Target {
 
   draw(scale) {
     if (this.alive) {
-      ctx.beginPath();
-      ctx.lineWidth = 0.5;
-      ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.r * scale, 0, Math.PI * 2);
-      ctx.fillStyle = "yellow";
-      ctx.fill();
-      ctx.closePath();
-
-    } else {
-      ctx.beginPath();
-      ctx.lineWidth = 0.5;
-      ctx.arc(worldToCanvas(this.x, 0), worldToCanvas(this.y, 1), this.r * scale, 0, Math.PI * 2);
-      ctx.fillStyle = "red";
-      ctx.fill();
-      ctx.closePath();
-    }
-    if (this.alive) {
       if (this.shooting && !this.weapon.isReloading()) {
         this.sprite.shoot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);
       } else this.sprite.bot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, this.angle);

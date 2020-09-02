@@ -53,6 +53,8 @@ let sightHeight = 2;
 const bullets = new Set();
 const rounds = [];
 
+const barbedWireDmg = 0.5;
+
 const playerSounds = {
   water : new Sound(sounds["water"], 0, 0.8, 0.5),
 };
