@@ -44,7 +44,7 @@ class Player {
     this.inCover = false;
     this.coverId = -1;
     this.reloadId = null;
-    this.weapon = new Weapon(0);
+    this.weapon = new Weapon(1);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
 
@@ -106,7 +106,7 @@ class Player {
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
-    this.weapon = new Weapon(0);
+    this.weapon = new Weapon(1);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
     this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
@@ -368,11 +368,11 @@ class Player {
                   this.realXCenter + (canvasToWorld(sight.x, 0) - this.realXCenter) * dist1 / dist2 + normX,
                   this.realYCenter + (canvasToWorld(sight.y, 1) - this.realYCenter) * dist1 / dist2 + normY,
                   canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
-      this.weapon.shootExecuted = 1;
+      this.weapon.shotExecuted = true;
     } else {
       this.shooting = false;
       this.fire = false;
-      this.weapon.shootExecuted = 0;
+      this.weapon.shotExecuted = false;
     }
 
     if (pickUp) {

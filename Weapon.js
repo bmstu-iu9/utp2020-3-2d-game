@@ -4,6 +4,9 @@ class Weapon {
       case 0:
         this.damage = 1;
         this.fireRate = 1/10; //sec for 1 round
+        this.bulletSpread = Math.PI / 50;
+        this.stableFiringTime = 0.1;
+        this.stableBullets = Math.floor(this.stableFiringTime / this.fireRate);
         this.bullets = 30;
         this.maxBullets = 30;
         this.magazines = [];
@@ -19,11 +22,14 @@ class Weapon {
       case 1:
         this.damage = 1;
         this.fireRate = 1/11.6;
-        this.bullets = 30;
-        this.maxBullets = 30;
+        this.bulletSpread = Math.PI / 80;
+        this.stableFiringTime = 0.4;
+        this.stableBullets = Math.floor(this.stableFiringTime / this.fireRate);
+        this.bullets = 20;
+        this.maxBullets = 20;
         this.magazines = [];
-        this.magazines.push(30);
-        this.magazines.push(30);
+        this.magazines.push(20);
+        this.magazines.push(20);
         this.bulletSpeed = 48;
         this.reloadTime = 1.2;
         this.image = images["m16"];
@@ -66,9 +72,10 @@ class Weapon {
     this.lastReloadTime = 0;  //millisec
     this.singleShoot = false;
     this.shootingEnabled = true;
-    this.shootExecuted = 0;
+    this.shotExecuted = false;
     this.emptyMagazineSound = new Sound(sounds["empty"], 0.6, 1);
     this.pickUpRadius = 10;
+    this.countBullets = 0;
   }
   //0 - ak
   //1 - m16
@@ -78,7 +85,7 @@ class Weapon {
   shoot(x, y, targetX, targetY) {
     let now = performance.now();
 
-    if (this.singleShoot && this.shootExecuted !== 0) {
+    if (this.singleShoot && this.shotExecuted) {
       this.shootingEnabled = false;
     } else {
       this.shootingEnabled = true;
@@ -87,26 +94,38 @@ class Weapon {
     if (!this.reloading && this.bullets > 0 &&
        (now - this.lastBulletTime) / 1000 > this.fireRate &&
         this.shootingEnabled) {
-      bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed, this.damage, true));
+      let e = 0.02;
+      if ((now - this.lastBulletTime) / 1000 < this.fireRate + e) {
+        this.countBullets++;
+        console.log("inc");
+      } else {
+        this.countBullets -= Math.floor((now - this.lastBulletTime) / this.fireRate);
+        if (this.countBullets < 0) this.countBullets = 0;
+      }
+
       if (this.id === 2) {
+        bullets.add(new Bullet(x, y, targetX, targetY, this.bulletSpeed, this.damage, true));
         let v1 = rotate(targetX - x, targetY - y, this.bulletSpread);
         let v2 = rotate(targetX - x, targetY - y, -this.bulletSpread);
         bullets.add(new Bullet(x, y, x + v1.x, y + v1.y, this.bulletSpeed, this.damage, false));
         bullets.add(new Bullet(x, y, x + v2.x, y + v2.y, this.bulletSpeed, this.damage, false));
+      } else {
+        let deg = 0;
+        if (this.countBullets > this.stableBullets) {
+          deg = Math.random() * 2 * this.bulletSpread - this.bulletSpread;
+          console.log("random");
+        }
+        let v = rotate(targetX - x, targetY - y, deg);
+        bullets.add(new Bullet(x, y, x + v.x, y + v.y, this.bulletSpeed, this.damage, false));
       }
       this.bullets--;
 
-      let k1 = targetX - x;
-      let k2 = targetY - y;
-      let len = Math.sqrt(k1 * k1 + k2 * k2);
-      let offsetLen = 3/5 * this.width;
-      rounds.push(new Round(x - k1 / len * offsetLen, y - k2 / len * offsetLen,
-                            targetX, targetY, this.roundImage));
-      this.lastBulletTime = performance.now();
+      this.dropRound(x, y, targetX, targetY);
+      this.lastBulletTime = now;
       this.shotSound.play();
 
       return true;
-    } else if (this.bullets <= 0 && this.shootExecuted === 0) {
+    } else if (this.bullets <= 0 && !this.shotExecuted) {
       this.emptyMagazineSound.play();
     }
 
@@ -114,7 +133,7 @@ class Weapon {
   }
 
   reload() {
-    if (this.magazines.length !== 0 && this.bullets != this.maxBullets &&
+    if (this.magazines.length !== 0 && this.bullets !== this.maxBullets &&
         this.reloading === false) {
       this.reloading = true;
       this.lastReloadTime = performance.now();
@@ -237,6 +256,15 @@ class Weapon {
     this.y = y;
     this.offsetY = 0;
     weapons.add(this);
+  }
+
+  dropRound(x, y, tX, tY) {
+    let k1 = tX - x;
+    let k2 = tY - y;
+    let len = Math.sqrt(k1 * k1 + k2 * k2);
+    let offsetLen = 3/5 * this.width;
+    rounds.push(new Round(x - k1 / len * offsetLen, y - k2 / len * offsetLen,
+                          tX, tY, this.roundImage));
   }
 
   emptyMagazine() { return this.bullets === 0 };
