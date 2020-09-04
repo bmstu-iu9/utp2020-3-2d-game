@@ -27,17 +27,6 @@ resume.onclick = () => {
   closeMenu();
 }
 
-const menu = document.createElement("button");
-const div = document.createElement("div");
-div.className = "in";
-const menuText = document.createTextNode("Меню");
-menu.className = "back";
-div.append(menuText);
-menu.append(div);
-menu.onclick = () => {
-  openMenu();
-}
-
 const about = document.createElement("button");
 const aboutName = document.createTextNode("Об игре");
 about.className = "btnabout";
@@ -138,7 +127,6 @@ const openMenu = () => {
   }
   paused = true;
   document.body.append(divMenu);
-  menu.remove();
 }
 
 const closeMenu = () => {
@@ -152,7 +140,6 @@ const closeMenu = () => {
   if (settingsOpened) {
     toggleSettings();
   }
-  document.body.append(menu);
 
   if (!firstStart) {
     lastTime = performance.now();

@@ -286,6 +286,12 @@ trees.push(new Tree(3545, 965, 80, 90, 0, 0, 110, 120, images["trees"])); //де
 trees.push(new Tree(3689, 925, 80, 90, 0, 0, 110, 120, images["trees"])); //дерево 1
 trees.push(new Tree(3561, 885, 110, 130, 0, 250, 102, 102, images["trees"]));
 trees.push(new Tree(3614, 972, 110, 130, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(72, 715, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(535, 727, 60, 60, 170, 308, 73, 73, images["trees"]));
+trees.push(new Tree(535, 788, 80, 90, 0, 0, 110, 120, images["trees"]));
+trees.push(new Tree(534, 670, 80, 90, 0, 250, 102, 102, images["trees"]));
+trees.push(new Tree(535, 510, 80, 90, 0, 125, 110, 120, images["trees"]));
+trees.push(new Tree(535, 580, 110, 130, 0, 250, 102, 102, images["trees"]));
 
 const blood = [];
 
