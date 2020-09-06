@@ -181,6 +181,15 @@ const drawUI = () => {
   ctx.strokeRect(mapXY + (camera.x - koef) / 10, mapXY + camera.y / 10, visiblePart / 10, visiblePart / 10);
   ctx.closePath();
 
+  sight.draw();
+
+  if (!throwGrenade && throwTime && player.grenades.length) {
+    Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
+  }
+
+  if (player.weapon.isReloading()) {
+    player.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
+  }
 }
 
 const drawTileTypes = () => {
@@ -276,12 +285,6 @@ const draw = () => {
   trees.forEach(tree => {
     tree.draw();
   });
-
-  if (!throwGrenade && throwTime && player.grenades.length) {
-    Grenade.drawProgress(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset, throwTime);
-  }
-
-  sight.draw();
 
   drawUI();
 }
