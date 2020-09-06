@@ -49,48 +49,52 @@ const update = (dt) => {
   collision();
 }
 
-const drawData = () => {
+const drawUI = () => {
+  ctx.lineWidth = 1;
   let step = 0;
   let sx = 0;
   let sy = 0;
-  for (let i = 1; i < player.hp + 1; i++) {
-    sx = i * Math.sqrt(i) * 1.3 * 30;
-    sy = 16;
+  for (let i = 0.5; i < player.hp + 0.5; i += 0.5) {
+    sx = i * 80 - 15;
+    sy = 12;
     ctx.beginPath();
     ctx.moveTo(sx, sy);
-    ctx.bezierCurveTo(sx, 14, sx, 10, sx - 10, 10);
-    ctx.bezierCurveTo(sx - 22, 10, sx - 22, 26, sx - 22, 26);
-    ctx.bezierCurveTo(sx - 22, 32, sx - 14, 40, sx, 48);
-    ctx.bezierCurveTo(sx + 14, 40, sx + 22, 32, sx + 22, 26);
-    ctx.bezierCurveTo(sx + 22, 26, sx + 22, 10, sx + 10, 10);
-    ctx.bezierCurveTo(sx + 4, 10, sx, 14, sx, sy);
+    ctx.bezierCurveTo(sx - 1, 11, sx - 1, 8, sx - 9, 8);
+    ctx.bezierCurveTo(sx - 16, 8, sx - 16, 19, sx - 16, 19);
+    ctx.bezierCurveTo(sx - 16, 24, sx - 11, 30, sx, 36);
+    ctx.bezierCurveTo(sx + 11, 30, sx + 16, 24, sx + 16, 19);
+    ctx.bezierCurveTo(sx + 16, 19, sx + 16, 8, sx + 8, 8);
+    ctx.bezierCurveTo(sx + 3, 8, sx, 11, sx, sy);
     ctx.fillStyle = "red";
     ctx.fill();
+    ctx.strokeStyle = "black";
+    ctx.stroke();
     ctx.closePath();
   }
 
-  sx = 15;
-  sy = 60;
+  sx = 10;
+  sy = 50;
   ctx.beginPath();
   ctx.fillStyle = "black";
-  ctx.fillRect(sx, sy, 120, 10);
+  ctx.fillRect(sx, sy, 150, 10);
   ctx.fillStyle = "yellow";
-  ctx.fillRect(sx, sy, player.weapon.bullets / player.weapon.maxBullets * 120, 10);
+  ctx.fillRect(sx, sy, player.weapon.bullets / player.weapon.maxBullets * 150, 10);
   for (let i = 0; i < player.weapon.maxBullets; i++) {
-    step = 120 / player.weapon.maxBullets;
+    step = 150 / player.weapon.maxBullets;
+    ctx.strokeStyle = "red";
     ctx.strokeRect(sx + i * step , sy, step, 10);
   }
   ctx.closePath();
 
   for (let i = 0; i < player.weapon.magazines.length; i++) {
-    sy = i * 10 + 75;
+    sy = i * 15 + 70;
     ctx.beginPath();
     ctx.fillStyle = "black";
-    ctx.fillRect(sx, sy, 90, 7);
+    ctx.fillRect(sx, sy, 100, 7);
     ctx.fillStyle = "yellow";
-    ctx.fillRect(sx, sy, player.weapon.magazines[i] / player.weapon.maxBullets * 90, 7);
+    ctx.fillRect(sx, sy, player.weapon.magazines[i] / player.weapon.maxBullets * 100, 7);
     for (let i = 0; i < player.weapon.maxBullets; i++) {
-      step = 90 / player.weapon.maxBullets;
+      step = 100 / player.weapon.maxBullets;
       ctx.strokeStyle = "black";
       ctx.strokeRect(sx + i * step , sy, step, 7);
     }
@@ -98,12 +102,13 @@ const drawData = () => {
   }
 
   if (player.weapon.id !== 2) {
-    ctx.font = "11px Arial";
-    ctx.fillStyle = "black";
-    ctx.fillText("АВ", 15, 110);
-    ctx.fillText("ОД", 15, 125);
+    ctx.font = "12px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText("АВ", 14, 111);
+    ctx.fillText("ОД", 14, 126);
 
-    ctx.strokeStyle = "white";
+    ctx.fillStyle = "black";
+
 
     if (player.weapon.singleShoot) {
       ctx.beginPath();
@@ -113,9 +118,10 @@ const drawData = () => {
       ctx.lineTo(100 - 2, 106 - 7);
       ctx.fill();
       ctx.arc(100, 106, 5, 3 * Math.PI / 2 - 0.4, Math.PI / 2 - 0.4);
-      ctx.lineTo(44, 122);
-      ctx.lineTo(42, 119);
+      ctx.lineTo(43.5, 122);
+      ctx.lineTo(42.5, 118.5);
       ctx.lineTo(100, 106 - 5);
+      ctx.strokeStyle = "white";
       ctx.stroke();
       ctx.closePath();
     } else {
@@ -129,14 +135,15 @@ const drawData = () => {
       ctx.lineTo(42, 107);
       ctx.lineTo(42, 105);
       ctx.lineTo(100, 106 - 5);
+      ctx.strokeStyle = "white";
       ctx.stroke();
       ctx.closePath();
     }
   }
 
   for (let i = 1; i < player.grenades.length + 1; i++) {
-    sx = 124;
-    sy = 60 + 30 * i;
+    sx = 100 + 25 * i;
+    sy = 83;
     ctx.beginPath();
     ctx.arc(sx, sy, 10, 0, 2 * Math.PI);
     ctx.fillStyle = "#808000";
@@ -151,6 +158,28 @@ const drawData = () => {
     ctx.fillText("G", sx - 3, sy + 5);
     ctx.closePath();
   }
+
+  let mapXY = canvas.height - 10 - images["map"].naturalHeight / 10;
+  let koef = null;
+  if (player.realXCenter < images["map"].naturalHeight / 2) {
+    ctx.drawImage(images["map"], 0, 0, images["map"].naturalHeight, images["map"].naturalHeight,
+                  mapXY, mapXY, images["map"].naturalHeight / 10, images["map"].naturalHeight / 10);
+    koef = 0;
+  } else if (player.realXCenter > images["map"].naturalWidth - images["map"].naturalHeight / 2) {
+    ctx.drawImage(images["map"], images["map"].naturalWidth - images["map"].naturalHeight, 0, images["map"].naturalHeight, images["map"].naturalHeight,
+                  mapXY, mapXY, images["map"].naturalHeight / 10, images["map"].naturalHeight / 10);
+    koef = images["map"].naturalWidth - images["map"].naturalHeight;
+  } else {
+    ctx.drawImage(images["map"], player.realXCenter - images["map"].naturalHeight / 2, 0, images["map"].naturalHeight, images["map"].naturalHeight,
+                  mapXY, mapXY, images["map"].naturalHeight / 10, images["map"].naturalHeight / 10);
+    koef = player.realXCenter - images["map"].naturalHeight / 2;
+  }
+  ctx.beginPath();
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mapXY, mapXY, images["map"].naturalHeight / 10, images["map"].naturalHeight / 10);
+  ctx.strokeStyle = "white";
+  ctx.strokeRect(mapXY + (camera.x - koef) / 10, mapXY + camera.y / 10, visiblePart / 10, visiblePart / 10);
+  ctx.closePath();
 
 }
 
@@ -254,7 +283,7 @@ const draw = () => {
 
   sight.draw();
 
-  drawData();
+  drawUI();
 }
 
 const loop = () => {
