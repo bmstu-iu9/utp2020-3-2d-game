@@ -97,7 +97,6 @@ class Weapon {
       let e = 0.02;
       if ((now - this.lastBulletTime) / 1000 < this.fireRate + e) {
         this.countBullets++;
-        console.log("inc");
       } else {
         this.countBullets -= Math.floor((now - this.lastBulletTime) / this.fireRate);
         if (this.countBullets < 0) this.countBullets = 0;
@@ -113,7 +112,6 @@ class Weapon {
         let deg = 0;
         if (this.countBullets > this.stableBullets) {
           deg = Math.random() * 2 * this.bulletSpread - this.bulletSpread;
-          console.log("random");
         }
         let v = rotate(targetX - x, targetY - y, deg);
         bullets.add(new Bullet(x, y, x + v.x, y + v.y, this.bulletSpeed, this.damage, false));

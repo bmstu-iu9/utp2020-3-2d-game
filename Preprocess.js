@@ -17,13 +17,15 @@ let imagePromises = [ {"name": "map", "src" : "resources/jungle_map_v1.5.png"}, 
                  {"name" : "grenade", "src" : "resources/grenade_without_check_pixelized.png"},
                  {"name" : "door", "src" : "resources/door.png"},
                  {"name" : "glass", "src" : "resources/window.png"},
-                 {"name" : "trees", "src" : "resources/trees_bushes_pixelized.png"}, ];
+                 {"name" : "trees", "src" : "resources/trees_bushes_pixelized.png"},
+                 {"name" : "intro_text", "src" : "resources/intro_text.png"}];
 
 let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" },
                       {"name" : "shot_ak47", "src" : "resources/shot_ak47.mp3"},
                       {"name" : "shot_m16", "src" : "resources/shot_m16.mp3"},
                       {"name" : "shot_remington", "src" : "resources/shot_remington.mp3"},
-                      {"name" : "water", "src" : "resources/stepwater_1.wav"}, ];
+                      {"name" : "water", "src" : "resources/stepwater_1.wav"},
+                      {"name" : "uh1", "src" : "resources/uh1_huey.mp3"}, ];
 
 imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
   let img = new Image();
@@ -70,6 +72,7 @@ Promise.all(imagePromises.concat(soundPromises)).then(
     loadScript("Grenade.js").
     then(script => loadScript("Init.js")).
     then(script => loadScript("MainLoop.js")).
+    then(script => loadScript("Menu.js")).
     then(script => console.log("Game ready")).
     catch(error => console.log("Error:" + error.message));
 

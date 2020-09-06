@@ -11,7 +11,8 @@ playDiv.append(playText);
 play.append(playDiv);
 play.onclick = () => {
   closeMenu();
-  startGame();
+  let intro = new Intro(images["intro_text"], sounds["uh1"]);
+  intro.start();
 }
 
 const resume = document.createElement("button");
@@ -147,10 +148,10 @@ const closeMenu = () => {
     restart.style.bottom = "15%";
   }
   paused = false;
-  firstStart = false;
   if (!firstStart) {
     startGame();
   }
+  firstStart = false;
 }
 
 const gameOver = () => {
