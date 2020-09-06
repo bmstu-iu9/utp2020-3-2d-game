@@ -11,9 +11,7 @@ playDiv.append(playText);
 play.append(playDiv);
 play.onclick = () => {
   closeMenu();
-  const preprocess = document.createElement("script");
-  preprocess.src = "Preprocess.js";
-  document.body.append(preprocess);
+  startGame();
 }
 
 const resume = document.createElement("button");
@@ -141,10 +139,6 @@ const closeMenu = () => {
     toggleSettings();
   }
 
-  if (!firstStart) {
-    lastTime = performance.now();
-    requestId = RAF(loop);
-  }
   if (dead) {
     dead = false;
     divMenu.append(resume);
@@ -154,6 +148,9 @@ const closeMenu = () => {
   }
   paused = false;
   firstStart = false;
+  if (!firstStart) {
+    startGame();
+  }
 }
 
 const gameOver = () => {

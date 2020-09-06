@@ -70,7 +70,7 @@ Promise.all(imagePromises.concat(soundPromises)).then(
     loadScript("Grenade.js").
     then(script => loadScript("Init.js")).
     then(script => loadScript("MainLoop.js")).
-    then(script => console.log("all scripts are loaded")).
+    then(script => console.log("Game ready")).
     catch(error => console.log("Error:" + error.message));
 
   }
