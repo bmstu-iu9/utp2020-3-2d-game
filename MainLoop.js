@@ -271,9 +271,14 @@ const loop = () => {
   lastTime = now;
 }
 
-let lastTime = performance.now();
+const startGame = () => {
+  lastTime = performance.now();
+  requestId = RAF(loop);
+}
+
+let lastTime;
 let now = 0;
 let dt = 0;
 let fps = 60;
 let gameStep = 1 / fps;
-let requestId = RAF(loop);
+let requestId;
