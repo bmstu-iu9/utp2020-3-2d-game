@@ -50,13 +50,18 @@ const keyUpHandler = (e) => {
       getInCover = true;
     }
   }
-  if (e.keyCode === 27 && !firstStart) { //esc
+  if (e.keyCode === 27 && intro.playing) {
+    intro.stop();
+    paused = false;
+    console.log("stopped");
+  } else if (e.keyCode === 27 && !firstStart) { //esc
+    console.log("ok");
     if (paused) {
-      closeMenu();
+        closeMenu();
     } else {
-      openMenu();
+        openMenu();
+      }
     }
-  }
 }
 
 const keyDownHandler = (e) => {

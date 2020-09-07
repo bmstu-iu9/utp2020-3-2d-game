@@ -1,6 +1,7 @@
 'use strict';
 
 let firstStart = true;
+const intro = new Intro(images["intro_text"], sounds["uh1"]);
 
 const play = document.createElement("button");
 const playDiv = document.createElement("div");
@@ -11,7 +12,6 @@ playDiv.append(playText);
 play.append(playDiv);
 play.onclick = () => {
   closeMenu();
-  let intro = new Intro(images["intro_text"], sounds["uh1"]);
   intro.start();
 }
 
