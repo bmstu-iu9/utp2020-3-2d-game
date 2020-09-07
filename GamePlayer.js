@@ -158,7 +158,6 @@ class Player {
     if (!this.shooting) {
       if (this.weapon.isReloading()) {
         this.sprite.pl.drawBodySprite();
-        this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
       } else {
         switch (this.weapon.id) {
           case 0:

@@ -13,11 +13,13 @@ class Intro {
     this.dy = this.lineH / this.timeForOneLine / k;
     let end = (img.naturalHeight - this.srcH) / this.lineH * this.timeForOneLine;
     this.snd = new Sound(snd, 0, end, 1, end * 0.9);
+    this.playing = false;
   }
 
   play() {
     if (this.y + this.srcH >= this.img.naturalHeight) {
       clearInterval(this.id);
+      this.playing = false;
       startGame();
       return;
     }
@@ -33,5 +35,13 @@ class Intro {
   start() {
     this.id = setInterval(this.play.bind(this), this.step);
     this.snd.play();
+    this.playing = true;
+  }
+
+  stop() {
+    this.playing = false;
+    this.snd.pause();
+    clearInterval(this.id);
+    startGame();
   }
 }
