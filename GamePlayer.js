@@ -10,7 +10,7 @@
 // 0 - shoot ak47
 // 1 - shoot shotgun
 // 2 - shoot m16
-let timeForOneBul = [1.5 * 1000 / 20, 1.2 * 1000 / 20, 3.5 * 1000 / 6];
+let timeForOneBul = [1.5 * 1000 / 30, 1.2 * 1000 / 20, 3.5 * 1000 / 6];
 let lTime = 0;
 let dT = 0;
 let noW = 0;
@@ -30,6 +30,8 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
+    this.weaponX = this.realXCenter;
+    this.weaponY = this.realYCenter + 5;
     this.action = false;
     this.angle = 0;
     this.actionRadius = rW;
@@ -173,6 +175,11 @@ class Player {
       }
     }
   }
+  ctx.beginPath();
+  ctx.arc(worldToCanvas(this.weaponX, 0), worldToCanvas(this.weaponY, 1), 10, 0, 2 * Math.PI);
+  ctx.fillstyle = "yellow";
+  ctx.fill();
+  ctx.closePath();
   }
 
   move(dt) {
@@ -181,6 +188,7 @@ class Player {
       this.realYCenter += this.speed;
       this.y += this.speed;
       this.Y_Center += this.speed;
+      this.weaponY += this.speed;
 
       this.sprite.down.x = worldToCanvas(this.X_Center, 0);
       this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
@@ -199,6 +207,7 @@ class Player {
       this.realY -= this.speed;
       this.realYCenter -= this.speed;
       this.Y_Center -= this.speed;
+      this.weaponY -= this.speed;
 
       this.sprite.up.x = worldToCanvas(this.X_Center, 0);
       this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
@@ -218,6 +227,7 @@ class Player {
       this.realX += this.speed;
       this.realXCenter += this.speed;
       this.X_Center += this.speed;
+      this.weaponX += this.speed;
 
       this.sprite.right.x = worldToCanvas(this.X_Center, 0);
       this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
@@ -235,6 +245,7 @@ class Player {
       this.realX -= this.speed;
       this.realXCenter -= this.speed;
       this.X_Center -= this.speed;
+      this.weaponX -= this.speed;
 
       this.sprite.left.x = worldToCanvas(this.X_Center, 0);
       this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
@@ -253,7 +264,6 @@ class Player {
       this.weapon.drop(this.realXCenter, this.realYCenter);
       this.sprite.death.x = worldToCanvas(this.x, 0);
       this.sprite.death.y = worldToCanvas(this.y, 1);
-      //this.sprite.death.drawSprite();
       gameOver();
       return;
     }
@@ -323,18 +333,15 @@ class Player {
     if (this.weapon.isReloading()) {
      noW = performance.now();
       dT = (noW - lTime);
-    //  console.log(dt);
-        if (dT > timeForOneBul[this.weapon.id] / 20 && steP < 1) {
+        if (dT > timeForOneBul[this.weapon.id] / 10 && steP < 1) {
           steP += 1/20;
           this.sprite.pl.counter = this.sprite.pl.speed - 1;
           this.sprite.pl.update();
-          //dT -= 0.001;
+          lTime = noW;
         }
         if (steP === 1) {
           steP = 0;
         }
-  //  console.log(this.sprite.pl.currentFrame[3]);
-      lTime = noW;
   } else {
     steP = 0;
   }
@@ -410,6 +417,8 @@ class Player {
       if (this.inCover) {
         this.inCover = false;
         this.coverId = -1;
+        this.sprite.pl.canvasW *= 2;
+        this.sprite.pl.canvasH *= 2;
       } else {
         let blocks = this.getBlocksByRadius();
         for (let block of blocks) {
@@ -417,6 +426,8 @@ class Player {
           if (coverId !== -1) {
             this.inCover = true;
             this.coverId = coverId;
+            this.sprite.pl.canvasW /= 2;
+            this.sprite.pl.canvasH /= 2;
           }
         }
       }
