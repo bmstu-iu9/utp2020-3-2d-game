@@ -9,6 +9,7 @@ class Target {
     this.route = null;
     this.routeP = 0;
     this.lastUpdate = 0;
+    this.hp = 2;
     this.st = 0;
     // 0 - ожидание
     // 1 - движение в укрытие
@@ -19,6 +20,7 @@ class Target {
     this.visible = false;
     this.alive = true;
     this.speed = player.speed;
+    this.turnSpeed = 15;
     this.dx = 0;
     this.dy = 0;
     this.sx = 0;
@@ -42,6 +44,7 @@ class Target {
     this.knowPlPos = false;
     this.underAttack = false;
     this.shooting = false;
+    this.justShooted = false;
     this.lastTimeSeen = 0;
     this.index = I;
     switch (I) {
@@ -105,6 +108,8 @@ class Target {
 
   update() {
     if (this.alive) {
+      console.log(this.expSightX);
+      this.turn();
       this.analyzeSituation();
 
       if (performance.now() - this.lastUpdate > 4000) {
@@ -162,7 +167,7 @@ class Target {
     } else {
       if (this.weapon !== null) {
         controlPoints[this.point].bots -= 1;
-        this.weapon.drop(this.x, this.y);
+        //this.weapon.drop(this.x, this.y);
         this.weapon = null;
       }
       let x1 = worldToCanvas(this.rX, 0);
@@ -185,7 +190,7 @@ class Target {
       let angle = findAngle(player.realXCenter, player.realYCenter,
                             this.x, this.y,
                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
-      this.underAttack = (angle < 1.05 && player.shooting); //|| angle < 0.35;
+      this.underAttack = (angle < 1.05 && player.shooting);
     } else {
       this.underAttack = false;
     }
@@ -260,8 +265,8 @@ class Target {
 
   attack() {
     if (!this.moving) {
-      this.sightX = player.realXCenter;
-      this.sightY = player.realYCenter;
+      this.expSightX = player.realXCenter;
+      this.expSightY = player.realYCenter;
       if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < 150) {
         this.onPosition = true;
       } else {
@@ -297,21 +302,20 @@ class Target {
   movement(key) {
     if (this.moving) {
       if (this.seesPlayer) {
-        this.sightX = player.realXCenter;
-        this.sightY = player.realYCenter;
+        this.expSightX = player.realXCenter;
+        this.expSightY = player.realYCenter;
         let d = dist(this.x, player.realXCenter, this.y, player.realYCenter);
-        if (d < 250 && this.trySingleShoot()) {
+        if (d < 250) {
           let koef1 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
           let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
-          this.sightX += koef1;
-          this.sightY += koef2;
-          this.singleShoot(this.x, this.y, this.sightX, this.sightY);
+
+          this.singleShoot(this.x, this.y, this.sightX + koef1, this.sightY + koef2);
         }
       } else {
-        this.sightX = this.x + 5 * (this.route[this.routeP].x - this.x);
-        this.sightY = this.y + 5 * (this.route[this.routeP].y - this.y);
+        this.expSightX = this.x + 5 * (this.route[this.routeP].x - this.x);
+        this.expSightY = this.y + 5 * (this.route[this.routeP].y - this.y);
       }
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
@@ -347,8 +351,8 @@ class Target {
             (key === 2 && this.seesPlayer && dist(this.x, player.realXCenter, this.y, player.realYCenter) < 120)) {
           this.moving = false;
           if (!(key == 2 || key === 4)) {
-            this.sightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
-            this.sightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
+            this.expSightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
+            this.expSightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
           }
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
           this.YBlock = (this.route[this.routeP].y - (this.route[this.routeP].y % worldTileSize)) / worldTileSize;
@@ -421,19 +425,15 @@ class Target {
     }
   }
 
-  trySingleShoot() {
-    if (performance.now() - this.lastShoot >= 1000) {
-      this.firstShoot = performance.now();
-    }
-    return performance.now() - this.firstShoot < 5;
-  }
-
   singleShoot(x, y, tx, ty) {
-    if (performance.now() - this.firstShoot < 5) {
+    if (!this.justShooted) {
+      this.weapon.singleShoot = true;
       this.weapon.shoot(x, y, tx, ty);
-      this.lastShoot = performance.now()
+      this.lastShoot = performance.now();
+      this.justShooted = true;
     } else if (performance.now() - this.lastShoot >= 1000) {
-      this.firstShoot = performance.now();
+      this.weapon.singleShoot = false;
+      this.justShooted = false;
     }
   }
 
@@ -450,9 +450,25 @@ class Target {
     return findAngle(this.x, this.y, this.sightX, this.sightY, this.expSightX, this.expSightY);
   }
 
-  /*turn() {
+  turn() {
+    if (dist(this.sightX, this.expSightX, this.sightY, this.expSightY) <= this.turnSpeed) {
+      this.sightX = this.expSightX;
+      this.sightY = this.expSightY;
+    } else {
+      let tdx = this.turnSpeed * (this.expSightX - this.sightX) / Math.sqrt(Math.pow(this.expSightX - this.sightX, 2) + Math.pow(this.expSightY - this.sightY, 2));
+      let tdy = this.turnSpeed * (this.expSightY - this.sightY) / Math.sqrt(Math.pow(this.expSightX - this.sightX, 2) + Math.pow(this.expSightY - this.sightY, 2));
+      this.sightX += tdx;
+      this.sightY += tdy;
+    }
+  }
 
-  }*/
+  subHP(dmg) {
+    this.hp -= dmg;
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.alive = false;
+    }
+  }
 
   vis(tx, ty) {
     let vx = (tx - this.x) / 2;
