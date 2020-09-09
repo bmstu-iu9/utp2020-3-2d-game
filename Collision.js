@@ -24,7 +24,8 @@ const collision = () => {
           for (let g = 0; g < glass.length; g++) {
             if (!glass[g].broken && collisionCircleRect(x1, y1, bul.bulletRadius,
                                     glass[g].getX(), glass[g].getY(),
-                                    glass[g].getH(), glass[g].getW())) {
+                                    glass[g].getH(), glass[g].getW()) && bul.active) {
+
                glass[g].breakGlass();
             }
           }
@@ -47,8 +48,15 @@ const collision = () => {
                 !(player.coverId !== -1 && bul.coverId !== -1 && player.coverId === bul.coverId)) {
               console.log("hit");
               f = true;
+<<<<<<< HEAD
               blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
             //  player.subHp(bul.damage);
+=======
+              if (bul.active) {
+                blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
+                //player.subHp(bul.damage);
+              }
+>>>>>>> bb3d02291da3efa4f8f89a95565e1465d4c24fc6
             }
           }
         }
@@ -59,8 +67,10 @@ const collision = () => {
               if (bul.bulletRadius + targets[j].r >= dist(x1, targets[j].x, y1, targets[j].y) &&
                   targets[j].alive === true) {
                 f = true;
-                targets[j].alive = false;
-                blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
+                if (bul.active) {
+                  targets[j].subHP(bul.damage);
+                  blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
+                }
               }
               if (f) {
                 break;
@@ -82,6 +92,7 @@ const collision = () => {
             bul.x = x1 - bul.dx;
             bul.y = y1 - bul.dy;
             f = false;
+            bul.active = false;
           }
           break;
         }
