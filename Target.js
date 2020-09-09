@@ -316,6 +316,12 @@ class Target {
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
 
+
+      this.x += this.dx;
+      this.y += this.dy;
+      this.rX += this.dx;
+      this.rY += this.dy;
+
       let x1 = worldToCanvas(this.x, 0);
       let y1 = worldToCanvas(this.y, 1);
       let x2 = worldToCanvas(this.sightX, 0);
@@ -335,11 +341,6 @@ class Target {
         }
       }
       this.angle = deg;
-
-      this.x += this.dx;
-      this.y += this.dy;
-      this.rX += this.dx;
-      this.rY += this.dy;
 
 
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {

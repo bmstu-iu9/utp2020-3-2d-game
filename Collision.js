@@ -48,7 +48,7 @@ const collision = () => {
               console.log("hit");
               f = true;
               blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
-              player.subHp(bul.damage);
+            //  player.subHp(bul.damage);
             }
           }
         }
