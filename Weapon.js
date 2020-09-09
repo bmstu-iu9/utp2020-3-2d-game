@@ -137,15 +137,9 @@ class Weapon {
       this.lastReloadTime = performance.now();
       if (this.id === 2) {  //перезарядка дробовика
         let loaded = 0;
+        loaded = this.loadShotgun(loaded);
         this.reloadId = setInterval(() => {
-          if (loaded !== this.maxBullets - this.bullets && this.enoughAmmo(loaded + 1)) {
-            loaded++;
-          } else {
-            clearInterval(this.reloadId);
-            this.reloadId = null;
-            this.reloading = false;
-            this.load(loaded);
-          }
+          loaded = this.loadShotgun(loaded);
         }, this.reloadTime / this.maxBullets * 1000);
       } else {
         this.reloadId = setTimeout(() => {
@@ -156,6 +150,18 @@ class Weapon {
         }, this.reloadTime * 1000);
       }
     };
+  }
+
+  loadShotgun(loaded) {
+    if (loaded !== this.maxBullets - this.bullets && this.enoughAmmo(loaded + 1)) {
+      loaded++;
+    } else {
+      clearInterval(this.reloadId);
+      this.reloadId = null;
+      this.reloading = false;
+      this.load(loaded);
+    }
+    return loaded;
   }
 
   enoughAmmo(neededBullets) {
