@@ -10,11 +10,10 @@
 // 0 - shoot ak47
 // 1 - shoot shotgun
 // 2 - shoot m16
-let timeForOneBul = [1.5 * 1000 / 30, 1.2 * 1000 / 20, 3.5 * 1000 / 6];
+let timeForOneBul = [1.5 * 1000 / 30, 1.2 * 1000 / 20, 3.5 * 1000 / 6 / 20];
 let lTime = 0;
 let dT = 0;
 let noW = 0;
-let change = false;
 let steP = 0;
 
 class Player {
@@ -30,8 +29,8 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
-    this.weaponX = this.realXCenter;
-    this.weaponY = this.realYCenter + 5;
+    this.weaponX = this.realXCenter + this.realW/2 + 3;
+    this.weaponY = this.realYCenter + 9;
     this.action = false;
     this.angle = 0;
     this.actionRadius = rW;
@@ -45,8 +44,7 @@ class Player {
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
-    this.reloadId = null;
-    this.weapon = new Weapon(1);
+    this.weapon = new Weapon(2);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
 
@@ -101,6 +99,7 @@ class Player {
     this.realYCenter += dy;
     this.prevDirect = "Right";
     this.direction = "Right";
+    this.sound = "nothing";
     this.hp = 2;
     this.angle = 0;
     this.dead = false;
@@ -151,7 +150,7 @@ class Player {
         }
       } else {
           this.sprite.pl.drawBodySprite();
-          this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
+          //this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
       }
     }
 
@@ -323,6 +322,7 @@ class Player {
         this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
         this.sprite.pl.counter = 0;
         lTime = this.weapon.lastReloadTime;
+        //dT = (performance.now() - lTime) / 1000;
       }
       reloadPending = false;
     }
@@ -330,18 +330,26 @@ class Player {
     this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
     this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
     if (this.weapon.isReloading()) {
+     //this.sprite.pl.speed = 2;
      noW = performance.now();
-      dT = (noW - lTime);
-        if (dT > timeForOneBul[this.weapon.id] / 10 && steP < 1) {
-          steP += 1/20;
-          this.sprite.pl.counter = this.sprite.pl.speed - 1;
-          this.sprite.pl.update();
-          lTime = noW;
-        }
-        if (steP === 1) {
-          steP = 0;
-        }
+      dT += (noW - lTime);
+      if (dT > timeForOneBul[this.weapon.id]) {
+        steP += 1/20;
+        this.sprite.pl.counter = this.sprite.pl.speed - 1;
+        this.sprite.pl.update();
+        //lTime = noW;
+        //dT -= timeForOneBul[this.weapon.id] / 20;
+        lTime = noW - (dT - timeForOneBul[this.weapon.id]);
+        dT = 0;
+      } else {
+        lTime = noW;
+      }
+      console.log(steP);
+      if (steP >= 1) {
+        steP = 0;
+      }
   } else {
+    dT = 0;
     steP = 0;
   }
 
@@ -416,8 +424,8 @@ class Player {
       if (this.inCover) {
         this.inCover = false;
         this.coverId = -1;
-        this.sprite.pl.canvasW *= 2;
-        this.sprite.pl.canvasH *= 2;
+        this.sprite.pl.canvasW *= 1.1;
+        this.sprite.pl.canvasH *= 1.1;
       } else {
         let blocks = this.getBlocksByRadius();
         for (let block of blocks) {
@@ -425,9 +433,11 @@ class Player {
           if (coverId !== -1) {
             this.inCover = true;
             this.coverId = coverId;
-            this.sprite.pl.canvasW /= 2;
-            this.sprite.pl.canvasH /= 2;
           }
+        }
+        if (this.inCover) {
+          this.sprite.pl.canvasW /= 1.1;
+          this.sprite.pl.canvasH /= 1.1;
         }
       }
       getInCover = false;

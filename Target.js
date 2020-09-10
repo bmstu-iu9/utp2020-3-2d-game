@@ -108,7 +108,7 @@ class Target {
 
   update() {
     if (this.alive) {
-      console.log(this.expSightX);
+      //console.log(this.expSightX);
       this.turn();
       this.analyzeSituation();
 
