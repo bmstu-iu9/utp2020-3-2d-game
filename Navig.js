@@ -74,7 +74,11 @@ const checkDef = (node, st) => {
 }
 
 const checkNode = (node) => {
-  return (!player.vis(node.x, node.y, 1) && dist(player.realXCenter, node.x, player.realYCenter, node.y) > 20);
+  let res = true;
+  for (let incid of node.incidence) {
+    res = res && !player.vis(mesh[incid.i][incid.j].x, mesh[incid.i][incid.j].y, 1);
+  }
+  return (!player.vis(node.x, node.y, 1) && res && dist(player.realXCenter, node.x, player.realYCenter, node.y) > 20);
 }
 
 const checkDist = (st, node) => {
@@ -174,20 +178,24 @@ const makeRoute = (cF, s, g) => {
   let cur = g;
   let route = [];
   route.push(cur);
+  cur.used = true;
   while (cur !== s) {
     cur = cF.get(cur);
     route.push(cur);
+    cur.used = true;
   }
-  //route.pop();
   return route;
 }
 
 const findCost = (elem, bot) => {
+  let danger = elem.def;
   if (player.vis(elem.x, elem.y, 0) && bot.seesPlayer) {
-    return elem.def + 100;
-  } else {
-    return elem.def;
+    danger += 200;
   }
+  if (elem.used) {
+    danger += 100;
+  }
+  return danger;
 }
 
 const heuristic = (block1, block2) => {

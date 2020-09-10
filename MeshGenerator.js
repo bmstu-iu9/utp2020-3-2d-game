@@ -15,11 +15,11 @@ const generateMesh = () => {
       x = i * blockSize + blockCenter;
       y = j * blockSize + blockCenter;
       if (tileMap[j][i] === "red" || tileMap[j][i] === "orange" || tileMap[j][i] === "cover") {
-        mesh[i][j] = {x: x, y: y, color : 2, bfs: 0, vision: [], def: 0, incidence: [], walk: true};
+        mesh[i][j] = {x: x, y: y, color : 2, bfs: 0, vision: [], def: 0, incidence: [], walk: true, used: false};
       } else if (tileMap[j][i] === "black") {
-        mesh[i][j] = {x: x, y: y, color : 1, bfs: 0, vision: [], def: 0, incidence: [], walk: true};
+        mesh[i][j] = {x: x, y: y, color : 1, bfs: 0, vision: [], def: 0, incidence: [], walk: true, used: false};
       } else {
-        mesh[i][j] = {x: x, y: y, color : 0, bfs: 0, vision: [], def: 0, incidence: [], walk: true};
+        mesh[i][j] = {x: x, y: y, color : 0, bfs: 0, vision: [], def: 0, incidence: [], walk: true, used: false};
       }
       if (i % 2 === 1 || j % 2 === 1) {
         mesh[i][j].walk = false;

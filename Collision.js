@@ -48,8 +48,6 @@ const collision = () => {
                 !(player.coverId !== -1 && bul.coverId !== -1 && player.coverId === bul.coverId)) {
               console.log("hit");
               f = true;
-              blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
-            //  player.subHp(bul.damage);
               if (bul.active) {
                 blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
                 //player.subHp(bul.damage);

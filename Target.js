@@ -8,8 +8,8 @@ class Target {
     this.r = 18;
     this.route = null;
     this.routeP = 0;
-    this.lastUpdate = 0;
     this.hp = 2;
+    this.lastUpd = 0;
     this.st = 0;
     // 0 - ожидание
     // 1 - движение в укрытие
@@ -17,6 +17,7 @@ class Target {
     // 3 - отступление
     // 4 - поиск игрока
     // 5 - возвращение
+    // 6 - возвращение в радиус действия
     this.visible = false;
     this.alive = true;
     this.speed = player.speed;
@@ -36,10 +37,14 @@ class Target {
     this.expSightY = 0;
     this.plwalkXBlock = 0;
     this.plwalkXBlock = 0;
+    this.plUpdX = 0;
+    this.plUpdY = 0;
+    this.plUpdSX = 0;
+    this.plUpdSY = 0;
     this.seesPlayer = false;
     this.lastPlTime = 0;
     this.moving = false;
-    this.priority = false;
+    this.priority = 0;
     this.onPosition = false;
     this.knowPlPos = false;
     this.underAttack = false;
@@ -108,13 +113,17 @@ class Target {
 
   update() {
     if (this.alive) {
-      //console.log(this.expSightX);
       this.turn();
       this.analyzeSituation();
 
-      if (performance.now() - this.lastUpdate > 4000) {
-        this.lastUpdate = performance.now();
+      if (this.checkPl() && performance.now() - this.lastUpd > 1000) {
+        this.lastUpd = performance.now();
         this.moving = false;
+        if (this.route !== null) {
+          for (let node of this.route) {
+            node.used = false;
+          }
+        }
       }
 
       switch(this.st) {
@@ -132,6 +141,9 @@ class Target {
           break;
         case 5:
           this.comeBack();
+          break;
+        case 6:
+          this.return();
           break;
       }
       let x1 = worldToCanvas(this.x, 0);
@@ -182,7 +194,7 @@ class Target {
     if (this.seesPlayer) {
       this.lastPlTime = performance.now();
     }
-    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < 1000;
+    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < 200;
     if (this.seesPlayer) {
       this.knowPlPos = true;
       this.plwalkXBlock = player.walkXBlock;
@@ -194,30 +206,64 @@ class Target {
     } else {
       this.underAttack = false;
     }
+    if (!this.seesPlayer && player.shooting &&
+        dist(controlPoints[this.point].x, player.realXCenter, controlPoints[this.point].y, player.realYCenter) < controlPoints[this.point].r * 2) {
+      this.knowPlPos = true;
+      this.plwalkXBlock = player.walkXBlock;
+      this.plwalkYBlock = player.walkYBlock;
+    }
     let oldSt = this.st;
-    if (!this.priority) {
-      if (dist(this.x, this.initialX, this.y, this.initialY) <= 10) {
-        this.st = 0;
-      } else {
-        this.st = 5;
+    if (!this.moving) {
+      this.priority = 0;
+    }
+    if (this.priority < 3) {
+      if (this.priority < 1) {
+        if (dist(this.x, this.initialX, this.y, this.initialY) <= 10) {
+          this.st = 0;
+        } else {
+          this.st = 5;
+        }
+        if (this.knowPlPos) {
+          this.st = 4;
+        }
       }
-      if (this.knowPlPos) {
-        this.st = 4;
+      if (this.priority < 2) {
+        if (this.seesPlayer) {
+          this.priority = 1
+          this.st = 2;
+        }
       }
-      if (this.seesPlayer) {
-        this.st = 2;
+      if (dist(this.x, controlPoints[this.point].x,
+               this.y, controlPoints[this.point].y) > controlPoints[this.point].r * 3) {
+        this.priority = 2
+        this.st = 6;
       }
       if (this.underAttack) {
-        this.priority = true;
+        this.priority = 3;
         this.st = 1;
       }
       if (controlPoints[this.point].captured) {
-        this.priority = true;
+        this.priority = 3;
         this.st = 3;
       }
     }
     if (this.st !== oldSt) {
       this.moving = false;
+      if (this.route !== null) {
+        for (let node of this.route) {
+          node.used = false;
+        }
+      }
+    }
+  }
+
+  return() {
+    if (!this.moving) {
+      this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[this.initXBlock][this.initYBlock], this);
+      this.routeP = this.route.length - 1;
+      this.moving = true;
+    } else {
+      this.movement(6);
     }
   }
 
@@ -273,10 +319,10 @@ class Target {
         this.onPosition = false;
       }
       if (this.onPosition) {
-        //if (this.checkSight() < 0.17) {
+        if (this.checkSight() < 0.17) {
           this.shoot(this.x, this.y, this.sightX, this.sightY);
           this.shooting = true;
-        //}
+        }
       } else {
         this.route = A_Star(mesh[this.XBlock][this.YBlock], mesh[player.walkXBlock][player.walkYBlock], this);
         this.routeP = this.route.length - 1;
@@ -311,7 +357,9 @@ class Target {
           let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
 
-          this.singleShoot(this.x, this.y, this.sightX + koef1, this.sightY + koef2);
+          if (this.checkSight() < 0.17 && player.vis(this.x, this.y, 0)) {
+            this.singleShoot(this.x, this.y, this.sightX + koef1, this.sightY + koef2);
+          }
         }
       } else {
         this.expSightX = this.x + 5 * (this.route[this.routeP].x - this.x);
@@ -319,7 +367,6 @@ class Target {
       }
       this.dx = this.speed * (this.route[this.routeP].x - this.x) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
       this.dy = this.speed * (this.route[this.routeP].y - this.y) / Math.sqrt(Math.pow(this.route[this.routeP].x - this.x, 2) + Math.pow(this.route[this.routeP].y - this.y, 2));
-
 
       this.x += this.dx;
       this.y += this.dy;
@@ -346,19 +393,28 @@ class Target {
       }
       this.angle = deg;
 
-
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1 ||
-            (key === 2 && this.seesPlayer && dist(this.x, player.realXCenter, this.y, player.realYCenter) < 120)) {
+            (key === 2 && this.seesPlayer &&
+             dist(this.x, player.realXCenter, this.y, player.realYCenter) < 120) ||
+            (key === 6 && dist(this.x, controlPoints[this.point].x,
+                               this.y, controlPoints[this.point].y) < controlPoints[this.point].r / 2)) {
           this.moving = false;
+          if (this.route !== null) {
+            for (let node of this.route) {
+              node.used = false;
+            }
+          }
           if (!(key == 2 || key === 4)) {
-            this.expSightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
-            this.expSightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
+            if (this.routeP + 1 < this.route.length) {
+              this.expSightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
+              this.expSightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
+            }
           }
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
           this.YBlock = (this.route[this.routeP].y - (this.route[this.routeP].y % worldTileSize)) / worldTileSize;
 
-          if (key === 4) {
+          if (key === 4 || key === 6) {
             this.knowPlPos = false;
           } else if (key === 3) {
             controlPoints[this.point].bots -= 1;
@@ -369,50 +425,69 @@ class Target {
             this.initXBlock = this.XBlock;
             this.initYBlock = this.YBlock;
           }
-
-          if (key === 1 || key === 3) {
-            this.priority = false;
-          }
-
         } else {
           this.routeP -= 1;
-          for (let door of doors) {
-            if (collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
-                                  this.route[this.routeP].x, this.route[this.routeP].y,
-                                  door.getX(), door.getY(),
-                                  door.getX() + door.getW(), door.getY() + door.getH())) {
-              if (!door.moving) {
-                door.toggle();
+          if (this.routeP + 1 < this.route.length) {
+            for (let door of doors) {
+              if (collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
+                                    this.route[this.routeP].x, this.route[this.routeP].y,
+                                    door.getX(), door.getY(),
+                                    door.getX() + door.getW(), door.getY() + door.getH())) {
+                if (!door.moving) {
+                  door.toggle();
+                }
               }
             }
-          }
-          for (let gl of glass) {
-            let breakGL = null;
-            if (this.routeP - 3 <= - 1) {
-              breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
-                                          this.route[this.routeP].x, this.route[this.routeP].y,
-                                          gl.getX(), gl.getY(),
-                                          gl.getX() + gl.getW(), gl.getY() + gl.getH());
-            } else {
-              breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
-                                          this.route[this.routeP - 3].x, this.route[this.routeP - 3].y,
-                                          gl.getX(), gl.getY(),
-                                          gl.getX() + gl.getW(), gl.getY() + gl.getH());
-            }
-            if (breakGL) {
-              if (!gl.broken) {
-                this.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
-                this.shooting = true;
+            for (let gl of glass) {
+              let breakGL = null;
+              if (this.routeP - 3 <= - 1) {
+                breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
+                                            this.route[this.routeP].x, this.route[this.routeP].y,
+                                            gl.getX(), gl.getY(),
+                                            gl.getX() + gl.getW(), gl.getY() + gl.getH());
               } else {
-                this.shooting = false;
+                breakGL = collisionLineRect(this.route[this.routeP + 1].x, this.route[this.routeP + 1].y,
+                                            this.route[this.routeP - 3].x, this.route[this.routeP - 3].y,
+                                            gl.getX(), gl.getY(),
+                                            gl.getX() + gl.getW(), gl.getY() + gl.getH());
+              }
+              if (breakGL) {
+                if (!gl.broken) {
+                  this.shoot(this.x, this.y, (this.sightX + (gl.getX() + gl.getW() / 2)) / 2, (this.sightY + (gl.getY() + gl.getH() / 2)) / 2);
+                  this.shooting = true;
+                } else {
+                  this.shooting = false;
+                }
               }
             }
           }
-          this.XBlock = (this.route[this.routeP + 1].x - (this.route[this.routeP + 1].x % worldTileSize)) / worldTileSize;
-          this.YBlock = (this.route[this.routeP + 1].y - (this.route[this.routeP + 1].y % worldTileSize)) / worldTileSize;
+          if (this.routeP + 1 < this.route.length) {
+            this.XBlock = (this.route[this.routeP + 1].x - (this.route[this.routeP + 1].x % worldTileSize)) / worldTileSize;
+            this.YBlock = (this.route[this.routeP + 1].y - (this.route[this.routeP + 1].y % worldTileSize)) / worldTileSize;
+          }
         }
       }
     }
+  }
+
+  checkPl() {
+    if (dist(player.realXCenter, this.plUpdX, player.realYCenter, this.plUpdY) > 100) {
+      this.plUpdX = player.realXCenter;
+      this.plUpdY = player.realYCenter;
+      this.plUpdSX = canvasToWorld(sight.x, 0);
+      this.plUpdSY = canvasToWorld(sight.y, 1);
+      return true;
+    }
+    if (findAngle(player.realXCenter, player.realYCenter,
+                  this.plUpdSX, this.plUpdSY,
+                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1)) > 1.5) {
+      this.plUpdX = player.realXCenter;
+      this.plUpdY = player.realYCenter;
+      this.plUpdSX = canvasToWorld(sight.x, 0);
+      this.plUpdSY = canvasToWorld(sight.y, 1);
+      return true;
+    }
+    return false;
   }
 
   draw() {
@@ -522,6 +597,7 @@ class ControlPoint {
       captureEnable = captureEnable && incid.captured;
     }
     if (!this.captured &&
+        this.next !== null &&
         captureEnable &&
         this.bots <= 1 &&
         Math.sqrt(Math.pow(player.realXCenter - this.x, 2) +
@@ -536,7 +612,10 @@ const findAngle = (x1, y1, x2, y2, x3, y3) => {
   let vx2 = x3 - x1;
   let vy1 = y2 - y1;
   let vy2 = y3 - y1;
-  return  Math.acos(((vx1) * (vx2) + (vy1) * (vy2)) /
-                    (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                     Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2))));
+  let dotProduct = ((vx1) * (vx2) + (vy1) * (vy2)) /
+                   (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
+                    Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
+  dotProduct = dotProduct > 1 ? 1 : dotProduct;
+  dotProduct = dotProduct < -1 ? -1 : dotProduct;
+  return Math.acos(dotProduct);
 }
