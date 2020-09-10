@@ -322,7 +322,6 @@ class Player {
         this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
         this.sprite.pl.counter = 0;
         lTime = this.weapon.lastReloadTime;
-        //dT = (performance.now() - lTime) / 1000;
       }
       reloadPending = false;
     }
@@ -330,23 +329,15 @@ class Player {
     this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
     this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
     if (this.weapon.isReloading()) {
-     //this.sprite.pl.speed = 2;
      noW = performance.now();
       dT += (noW - lTime);
       if (dT > timeForOneBul[this.weapon.id]) {
-        steP += 1/20;
         this.sprite.pl.counter = this.sprite.pl.speed - 1;
         this.sprite.pl.update();
-        //lTime = noW;
-        //dT -= timeForOneBul[this.weapon.id] / 20;
         lTime = noW - (dT - timeForOneBul[this.weapon.id]);
         dT = 0;
       } else {
         lTime = noW;
-      }
-      console.log(steP);
-      if (steP >= 1) {
-        steP = 0;
       }
   } else {
     dT = 0;
