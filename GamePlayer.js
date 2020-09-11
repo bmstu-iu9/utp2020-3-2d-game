@@ -29,8 +29,8 @@ class Player {
     this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
-    this.weaponX = this.realXCenter + this.realW/2 + 3;
-    this.weaponY = this.realYCenter + 9;
+    this.weaponX = this.realXCenter;
+    this.weaponY = this.realYCenter + 10;
     this.action = false;
     this.angle = 0;
     this.actionRadius = rW;

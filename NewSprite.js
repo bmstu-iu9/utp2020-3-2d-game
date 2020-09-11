@@ -51,37 +51,55 @@ class Sprite {
   }
 
   drawBodySprite() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    let deg = 0;
-    if (sight.y > this.y) {
-      if (sight.x < this.x) {
-        deg = Math.PI / 2 + Math.atan((this.x - sight.x) / (sight.y - this.y)) - gunOffset;
-      } else {
-        deg = Math.PI / 2 - Math.atan((sight.x - this.x) / (sight.y - this.y)) - gunOffset;
-      }
-    } else {
-      if (sight.x > this.x) {
-        deg = 2 * Math.PI - Math.atan((this.y - sight.y) / (sight.x - this.x)) - gunOffset;
-      } else {
-        deg = Math.PI + Math.atan((this.y - sight.y) / (this.x - sight.x)) - gunOffset;
-      }
-    }
-    player.angle = deg;
-    ctx.rotate(deg);
-    ctx.translate(-this.x, -this.y);
-    ctx.drawImage(
-        this.image,
-        this.srcX,
-        this.srcY,
-        this.width,
-        this.height,
-        worldToCanvas(player.x, 0),
-        worldToCanvas(player.y, 1),
-        this.canvasW,
-        this.canvasH
-    );
-    ctx.restore();
+        ctx.save();
+        let x = worldToCanvas(player.weaponX, 0);
+        let y = worldToCanvas(player.weaponY, 1);
+        let deg = 0;
+        let x1 = this.x;
+        let y1 = this.y;
+        let len1 = Math.sqrt(Math.pow(sight.x - x1, 2) + Math.pow(sight.y - y1, 2));
+        let vec1 = [(sight.x - x1) / len1, (sight.y - y1) / len1];
+
+        if (sight.x < x1) {
+          if (sight.y > y1) {
+            deg = Math.PI / 2 + Math.acos(vec1[1]);
+          } else {
+            deg = Math.PI + Math.acos(-vec1[0])
+          }
+        } else {
+          if (sight.y > y1) {
+            deg = Math.acos(vec1[0]);
+          } else {
+            deg = 3 * Math.PI / 2 + Math.acos(-vec1[1]);
+          }
+        }
+
+        let point = {
+          "x" : (x - x1)*Math.cos(deg) - (y - y1)*Math.sin(deg) + x1,
+          "y" : (x - x1)*Math.sin(deg) + (y - y1)*Math.cos(deg) + y1,
+        }
+
+        let L = Math.sqrt(Math.pow(sight.x - point.x, 2) + Math.pow(sight.y - point.y, 2));
+        let X = (sight.x - point.x) / L;
+        let Y = (sight.y - point.y) / L;
+        deg -= Math.acos(X * vec1[0] + Y * vec1[1]);
+
+        ctx.translate(this.x, this.y);
+        player.angle = deg;
+        ctx.rotate(deg);
+        ctx.translate(-this.x, -this.y);
+        ctx.drawImage(
+            this.image,
+            this.srcX,
+            this.srcY,
+            this.width,
+            this.height,
+            worldToCanvas(player.x, 0),
+            worldToCanvas(player.y, 1),
+            this.canvasW,
+            this.canvasH
+        );
+        ctx.restore();
   }
 
   drawBot(sightX, sightY, x, y, angle) {
