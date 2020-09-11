@@ -56,6 +56,7 @@ class Grenade {
       this.y = player.y;
       grenades.add(this);
     }
+    grenadeHit(this);
     this.explode = true;
     clouds.push(new Cloud(this.x + 10, this.y + 5, Math.cos(-Math.PI / 4), Math.sin(-Math.PI / 4),
                                0.15, 16, "49, 49, 49", 1, 5));

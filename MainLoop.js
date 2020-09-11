@@ -47,6 +47,7 @@ const update = (dt) => {
 
   camera.updateCoordinates();
   collision();
+  grenadeCollision();
 }
 
 const drawUI = () => {
