@@ -139,6 +139,28 @@ body {
   background: #666633;
 }
 
+.btnmusic {
+  z-index: 1;
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 15%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnmusic:hover {
+  background: #666633;
+}
+
 .slidercontainer {
   width: 70%;
   height: 30px;

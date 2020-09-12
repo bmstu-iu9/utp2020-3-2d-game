@@ -2,6 +2,7 @@
 
 let firstStart = true;
 const intro = new Intro(images["intro_text"], sounds["uh1"]);
+const menuMusic = new Sound(sounds["menu_music"], 0, sounds["menu_music"].duration, 0.5);
 
 const play = document.createElement("button");
 const playDiv = document.createElement("div");
@@ -95,6 +96,21 @@ deadInfo.style.top = "10%";
 const deadText = document.createTextNode("Вас убили!");
 deadInfo.append(deadText);
 
+const soundOnBttn = document.createElement("button");
+const soundOnDiv = document.createElement("div");
+soundOnDiv.className = "in";
+const soundOnText = document.createTextNode("Музыка");
+soundOnBttn.className = "btnmusic";
+soundOnDiv.append(soundOnText);
+soundOnBttn.append(soundOnDiv);
+soundOnBttn.onclick = () => {
+  if (menuMusic.onPause()) {
+    menuMusic.play(false);
+  } else {
+    menuMusic.pause();
+  }
+}
+
 const toggleSettings = () => {
   if (!settingsOpened) {
     settingsOpened = true;
@@ -134,6 +150,8 @@ const closeMenu = () => {
     about.remove();
     divMenu.append(resume);
     divMenu.append(restart);
+    soundOnBttn.remove();
+    menuMusic.pause();
   }
   divMenu.remove();
   if (settingsOpened) {
@@ -163,4 +181,5 @@ const gameOver = () => {
   openMenu();
 }
 
+document.body.append(soundOnBttn);
 openMenu();

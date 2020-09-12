@@ -18,14 +18,16 @@ let imagePromises = [ {"name": "map", "src" : "resources/jungle_map_v1.5.png"}, 
                  {"name" : "door", "src" : "resources/door.png"},
                  {"name" : "glass", "src" : "resources/window.png"},
                  {"name" : "trees", "src" : "resources/trees_bushes_pixelized.png"},
-                 {"name" : "intro_text", "src" : "resources/intro_text.png"}];
+                 {"name" : "intro_text", "src" : "resources/intro_text.png"}, ];
 
 let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine.mp3" },
                       {"name" : "shot_ak47", "src" : "resources/shot_ak47.mp3"},
                       {"name" : "shot_m16", "src" : "resources/shot_m16.mp3"},
                       {"name" : "shot_remington", "src" : "resources/shot_remington.mp3"},
                       {"name" : "water", "src" : "resources/stepwater_1.wav"},
-                      {"name" : "uh1", "src" : "resources/uh1_huey.mp3"}, ];
+                      {"name" : "uh1", "src" : "resources/uh1_huey.mp3"},
+                      {"name" : "menu_music", "src" : "resources/The Doors - The End.mp3"},
+                      {"name" : "outro_music", "src" : "resources/CCR - Fortunate Son.mp3"}];
 
 imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
   let img = new Image();
