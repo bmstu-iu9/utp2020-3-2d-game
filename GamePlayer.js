@@ -123,6 +123,7 @@ class Player {
         break;
     }
     this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
+    player.sound = "nothing";
   }
 
   drawDirection() {
@@ -262,7 +263,7 @@ class Player {
       this.weapon.drop(this.realXCenter, this.realYCenter);
       this.sprite.death.x = worldToCanvas(this.x, 0);
       this.sprite.death.y = worldToCanvas(this.y, 1);
-      gameOver();
+      gameOver("dead");
       return;
     }
 

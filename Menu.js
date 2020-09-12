@@ -3,6 +3,7 @@
 let firstStart = true;
 const intro = new Intro(images["intro_text"], sounds["uh1"]);
 const menuMusic = new Sound(sounds["menu_music"], 0, sounds["menu_music"].duration, 0.5);
+const outro = new Outro(sounds["outro_music"]);
 
 const play = document.createElement("button");
 const playDiv = document.createElement("div");
@@ -25,6 +26,7 @@ resumeDiv.append(resumeText);
 resume.append(resumeDiv);
 resume.onclick = () => {
   closeMenu();
+  startGame();
 }
 
 const about = document.createElement("button");
@@ -67,6 +69,7 @@ restart.append(restartDiv);
 restart.onclick = () => {
   init();
   closeMenu();
+  startGame();
 }
 
 const divMenu = document.createElement("div");
@@ -95,6 +98,14 @@ deadInfo.style.position = "relative";
 deadInfo.style.top = "10%";
 const deadText = document.createTextNode("Вас убили!");
 deadInfo.append(deadText);
+
+const winInfo = document.createElement("div");
+winInfo.className = "in";
+winInfo.style.fontSize = "50px";
+winInfo.style.position = "relative";
+winInfo.style.top = "10%";
+const winText = document.createTextNode("Вы победили!");
+winInfo.append(winText);
 
 const soundOnBttn = document.createElement("button");
 const soundOnDiv = document.createElement("div");
@@ -137,10 +148,6 @@ const saveSettings = () => {
 }
 
 const openMenu = () => {
-  if (!firstStart) {
-    cancelRAF(requestId);
-  }
-  paused = true;
   document.body.append(divMenu);
 }
 
@@ -164,21 +171,44 @@ const closeMenu = () => {
     divMenu.append(settings);
     deadInfo.remove();
     restart.style.bottom = "15%";
+  } else if (win) {
+    win = false;
+    divMenu.append(resume);
+    divMenu.append(settings);
+    winInfo.remove();
+    restart.style.bottom = "15%";
+    outro.stop();
   }
-  paused = false;
-  if (!firstStart) {
-    startGame();
-  }
+
   firstStart = false;
 }
 
-const gameOver = () => {
-  dead = true;
+const gameOver = (type) => {
+  stopGame();
   resume.remove();
   settings.remove();
-  divMenu.append(deadInfo);
-  restart.style.bottom = "50%";
+  if (type === "dead") {
+    dead = true;
+    divMenu.append(deadInfo);
+    restart.style.bottom = "50%";
+  } else {
+    win = true;
+    divMenu.append(winInfo);
+    restart.style.bottom = "50%";
+  }
+
   openMenu();
+}
+
+const startGame = () => {
+  paused = false;
+  lastTime = performance.now();
+  requestId = RAF(loop);
+}
+
+const stopGame = () => {
+  paused = true;
+  cancelRAF(requestId);
 }
 
 document.body.append(soundOnBttn);

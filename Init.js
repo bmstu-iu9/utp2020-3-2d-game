@@ -165,6 +165,8 @@ targets.push(new Target(2745, 1183, 11, getRandom()));
 targets.push(new Target(1654, 357, 7, getRandom()));
 targets.push(new Target(2336, 729, 9, getRandom()));*/
 
+let targetsCount = targets.length;
+
 const weapons = new Set();
 weapons.add(new Weapon(0, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829)).
         add(new Weapon(1, 1160, 690)).add(new Weapon(2, 2174, 960)).add(new Weapon(1, 2585, 157)).
@@ -373,7 +375,8 @@ const init = () => {
   targets.push(new Target(1654, 357, 7, getRandom()));
   targets.push(new Target(2336, 729, 9, getRandom()));*/
 
-  player.sound = "nothing";
+  targetsCount = targets.length;
+
   weapons.clear();
   weapons.add(new Weapon(0, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829)).
           add(new Weapon(1, 1160, 690)).add(new Weapon(2, 2174, 960)).add(new Weapon(1, 2585, 157)).

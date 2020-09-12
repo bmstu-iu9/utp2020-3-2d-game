@@ -1,6 +1,11 @@
 'use strict';
 
 const update = (dt) => {
+
+  if (targetsCount === 0) {
+    outro.play();
+  }
+
   bullets.forEach(bullet => {
     bullet.updateCoordinates();
   });
@@ -302,11 +307,6 @@ const loop = () => {
 
   draw();
   lastTime = now;
-}
-
-const startGame = () => {
-  lastTime = performance.now();
-  requestId = RAF(loop);
 }
 
 let lastTime;

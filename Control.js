@@ -12,6 +12,7 @@ let throwGrenade = false;
 let throwTime = 0;
 let paused = true;
 let dead = false;
+let win = false;
 let openDoor = false;
 let getInCover = false;
 
@@ -52,13 +53,12 @@ const keyUpHandler = (e) => {
   }
   if (e.keyCode === 27 && intro.playing) {
     intro.stop();
-    paused = false;
-    console.log("stopped");
   } else if (e.keyCode === 27 && !firstStart) { //esc
-    console.log("ok");
     if (paused) {
         closeMenu();
+        startGame()
     } else {
+        stopGame();
         openMenu();
       }
     }
