@@ -1,6 +1,6 @@
 'use strict'
 
-let explosionRadius = 120;
+let explosionRadius = 160;
 let grenadeCollision = () => {
   let step = 5;
   for (let grenade of grenades) {
@@ -71,7 +71,7 @@ let grenadeCheckRect = (x, y, h, w, g) => {
   pointsY.push(y);
   pointsY.push(y + h);
 
-  pointsX.push(x + (w/ 2));
+  pointsX.push(x + (w / 2));
   pointsX.push(x);
   pointsX.push(x + w);
   pointsX.push(x + (w / 2));
@@ -121,7 +121,7 @@ let grenadeCheckRect = (x, y, h, w, g) => {
           hit = 1;
         }
         else
-        if (dist(g.x, x1, g.y, y1) <= explosionRadius /2) {
+        if (dist(g.x, x1, g.y, y1) <= explosionRadius / 2) {
           hit = 2;
           break;
         }
@@ -132,9 +132,9 @@ let grenadeCheckRect = (x, y, h, w, g) => {
 }
 
 let grenadeHit = (g) => {
-  //player.subHp(grenadeCheckRect(player.realX, player.realY, player.realH, player.realW, g));
+  // player.subHp(grenadeCheckRect(player.realX, player.realY, player.realH, player.realW, g));
   for (let gl of glass) {
-    if (grenadeCheckRect(gl.x, gl.y, gl.h, gl.w, g) > 0) {
+    if (!gl.broken && grenadeCheckRect(gl.x, gl.y, gl.h, gl.w, g) > 0) {
       gl.breakGlass();
     }
   }
