@@ -548,6 +548,7 @@ class Target {
     if (this.hp <= 0) {
       this.hp = 0;
       this.alive = false;
+      targetsCount--;
     }
   }
 
