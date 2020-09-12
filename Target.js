@@ -51,6 +51,7 @@ class Target {
     this.shooting = false;
     this.justShooted = false;
     this.lastTimeSeen = 0;
+    this.upd = true;
     this.index = I;
     switch (I) {
       case 0:
@@ -71,6 +72,7 @@ class Target {
       this.sprite = sprite;
         break;
       case 1:
+      this.upd = false;
       let sprite1 = {
         bot : new Sprite(images["bot2"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [0,1]),
         shoot : new Sprite(images["botshoot"], 0, spriteTileH, spriteTileW, spriteTileH, worldToCanvas(0, 0), worldToCanvas(0, 1), [1]),
@@ -114,18 +116,19 @@ class Target {
   update() {
     if (this.alive) {
       this.turn();
-      this.analyzeSituation();
-
-      if (this.checkPl() && performance.now() - this.lastUpd > 1000) {
-        this.lastUpd = performance.now();
-        this.moving = false;
-        if (this.route !== null) {
-          for (let node of this.route) {
-            node.used = false;
+      if (this.upd) {
+        this.analyzeSituation();
+        if (this.checkPl() && performance.now() - this.lastUpd > 1000) {
+          this.lastUpd = performance.now();
+          this.moving = false;
+          if (this.route !== null) {
+            for (let node of this.route) {
+              node.used = false;
+            }
           }
         }
       }
-
+      this.upd = !this.upd;
       switch(this.st) {
         case 1:
           this.hide();
@@ -223,18 +226,20 @@ class Target {
         } else {
           this.st = 5;
         }
-        if (this.knowPlPos) {
+        if (this.knowPlPos && dist(player.realXCenter, controlPoints[this.point].x,
+                                   player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
           this.st = 4;
         }
       }
       if (this.priority < 2) {
-        if (this.seesPlayer) {
+        if (this.seesPlayer && dist(player.realXCenter, controlPoints[this.point].x,
+                                   player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
           this.priority = 1
           this.st = 2;
         }
       }
       if (dist(this.x, controlPoints[this.point].x,
-               this.y, controlPoints[this.point].y) > controlPoints[this.point].r * 3) {
+               this.y, controlPoints[this.point].y) > controlPoints[this.point].r * 2) {
         this.priority = 2
         this.st = 6;
       }
@@ -543,7 +548,6 @@ class Target {
     if (this.hp <= 0) {
       this.hp = 0;
       this.alive = false;
-      targetsCount--;
     }
   }
 
