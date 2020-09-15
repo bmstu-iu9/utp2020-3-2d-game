@@ -10,11 +10,10 @@
 // 0 - shoot ak47
 // 1 - shoot shotgun
 // 2 - shoot m16
-let timeForOneBul = [1.5 * 1000 / 30, 1.2 * 1000 / 20, 3.5 * 1000 / 6 / 20];
+let timeForOneBul = [1.5 * 1000 / 20, 1.2 * 1000 / 18.5, 3.5 * 1000 / 6 / 20];
 let lTime = 0;
 let dT = 0;
 let noW = 0;
-let steP = 0;
 
 class Player {
 
@@ -30,21 +29,21 @@ class Player {
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
     this.weaponX = this.realXCenter;
-    this.weaponY = this.realYCenter + 10;
+    this.weaponY = this.realYCenter + 9;
+    this.sX = this.realXCenter + 30; //координаты реального прицела(дуло оружия)
+    this.sY = this.realYCenter + 9;
     this.action = false;
     this.angle = 0;
     this.actionRadius = rW;
     this.sprite = sprite;
     this.speed = speed;
-    this.prevDirect = "Right";
-    this.direction = "Right";
     this.hp = 2;
     this.dead = false;
     this.fire = false;
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
-    this.weapon = new Weapon(2);
+    this.weapon = new Weapon(1);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
 
@@ -97,8 +96,10 @@ class Player {
     this.Y_Center += dy;
     this.realXCenter += dx;
     this.realYCenter += dy;
-    this.prevDirect = "Right";
-    this.direction = "Right";
+    this.weaponX = this.realXCenter;
+    this.weaponY = this.realYCenter + 9;
+    this.sX = this.realXCenter + 30;
+    this.sY = this.realYCenter + 9;
     this.sound = "nothing";
     this.hp = 2;
     this.angle = 0;
@@ -123,29 +124,36 @@ class Player {
         break;
     }
     this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
-    player.sound = "nothing";
   }
 
   drawDirection() {
     if (this.dead === true) {
       this.sprite.death.drawSprite();
     } else {
-    if (this.direction === "Down") {
-      this.sprite.down.drawBodySprite();
-    }
-    if (this.direction === "Up") {
-      this.sprite.up.drawBodySprite();
-    }
-    if (this.direction === "Left") {
-      this.sprite.left.drawBodySprite();
-    }
-    if (this.direction === "Right") {
-      this.sprite.right.drawBodySprite();
-    }
+      this.sprite.right.drawFeet(this.angle, worldToCanvas(this.realXCenter, 0), worldToCanvas(this.realYCenter, 1));
     if (this.shooting) {
       if (!this.weapon.isReloading()) {
         if (!this.weapon.emptyMagazine()) {
           this.sprite.shoot.drawBodySprite();
+          let x = worldToCanvas(this.weaponX, 0);
+          let y = worldToCanvas(this.weaponY, 1);
+          let x1 = worldToCanvas(this.realXCenter, 0);
+          let y1 = worldToCanvas(this.realYCenter, 1);
+          let x2 = worldToCanvas(this.sX, 0);
+          let y2 = worldToCanvas(this.sY, 1);
+          let point1 = {
+            "x" : (x - x1)*Math.cos(this.angle) - (y - y1)*Math.sin(this.angle) + x1,
+            "y" : (x - x1)*Math.sin(this.angle) + (y - y1)*Math.cos(this.angle) + y1,
+          }
+          let point2 = {
+            "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
+            "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
+          }
+          this.fire = this.weapon.shoot(
+                      canvasToWorld(point1.x, 0),
+                      canvasToWorld(point1.y, 1),
+                      canvasToWorld(point2.x, 0),
+                      canvasToWorld(point2.y, 1));
         } else {
           this.sprite.pl.drawBodySprite();
         }
@@ -174,27 +182,21 @@ class Player {
       }
     }
   }
-  ctx.beginPath();
-  ctx.arc(worldToCanvas(this.weaponX, 0), worldToCanvas(this.weaponY, 1), 10, 0, 2 * Math.PI);
-  ctx.fillstyle = "yellow";
-  ctx.fill();
-  ctx.closePath();
-  }
+}
 
-  move(dt) {
+  move() {
     if (downPressed && !this.inCover && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
       this.realYCenter += this.speed;
       this.y += this.speed;
       this.Y_Center += this.speed;
       this.weaponY += this.speed;
+      this.sY += this.speed;
 
-      this.sprite.down.x = worldToCanvas(this.X_Center, 0);
-      this.sprite.down.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
-      this.action = true;
-      this.direction = "Down";
-      this.sprite.down.update();
+      this.sprite.right.update();
 
       if (this.sound === "water") {
         if (playerSounds[this.sound].onPause()) {
@@ -207,12 +209,12 @@ class Player {
       this.realYCenter -= this.speed;
       this.Y_Center -= this.speed;
       this.weaponY -= this.speed;
+      this.sY -= this.speed;
 
-      this.sprite.up.x = worldToCanvas(this.X_Center, 0);
-      this.sprite.up.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
-      this.direction = "Up";
-      this.sprite.up.update();
+      this.sprite.right.update();
 
       if (this.sound === "water") {
         if (playerSounds[this.sound].onPause()) {
@@ -227,11 +229,11 @@ class Player {
       this.realXCenter += this.speed;
       this.X_Center += this.speed;
       this.weaponX += this.speed;
+      this.sX += this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.X_Center, 0);
-      this.sprite.right.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
-      this.direction = "Right";
       this.sprite.right.update();
 
       if (this.sound === "water") {
@@ -245,12 +247,12 @@ class Player {
       this.realXCenter -= this.speed;
       this.X_Center -= this.speed;
       this.weaponX -= this.speed;
+      this.sX -= this.speed;
 
-      this.sprite.left.x = worldToCanvas(this.X_Center, 0);
-      this.sprite.left.y = worldToCanvas(this.Y_Center, 1);
+      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
-      this.direction = "Left";
-      this.sprite.left.update();
+      this.sprite.right.update();
 
       if (this.sound === "water") {
         if (playerSounds[this.sound].onPause()) {
@@ -263,7 +265,7 @@ class Player {
       this.weapon.drop(this.realXCenter, this.realYCenter);
       this.sprite.death.x = worldToCanvas(this.x, 0);
       this.sprite.death.y = worldToCanvas(this.y, 1);
-      gameOver("dead");
+      gameOver();
       return;
     }
 
@@ -342,7 +344,6 @@ class Player {
       }
   } else {
     dT = 0;
-    steP = 0;
   }
 
     if (mouseDown) {
@@ -360,24 +361,10 @@ class Player {
       this.sprite.shoot.x = this.sprite.pl.x;
       this.sprite.shoot.y = this.sprite.pl.y;
       this.sprite.shoot.update();
-      let k1 = 30;
-      let k2 = 0;
-      let k3 = (canvasToWorld(sight.x, 0) - this.realXCenter);
-      let k4 = (canvasToWorld(sight.y, 1) - this.realYCenter);
-      let dist1 = Math.sqrt(k1*k1 + k2*k2);
-      let dist2 = Math.sqrt(k3*k3 + k4*k4);
-      let normLen = 5;
-      let normX = -k4 / dist2 * normLen;
-      let normY = k3 / dist2 * normLen;
       this.shooting = true;
-      this.fire = this.weapon.shoot(
-                  this.realXCenter + (canvasToWorld(sight.x, 0) - this.realXCenter) * dist1 / dist2 + normX,
-                  this.realYCenter + (canvasToWorld(sight.y, 1) - this.realYCenter) * dist1 / dist2 + normY,
-                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
       this.weapon.shotExecuted = true;
     } else {
       this.shooting = false;
-      this.fire = false;
       this.weapon.shotExecuted = false;
     }
 

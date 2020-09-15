@@ -50,7 +50,7 @@ const collision = () => {
               f = true;
               if (bul.active) {
                 blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
-                player.subHp(bul.damage);
+                //player.subHp(bul.damage);
               }
             }
           }

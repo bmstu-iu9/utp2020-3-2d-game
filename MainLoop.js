@@ -1,6 +1,8 @@
 'use strict';
 
-const update = (dt) => {
+const update = () => {
+
+  camera.updateCoordinates();
 
   if (targetsCount === 0) {
     outro.play();
@@ -27,7 +29,7 @@ const update = (dt) => {
     grenade.update();
   });
 
-  player.move(dt);
+  player.move();
 
   for (let i = 0; i < rounds.length; i++) {
     let round = rounds[i];
@@ -50,7 +52,7 @@ const update = (dt) => {
     point.update();
   });
 
-  camera.updateCoordinates();
+  //camera.updateCoordinates();
   collision();
   grenadeCollision();
 }
@@ -302,7 +304,7 @@ const loop = () => {
 
   while (dt > gameStep) {
     dt -= gameStep;
-    update(dt);
+    update();
   }
 
   draw();

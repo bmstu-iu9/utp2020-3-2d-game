@@ -50,6 +50,25 @@ class Sprite {
     );
   }
 
+  drawFeet(deg, x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(deg);
+    ctx.translate(-x, -y);
+    ctx.drawImage(
+        this.image,
+        this.srcX,
+        this.srcY,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.canvasW,
+        this.canvasH
+    );
+    ctx.restore();
+  }
+
   drawBodySprite() {
         ctx.save();
         let x = worldToCanvas(player.weaponX, 0);
@@ -78,7 +97,6 @@ class Sprite {
           "x" : (x - x1)*Math.cos(deg) - (y - y1)*Math.sin(deg) + x1,
           "y" : (x - x1)*Math.sin(deg) + (y - y1)*Math.cos(deg) + y1,
         }
-
         let L = Math.sqrt(Math.pow(sight.x - point.x, 2) + Math.pow(sight.y - point.y, 2));
         let X = (sight.x - point.x) / L;
         let Y = (sight.y - point.y) / L;
@@ -102,28 +120,36 @@ class Sprite {
         ctx.restore();
   }
 
-  drawBot(sightX, sightY, x, y, angle) {
+  drawBot(sightX, sightY, x, y, wX, wY) {
     ctx.save();
-    ctx.translate(this.x, this.y);
-    if (angle === 0) {
     let deg = 0;
-    if (sightY > this.y) {
-      if (sightX < this.x) {
-        deg = Math.PI / 2 + Math.atan((this.x - sightX) / (sightY - this.y));
+    let len1 = Math.sqrt(Math.pow(sightX - this.x, 2) + Math.pow(sightY - this.y, 2));
+    let vec1 = [(sightX - this.x) / len1, (sightY - this.y) / len1];
+
+    if (sightX < this.x) {
+      if (sightY > this.y) {
+        deg = Math.PI / 2 + Math.acos(vec1[1]);
       } else {
-        deg = Math.PI / 2 - Math.atan((sightX - this.x) / (sightY - this.y));
-      }
+        deg = Math.PI + Math.acos(-vec1[0]);
+        }
     } else {
-      if (sightX > this.x) {
-        deg = 2 * Math.PI - Math.atan((this.y - sightY) / (sightX - this.x));
-      } else {
-        deg = Math.PI + Math.atan((this.y - sightY) / (this.x - sightX));
+      if (sightY > this.y) {
+        deg = Math.acos(vec1[0]);
+        } else {
+        deg = 3 * Math.PI / 2 + Math.acos(-vec1[1]);
+        }
       }
-    }
+
+    let point = {
+      "x" : (wX - this.x)*Math.cos(deg) - (wY - this.y)*Math.sin(deg) + this.x,
+      "y" : (wX - this.x)*Math.sin(deg) + (wY - this.y)*Math.cos(deg) + this.y,
+        }
+    let L = Math.sqrt(Math.pow(sightX - point.x, 2) + Math.pow(sightY - point.y, 2));
+    let X = (sightX - point.x) / L;
+    let Y = (sightY - point.y) / L;
+    deg -= Math.acos(X * vec1[0] + Y * vec1[1]);
+    ctx.translate(this.x, this.y);
     ctx.rotate(deg);
-  } else {
-    ctx.rotate(angle);
-  }
     ctx.translate(-this.x, -this.y);
     ctx.drawImage(
         this.image,
@@ -137,6 +163,7 @@ class Sprite {
         this.canvasH
     );
     ctx.restore();
+    return deg;
   }
 
   setWorldSize(W , H) {

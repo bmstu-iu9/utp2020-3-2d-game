@@ -64,7 +64,7 @@ let collisionPlayer = (x, y, w, h) => {
   }
 
   if ((!lastRed) && nowRed) {
-    player.subHp(barbedWireDmg);
+    //player.subHp(barbedWireDmg);
   }
 
   lastRed = nowRed;
