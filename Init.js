@@ -39,7 +39,7 @@ const blockSize = 10;
 
 const cameraStartX = 0;
 const cameraStartY = 0;
-const moveBorder = canvas.width / 3;
+const moveBorder = canvas.width / 2;
 const visiblePart = 500;
 let cameraSpeed = 3;
 
