@@ -67,8 +67,8 @@ const spriteTileW = 96;
 const spriteTileH = 64;
 const spriteFeetH = 38;
 const spriteFeetW = 53;
-const FeetH = 1.75;
-const FeetW = 7;
+const FeetH = 7;
+const FeetW = 20;
 
 const srcOffsetX = 8;
 const srcOffsetY = 10;
@@ -78,15 +78,9 @@ const srcRealW = 63;
 const srcRealH = 49;
 const realW = playerWidth / spriteTileW * srcRealW;
 const realH = playerHeight / spriteTileH * srcRealH;
-let xDeg = realW / 2; //24
-let yDeg = realH / 2; //40
-const gunOffsetX = realW / 2; //88
-const gunOffsetY = realH / 2; //48
-//const gunOffset = Math.atan( worldToCanvas(gunOffsetY - yDeg, 1) / worldToCanvas(gunOffsetX - xDeg, 0));
 
 const camera = new Camera(cameraStartX, cameraStartY, images["map"], visiblePart, visiblePart, cameraSpeed);
 const sight = new Sight(canvas.width, canvas.height, sightWidth, sightHeight);
-const gunOffset = Math.atan( worldToCanvas(gunOffsetY - yDeg, 1) / worldToCanvas(gunOffsetX - xDeg, 0));
 
 const spritePl = {
   pl : new Sprite(images["player"], 0, 0, spriteTileW, spriteTileH, worldToCanvas(playerStartX, 0), worldToCanvas(playerStartY, 1), [0,1,2,3,4,5]),
