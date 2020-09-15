@@ -18,7 +18,7 @@ class Grenade {
     this.lastTime = 0;
   }
 
-  update() {  //доработать физику скорости и отскоков от препятствий
+  update() {
     if (!this.explode) {
       this.x += this.dx * this.speed;
       this.y += this.dy * this.speed;
