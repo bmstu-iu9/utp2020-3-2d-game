@@ -107,7 +107,9 @@ let grenadeCheckRect = (x, y, h, w, g) => {
 
           let xBlock = (x2 - (x2 % worldTileSize)) / worldTileSize;
           let yBlock = (y2 - (y2 % worldTileSize)) / worldTileSize;
-          if (tileMap[yBlock][xBlock] === "black" ||
+          if ((x2 <= 0 || x2 >= images["map"].naturalWidth ||
+              y2 <= 0 || y2 >= images["map"].naturalHeight) ||
+              tileMap[yBlock][xBlock] === "black" ||
               tileMap[yBlock][xBlock] === "cover") {
                 fPoint = false;
                 console.log(tileMap[yBlock][xBlock]);
