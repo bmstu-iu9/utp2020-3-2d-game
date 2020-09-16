@@ -104,8 +104,8 @@ class Target {
     this.sprite.death.y = worldToCanvas(this.rY, 1);
     this.sprite.shoot.x = worldToCanvas(this.x, 0);
     this.sprite.shoot.y = worldToCanvas(this.y, 1);
-    this.sprite.right.x = worldToCanvas(this.rX - 3, 0);
-    this.sprite.right.y = worldToCanvas(this.rY + 10, 1);
+    this.sprite.right.x = worldToCanvas(this.rX + realOffsetX - 3, 0);
+    this.sprite.right.y = worldToCanvas(this.rY + realOffsetY + 10, 1);
     this.sprite.shoot.speed = 7;
   }
 
@@ -173,6 +173,7 @@ class Target {
       if (this.moving || this.weapon.isReloading()) {
         if (!this.weapon.isReloading()) {
           this.sprite.bot.indexFrameY = 0;
+          this.sprite.right.update();
         }
         this.sprite.bot.update();
       }
