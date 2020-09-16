@@ -312,7 +312,7 @@ const init = () => {
   bullets.clear();
   rounds.splice(0, rounds.length);
 
-  camera.init(cameraStartX, cameraStartY, cameraSpeed);
+  camera.init(cameraStartX, cameraStartY, cameraSpeed, visiblePart, visiblePart);
   player.init(playerStartX, playerStartY, playerSpeed);
 
   controlPoints.splice(0, controlPoints.length);

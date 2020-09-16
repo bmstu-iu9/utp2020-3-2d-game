@@ -2,6 +2,10 @@
 
 const update = () => {
 
+  if (outro.playing) {
+    camera.changeVisiblePart(0.5);
+  }
+
   camera.updateCoordinates();
 
   if (targetsCount === 0 && !outro.playing) {

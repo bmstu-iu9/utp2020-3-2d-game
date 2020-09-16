@@ -13,11 +13,15 @@ class Camera {
     this.scaleY = visibleHeight / canvas.height;
   }
 
-  init(x, y, speed) {
+  init(x, y, speed, visibleWidth, visibleHeight) {
     this.x = x;
     this.y = y;
     this.dx = speed;
     this.dy = speed;
+    this.visibleWidth = visibleWidth;
+    this.visibleHeight = visibleHeight;
+    this.scaleX = visibleWidth / canvas.width;
+    this.scaleY = visibleHeight / canvas.height;
   }
 
   drawVisibleMap() {
@@ -63,5 +67,12 @@ class Camera {
     } else if (this.y + this.visibleHeight > this.map.naturalHeight){
       this.y = this.map.naturalHeight - this.visibleHeight;
     }
+  }
+
+  changeVisiblePart(dt) {
+    this.visibleWidth += dt;
+    this.visibleHeight += dt;
+    this.scaleX = this.visibleWidth / canvas.width;
+    this.scaleY = this.visibleHeight / canvas.height;
   }
 }
