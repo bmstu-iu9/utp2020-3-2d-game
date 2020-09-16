@@ -124,6 +124,14 @@ class Target {
           }
         }
       }
+      this.angle = checkAngle(
+                   worldToCanvas(this.sightX, 0),
+                   worldToCanvas(this.sightY, 1),
+                   worldToCanvas(this.wX, 0),
+                   worldToCanvas(this.wY, 1),
+                   worldToCanvas(this.x, 0),
+                   worldToCanvas(this.y, 1)
+      )
       this.upd = !this.upd;
       switch(this.st) {
         case 1:
@@ -380,7 +388,6 @@ class Target {
       this.wY += this.dy;
       this.shootSightX += this.dx;
       this.shootSightY += this.dy;
-      //this.angle = checkEarlyAngle(this.x, this.y, this.sightX, this.sightY, this.wX, this.wY);
 
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1 ||
@@ -482,26 +489,8 @@ class Target {
     if (this.alive) {
       this.sprite.right.drawFeet(this.angle, worldToCanvas(this.x, 0), worldToCanvas(this.y, 1));
       if (this.shooting && !this.weapon.isReloading()) {
-        this.angle = this.sprite.shoot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, worldToCanvas(this.wX, 0), worldToCanvas(this.wY, 1));
-        let x = worldToCanvas(this.wX, 0);
-        let y = worldToCanvas(this.wY, 1);
-        let x1 = worldToCanvas(this.x, 0);
-        let y1 = worldToCanvas(this.y, 1);
-        let x2 = worldToCanvas(this.shootSightX, 0);
-        let y2 = worldToCanvas(this.shootSightY, 1);
-        let point1 = {
-          "x" : (x - x1)*Math.cos(deg) - (y - y1)*Math.sin(deg) + x1,
-          "y" : (x - x1)*Math.sin(deg) + (y - y1)*Math.cos(deg) + y1,
-        }
-        let point2 = {
-          "x" : (x2 - x1)*Math.cos(deg) - (y2 - y1)*Math.sin(deg) + x1,
-          "y" : (x2 - x1)*Math.sin(deg) + (y2 - y1)*Math.cos(deg) + y1,
-        }
-        this.weapon.shoot(canvasToWorld(point1.x, 0),
-                          canvasToWorld(point1.y, 1),
-                          canvasToWorld(point2.x, 0),
-                          canvasToWorld(point2.y, 1));
-      } else this.angle = this.sprite.bot.drawBot(worldToCanvas(this.sightX, 0), worldToCanvas(this.sightY, 1), this.rX, this.rY, worldToCanvas(this.wX, 0), worldToCanvas(this.wY, 1));
+        this.sprite.shoot.drawBodySprite(this.rX, this.rY, this.angle);
+      } else this.sprite.bot.drawBodySprite(this.rX, this.rY, this.angle);
     } else {
       this.sprite.death.drawSprite();
     }
@@ -510,7 +499,18 @@ class Target {
   singleShoot(x, y, tx, ty) {
     if (!this.justShooted) {
       this.weapon.singleShoot = true;
-      //this.weapon.shoot(x, y, tx, ty);
+      let x1 = worldToCanvas(this.x, 0);
+      let y1 = worldToCanvas(this.y, 1);
+      let x2 = worldToCanvas(this.shootSightX, 0);
+      let y2 = worldToCanvas(this.shootSightY, 1);
+      let point = {
+        "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
+        "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
+      }
+      this.weapon.shoot(canvasToWorld(point.x, 0),
+                        canvasToWorld(point.y, 1),
+                        tx,
+                        ty);
       this.shooting = true;
       this.lastShoot = performance.now();
       this.justShooted = true;
@@ -523,6 +523,24 @@ class Target {
 
   shoot(x, y, tx, ty) { //centr, prizel
     if (performance.now() - this.firstShoot < this.shootingTime) {
+      let x = worldToCanvas(this.wX, 0);
+      let y = worldToCanvas(this.wY, 1);
+      let x1 = worldToCanvas(this.x, 0);
+      let y1 = worldToCanvas(this.y, 1);
+      let x2 = worldToCanvas(this.shootSightX, 0);
+      let y2 = worldToCanvas(this.shootSightY, 1);
+      let point1 = {
+        "x" : (x - x1)*Math.cos(this.angle) - (y - y1)*Math.sin(this.angle) + x1,
+        "y" : (x - x1)*Math.sin(this.angle) + (y - y1)*Math.cos(this.angle) + y1,
+      }
+      let point2 = {
+        "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
+        "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
+      }
+      this.weapon.shoot(canvasToWorld(point1.x, 0),
+                        canvasToWorld(point1.y, 1),
+                        canvasToWorld(point2.x, 0),
+                        canvasToWorld(point2.y, 1));
       //this.weapon.shoot(x, y, tx, ty);
       this.shooting = true;
       this.lastShoot = performance.now()
@@ -629,4 +647,35 @@ const findAngle = (x1, y1, x2, y2, x3, y3) => {
   dotProduct = dotProduct > 1 ? 1 : dotProduct;
   dotProduct = dotProduct < -1 ? -1 : dotProduct;
   return Math.acos(dotProduct);
+}
+
+
+let checkAngle = (sightX, sightY, wX, wY, x, y) => {
+  let deg = 0;
+  let len1 = Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
+  let vec1 = [(sightX - x) / len1, (sightY - y) / len1];
+
+  if (sightX < x) {
+    if (sightY > y) {
+      deg = Math.PI / 2 + Math.acos(vec1[1]);
+    } else {
+      deg = Math.PI + Math.acos(-vec1[0]);
+      }
+  } else {
+    if (sightY > y) {
+      deg = Math.acos(vec1[0]);
+      } else {
+      deg = 3 * Math.PI / 2 + Math.acos(-vec1[1]);
+      }
+    }
+
+  let point = {
+    "x" : (wX - x)*Math.cos(deg) - (wY - y)*Math.sin(deg) + x,
+    "y" : (wX - x)*Math.sin(deg) + (wY - y)*Math.cos(deg) + y,
+      }
+  let L = Math.sqrt(Math.pow(sightX - point.x, 2) + Math.pow(sightY - point.y, 2));
+  let X = (sightX - point.x) / L;
+  let Y = (sightY - point.y) / L;
+  deg -= Math.acos(X * vec1[0] + Y * vec1[1]);
+  return deg;
 }

@@ -134,38 +134,19 @@ class Player {
     if (this.shooting) {
       if (!this.weapon.isReloading()) {
         if (!this.weapon.emptyMagazine()) {
-          this.sprite.shoot.drawBodySprite();
-          let x = worldToCanvas(this.weaponX, 0);
-          let y = worldToCanvas(this.weaponY, 1);
-          let x1 = worldToCanvas(this.realXCenter, 0);
-          let y1 = worldToCanvas(this.realYCenter, 1);
-          let x2 = worldToCanvas(this.sX, 0);
-          let y2 = worldToCanvas(this.sY, 1);
-          let point1 = {
-            "x" : (x - x1)*Math.cos(this.angle) - (y - y1)*Math.sin(this.angle) + x1,
-            "y" : (x - x1)*Math.sin(this.angle) + (y - y1)*Math.cos(this.angle) + y1,
-          }
-          let point2 = {
-            "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
-            "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
-          }
-          this.fire = this.weapon.shoot(
-                      canvasToWorld(point1.x, 0),
-                      canvasToWorld(point1.y, 1),
-                      canvasToWorld(point2.x, 0),
-                      canvasToWorld(point2.y, 1));
+          this.sprite.shoot.drawBodySprite(this.x, this.y, this.angle);
         } else {
-          this.sprite.pl.drawBodySprite();
+          this.sprite.pl.drawBodySprite(this.x, this.y, this.angle);
         }
       } else {
-          this.sprite.pl.drawBodySprite();
+          this.sprite.pl.drawBodySprite(this.x, this.y, this.angle);
           //this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
       }
     }
 
     if (!this.shooting) {
       if (this.weapon.isReloading()) {
-        this.sprite.pl.drawBodySprite();
+        this.sprite.pl.drawBodySprite(this.x, this.y, this.angle);
       } else {
         switch (this.weapon.id) {
           case 0:
@@ -178,7 +159,7 @@ class Player {
             this.sprite.pl.indexFrameY = 2;
             break;
         }
-        this.sprite.pl.drawBodySprite();
+        this.sprite.pl.drawBodySprite(this.x, this.y, this.angle);
       }
     }
   }
@@ -260,6 +241,8 @@ class Player {
         }
       }
     }
+
+    this.checkAngle();
 
     if (this.dead === true) {
       this.weapon.drop(this.realXCenter, this.realYCenter);
@@ -362,6 +345,25 @@ class Player {
       this.sprite.shoot.y = this.sprite.pl.y;
       this.sprite.shoot.update();
       this.shooting = true;
+      let x = worldToCanvas(this.weaponX, 0);
+      let y = worldToCanvas(this.weaponY, 1);
+      let x1 = worldToCanvas(this.realXCenter, 0);
+      let y1 = worldToCanvas(this.realYCenter, 1);
+      let x2 = worldToCanvas(this.sX, 0);
+      let y2 = worldToCanvas(this.sY, 1);
+      let point1 = {
+        "x" : (x - x1)*Math.cos(this.angle) - (y - y1)*Math.sin(this.angle) + x1,
+        "y" : (x - x1)*Math.sin(this.angle) + (y - y1)*Math.cos(this.angle) + y1,
+      }
+      let point2 = {
+        "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
+        "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
+      }
+      this.fire = this.weapon.shoot(
+                  canvasToWorld(point1.x, 0),
+                  canvasToWorld(point1.y, 1),
+                  canvasToWorld(point2.x, 0),
+                  canvasToWorld(point2.y, 1));
       this.weapon.shotExecuted = true;
     } else {
       this.shooting = false;
@@ -498,5 +500,39 @@ class Player {
       this.hp = 0;
       this.dead = true;
     }
+  }
+
+  checkAngle() {
+    let x = worldToCanvas(player.weaponX, 0);
+    let y = worldToCanvas(player.weaponY, 1);
+    let deg = 0;
+    let x1 = worldToCanvas(this.realXCenter, 0);
+    let y1 = worldToCanvas(this.realYCenter, 1);
+    let len1 = Math.sqrt(Math.pow(sight.x - x1, 2) + Math.pow(sight.y - y1, 2));
+    let vec1 = [(sight.x - x1) / len1, (sight.y - y1) / len1];
+
+    if (sight.x < x1) {
+      if (sight.y > y1) {
+        deg = Math.PI / 2 + Math.acos(vec1[1]);
+      } else {
+        deg = Math.PI + Math.acos(-vec1[0])
+      }
+    } else {
+      if (sight.y > y1) {
+        deg = Math.acos(vec1[0]);
+      } else {
+        deg = 3 * Math.PI / 2 + Math.acos(-vec1[1]);
+      }
+    }
+
+    let point = {
+      "x" : (x - x1)*Math.cos(deg) - (y - y1)*Math.sin(deg) + x1,
+      "y" : (x - x1)*Math.sin(deg) + (y - y1)*Math.cos(deg) + y1,
+    }
+    let L = Math.sqrt(Math.pow(sight.x - point.x, 2) + Math.pow(sight.y - point.y, 2));
+    let X = (sight.x - point.x) / L;
+    let Y = (sight.y - point.y) / L;
+    deg -= Math.acos(X * vec1[0] + Y * vec1[1]);
+    this.angle = deg;
   }
 }
