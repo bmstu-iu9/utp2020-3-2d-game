@@ -275,47 +275,6 @@ const drawUI = () => {
   }
 }
 
-const drawTileTypes = () => {
-  ctx.font = "8px Arial";
-  ctx.fillStyle = "red";
-
-  let minX = Math.floor(camera.x / worldTileSize);
-  let maxX = Math.ceil((camera.x + camera.visibleWidth) / worldTileSize);
-  let minY = Math.floor(camera.y / worldTileSize);
-  let maxY = Math.ceil((camera.y + camera.visibleHeight) / worldTileSize);
-
-  for (let i = minY; i < maxY; i++) {
-    for (let j = minX; j < maxX; j++) {
-      switch (tileMap[i][j]) {
-        case "water":
-          ctx.fillText("wa", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "red":
-          ctx.fillText("r", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "door":
-          ctx.fillText("d", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "black":
-          ctx.fillText("b", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "orange":
-          ctx.fillText("o", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "white":
-          ctx.fillText("w", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "glass":
-          ctx.fillText("g", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-        case "cover":
-          ctx.fillText("c", worldToCanvas(j * worldTileSize + 5, 0), worldToCanvas(i * worldTileSize + 5, 1));
-          break;
-      }
-    }
-  }
-}
-
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
@@ -352,7 +311,7 @@ const draw = () => {
     if (v) {
       target.lastTimeSeen = performance.now();
     }
-    if (v || performance.now() - target.lastTimeSeen < 200) {
+    if (v || performance.now() - target.lastTimeSeen < memoryTime) {
       target.draw();
     }
   });

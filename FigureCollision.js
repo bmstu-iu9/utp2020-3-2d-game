@@ -1,17 +1,17 @@
 'use strict'
 
 
-let pointInRect = (x, y, xR, yR, h, w) => {
+const pointInRect = (x, y, xR, yR, h, w) => {
   return (x >= xR) && (x <= xR + w) && (y >= yR) && (y <= yR + h);
 }
 
 
-let collisionCircle = (x1, y1, r1, x2, y2, r2) => {
+const collisionCircle = (x1, y1, r1, x2, y2, r2) => {
   return r1 + r2 >= dist(x1, x2, y1, y2);
 }
 
 
-let collisionRect = (x1, y1, h1, w1, x2, y2, h2, w2) => {
+const collisionRect = (x1, y1, h1, w1, x2, y2, h2, w2) => {
   let f = false;
 
   for (let i = 0; i < 2; i++) {
@@ -45,7 +45,7 @@ let collisionRect = (x1, y1, h1, w1, x2, y2, h2, w2) => {
 }
 
 
-let collisionCircleRect = (xC, yC, r, xR, yR, h, w) => {
+const collisionCircleRect = (xC, yC, r, xR, yR, h, w) => {
   let f = pointInRect (xC, yC, xR, yR, h, w);
 
   if ((!f) && (xC >= xR) && (xC <= xR + w) && (yC < yR) && (r >= yR - yC)) {

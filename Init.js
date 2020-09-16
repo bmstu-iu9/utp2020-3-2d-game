@@ -70,6 +70,8 @@ const spriteFeetW = 53;
 const FeetH = 27;
 const FeetW = 38;
 
+const memoryTime = 200;
+
 const srcOffsetX = 8;
 const srcOffsetY = 10;
 const realOffsetX = playerWidth / spriteTileW * srcOffsetX;

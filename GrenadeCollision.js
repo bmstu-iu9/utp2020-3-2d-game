@@ -1,7 +1,7 @@
 'use strict'
 
-let explosionRadius = 160;
-let grenadeCollision = () => {
+const explosionRadius = 160;
+const grenadeCollision = () => {
   let step = 5;
   for (let grenade of grenades) {
     for (let i = 0; i < step; i++) {
@@ -57,7 +57,7 @@ let grenadeCollision = () => {
   }
 }
 
-let grenadeCheckRect = (x, y, h, w, g) => {
+const grenadeCheckRect = (x, y, h, w, g) => {
   let step = 20;
   let pointsX = [];
   let pointsY = [];
@@ -133,7 +133,7 @@ let grenadeCheckRect = (x, y, h, w, g) => {
   return hit;
 }
 
-let grenadeCheckCircle = (x, y, r, g) => {
+const grenadeCheckCircle = (x, y, r, g) => {
   let step = 20;
   let pointsX = [];
   let pointsY = [];
@@ -201,7 +201,7 @@ let grenadeCheckCircle = (x, y, r, g) => {
   return hit;
 }
 
-let grenadeHit = (g) => {
+const grenadeHit = (g) => {
   player.subHp(grenadeCheckRect(player.realX, player.realY, player.realH, player.realW, g));
   for (let gl of glass) {
     if (!gl.broken && grenadeCheckRect(gl.x, gl.y, gl.h, gl.w, g) > 0) {

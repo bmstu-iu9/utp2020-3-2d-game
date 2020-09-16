@@ -44,18 +44,6 @@ class Camera {
       this.y -= this.dy;
     }
 
-    /*if (leftPressed && worldToCanvas(player.realXCenter, 0) <= canvas.width / 2) {
-      this.x -= this.dx;
-    } else if (rightPressed && worldToCanvas(player.realXCenter, 0) >= canvas.width / 2) {
-      this.x += this.dx;
-    }
-
-    if (downPressed && worldToCanvas(player.realYCenter, 1) >= canvas.height / 2){
-      this.y += this.dy;
-    } else if (upPressed && worldToCanvas(player.realYCenter, 1) <= canvas.height / 2) {
-      this.y -= this.dy;
-    }*/
-
     if (this.x < 0) {
       this.x = 0;
     } else if (this.x + this.visibleWidth > this.map.naturalWidth) {

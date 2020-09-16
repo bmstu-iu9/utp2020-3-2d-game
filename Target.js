@@ -53,6 +53,9 @@ class Target {
     this.onPosition = false;
     this.knowPlPos = false;
     this.underAttack = false;
+    this.updDist = 100;
+    this.shootingDist = 250;
+    this.positionDist = 150;
     this.shooting = false;
     this.justShooted = false;
     this.lastTimeSeen = 0;
@@ -205,7 +208,7 @@ class Target {
     if (this.seesPlayer) {
       this.lastPlTime = performance.now();
     }
-    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < 200;
+    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < memoryTime;
     if (this.seesPlayer) {
       this.knowPlPos = true;
       this.plwalkXBlock = player.walkXBlock;
@@ -326,7 +329,7 @@ class Target {
     if (!this.moving) {
       this.expSightX = player.realXCenter;
       this.expSightY = player.realYCenter;
-      if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < 150) {
+      if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < this.positionDist) {
         this.onPosition = true;
       } else {
         this.onPosition = false;
@@ -363,7 +366,7 @@ class Target {
         this.expSightX = player.realXCenter;
         this.expSightY = player.realYCenter;
         let d = dist(this.x, player.realXCenter, this.y, player.realYCenter);
-        if (d < 250) {
+        if (d < this.shootingDist) {
           let koef1 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
           let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
@@ -468,7 +471,7 @@ class Target {
   }
 
   checkPl() {
-    if (dist(player.realXCenter, this.plUpdX, player.realYCenter, this.plUpdY) > 100) {
+    if (dist(player.realXCenter, this.plUpdX, player.realYCenter, this.plUpdY) > this.updDist) {
       this.plUpdX = player.realXCenter;
       this.plUpdY = player.realYCenter;
       this.plUpdSX = canvasToWorld(sight.x, 0);
