@@ -248,7 +248,7 @@ class Player {
       this.weapon.drop(this.realXCenter, this.realYCenter);
       this.sprite.death.x = worldToCanvas(this.x, 0);
       this.sprite.death.y = worldToCanvas(this.y, 1);
-      gameOver();
+      gameOver("dead");
       return;
     }
 
