@@ -4,7 +4,7 @@ const update = () => {
 
   camera.updateCoordinates();
 
-  if (targetsCount === 0) {
+  if (targetsCount === 0 && !outro.playing) {
     outro.play();
   }
 

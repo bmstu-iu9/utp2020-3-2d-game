@@ -6,12 +6,13 @@ class Outro {
   }
 
   play() {
+    this.playing = true;
     this.snd.play();
-    gameOver("win");
+    setTimeout(gameOver, 15000, "win");
   }
 
   stop() {
+    this.playing = false;
     this.snd.pause();
-
   }
 }
