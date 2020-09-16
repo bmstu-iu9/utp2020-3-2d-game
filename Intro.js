@@ -8,7 +8,7 @@ class Intro {
     this.y = 0;
     this.step = 16.6;
     this.lineH = 20;
-    this.timeForOneLine = 1;
+    this.timeForOneLine = 2;
     let k = 1000 / this.step;
     this.dy = this.lineH / this.timeForOneLine / k;
     let end = (img.naturalHeight - this.srcH) / this.lineH * this.timeForOneLine;
