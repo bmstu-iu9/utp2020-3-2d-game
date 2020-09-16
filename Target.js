@@ -21,7 +21,8 @@ class Target {
     this.visible = false;
     this.alive = true;
     this.speed = player.speed;
-    this.turnSpeed = 15;
+    this.turnSpeed = 0;
+    this.turning = false;
     this.dx = 0;
     this.dy = 0;
     this.sx = 0;
@@ -559,7 +560,12 @@ class Target {
     if (dist(this.sightX, this.expSightX, this.sightY, this.expSightY) <= this.turnSpeed) {
       this.sightX = this.expSightX;
       this.sightY = this.expSightY;
+      this.turning = false;
     } else {
+      if (!this.turning) {
+        this.turnSpeed = dist(this.sightX, this.expSightX, this.sightY, this.expSightY) / 7;
+        this.turning = true;
+      }
       let tdx = this.turnSpeed * (this.expSightX - this.sightX) / Math.sqrt(Math.pow(this.expSightX - this.sightX, 2) + Math.pow(this.expSightY - this.sightY, 2));
       let tdy = this.turnSpeed * (this.expSightY - this.sightY) / Math.sqrt(Math.pow(this.expSightX - this.sightX, 2) + Math.pow(this.expSightY - this.sightY, 2));
       this.sightX += tdx;

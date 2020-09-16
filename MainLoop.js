@@ -44,8 +44,18 @@ const update = () => {
     }
   }
 
+  targetOnCanvas = false;
+  distCT = 5000;
   targets.forEach(target => {
     target.update();
+    if (target.alive) {
+      if (pointInRect(worldToCanvas(target.x, 0), worldToCanvas(target.y, 1), 0, 0, canvas.width, canvas.height)) {
+        targetOnCanvas = true;
+      } else if (dist(player.realXCenter, target.x, player.realYCenter, target.y) < distCT) {
+        distCT = dist(player.realXCenter, target.x, player.realYCenter, target.y);
+        closestTarget = target;
+      }
+    }
   });
 
   doors.forEach(door => {
@@ -62,6 +72,67 @@ const update = () => {
 }
 
 const drawUI = () => {
+  let Px = 0;
+  let Py = 0;
+  if (!targetOnCanvas) {
+    if (collisionSegment(player.realXCenter, player.realYCenter, closestTarget.x, closestTarget.y,
+                         canvasToWorld(0, 0), canvasToWorld(0, 1), canvasToWorld(canvas.width, 0), canvasToWorld(0, 1))) {
+      Px = canvasToWorld(0, 0) + (canvasToWorld(canvas.width, 0) - canvasToWorld(0, 0)) *
+                                 Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                       canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter)) /
+                                 Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                       canvasToWorld(canvas.width, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter) -
+                                          crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                       canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter));
+      Py = canvasToWorld(0, 1);
+      Px = worldToCanvas(Px, 0);
+      Py = worldToCanvas(Py, 1);
+    }
+    if (collisionSegment(player.realXCenter, player.realYCenter, closestTarget.x, closestTarget.y,
+                         canvasToWorld(0, 0), canvasToWorld(canvas.height, 1), canvasToWorld(canvas.width, 0), canvasToWorld(canvas.height, 1))) {
+      Px = canvasToWorld(canvas.width, 0) + (canvasToWorld(0, 0) - canvasToWorld(canvas.width, 0)) *
+                                            Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                  canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(canvas.height, 1) - player.realYCenter)) /
+                                            Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                  canvasToWorld(canvas.width, 0) - player.realXCenter, canvasToWorld(canvas.height, 1) - player.realYCenter) -
+                                                     crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                           canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(canvas.height, 1) - player.realYCenter));
+      Py = canvasToWorld(canvas.height, 1);
+      Px = canvas.width - worldToCanvas(Px, 0);
+      Py = worldToCanvas(Py, 1);
+    }
+    if (collisionSegment(player.realXCenter, player.realYCenter, closestTarget.x, closestTarget.y,
+                         canvasToWorld(0, 0), canvasToWorld(0, 1), canvasToWorld(0, 0), canvasToWorld(canvas.height, 1))) {
+      Px = canvasToWorld(0, 0);
+      Py = canvasToWorld(canvas.height, 1) + (canvasToWorld(0, 1) - canvasToWorld(canvas.height, 1)) *
+                                             Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                   canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter)) /
+                                             Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                   canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(canvas.height, 1) - player.realYCenter) -
+                                                      crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                            canvasToWorld(0, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter));
+      Px = worldToCanvas(Px, 0);
+      Py = canvas.height - worldToCanvas(Py, 1);
+    }
+    if (collisionSegment(player.realXCenter, player.realYCenter, closestTarget.x, closestTarget.y,
+                         canvasToWorld(canvas.width, 0), canvasToWorld(0, 1), canvasToWorld(canvas.width, 0), canvasToWorld(canvas.height, 1))) {
+      Px = canvasToWorld(canvas.width, 0);
+      Py = canvasToWorld(0, 1) + (canvasToWorld(canvas.height, 1) - canvasToWorld(0, 1)) *
+                                 Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                       canvasToWorld(canvas.width, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter)) /
+                                 Math.abs(crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                       canvasToWorld(canvas.width, 0) - player.realXCenter, canvasToWorld(canvas.height, 1) - player.realYCenter) -
+                                          crossProduct(closestTarget.x - player.realXCenter, closestTarget.y - player.realYCenter,
+                                                                canvasToWorld(canvas.width, 0) - player.realXCenter, canvasToWorld(0, 1) - player.realYCenter));
+      Px = worldToCanvas(Px, 0);
+      Py = worldToCanvas(Py, 1);
+    }
+    ctx.beginPath();
+    ctx.fillStyle = "red";
+    ctx.fillRect(Px - 5, Py - 5, 10, 10);
+    ctx.closePath();
+  }
+
   ctx.lineWidth = 1;
   let step = 0;
   let sx = 0;

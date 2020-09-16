@@ -139,7 +139,7 @@ targets.push(new Target(1523, 584, 7, getRandom()));
 //targets.push(new Target(1233, 440, 7, getRandom()));
 targets.push(new Target(2385, 300, 8, getRandom()));
 targets.push(new Target(2900, 481, 8, getRandom()));
-targets.push(new Target(1905, 1205, 5, getRandom()));
+targets.push(new Target(1905, 1204, 5, getRandom()));
 targets.push(new Target(1663, 1205, 5, getRandom()));
 //targets.push(new Target(1927, 729, 6, getRandom()));
 targets.push(new Target(1663, 723, 6, getRandom()));
@@ -159,6 +159,9 @@ targets.push(new Target(2740, 760, 11, getRandom()));
 targets.push(new Target(1644, 360, 7, getRandom()));
 //targets.push(new Target(2336, 729, 9, getRandom()));
 
+let closestTarget = targets[0];
+let distCT = 5000;
+let targetOnCanvas = false;
 let targetsCount = targets.length;
 
 const weapons = new Set();
@@ -349,7 +352,7 @@ const init = () => {
   //targets.push(new Target(1233, 440, 7, getRandom()));
   targets.push(new Target(2385, 300, 8, getRandom()));
   targets.push(new Target(2900, 481, 8, getRandom()));
-  targets.push(new Target(1905, 1205, 5, getRandom()));
+  targets.push(new Target(1905, 1204, 5, getRandom()));
   targets.push(new Target(1663, 1205, 5, getRandom()));
   //targets.push(new Target(1927, 729, 6, getRandom()));
   targets.push(new Target(1663, 723, 6, getRandom()));
@@ -369,6 +372,7 @@ const init = () => {
   targets.push(new Target(1644, 360, 7, getRandom()));
   //targets.push(new Target(2336, 729, 9, getRandom()));
 
+  closestTarget = targets[0];
   targetsCount = targets.length;
 
   weapons.clear();
