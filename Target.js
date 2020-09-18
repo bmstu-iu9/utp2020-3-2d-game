@@ -54,8 +54,10 @@ class Target {
     this.knowPlPos = false;
     this.underAttack = false;
     this.updDist = 100;
+    this.updAngle = 1.5;
     this.shootingDist = 250;
     this.positionDist = 150;
+    this.shootingAngle = 0.17;
     this.shooting = false;
     this.justShooted = false;
     this.lastTimeSeen = 0;
@@ -335,7 +337,7 @@ class Target {
         this.onPosition = false;
       }
       if (this.onPosition) {
-        if (this.checkSight() < 0.17) {
+        if (this.checkSight() < this.shootingAngle) {
           this.shoot(this.x, this.y, this.sightX, this.sightY);
         }
       } else {
@@ -480,7 +482,7 @@ class Target {
     }
     if (findAngle(player.realXCenter, player.realYCenter,
                   this.plUpdSX, this.plUpdSY,
-                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1)) > 1.5) {
+                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1)) > this.updAngle) {
       this.plUpdX = player.realXCenter;
       this.plUpdY = player.realYCenter;
       this.plUpdSX = canvasToWorld(sight.x, 0);
