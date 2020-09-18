@@ -24,8 +24,6 @@ class Player {
     this.realY = this.y + offsetY; //
     this.realW = rW; // размеры для коллизии
     this.realH = rH; //
-    this.X_Center = this.x + this.w_World/2; // координаты центра в мире
-    this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
     this.weaponX = this.realXCenter;
@@ -92,8 +90,6 @@ class Player {
     this.y = y;
     this.realX += dx;
     this.realY += dy;
-    this.X_Center += dx;
-    this.Y_Center += dy;
     this.realXCenter += dx;
     this.realYCenter += dy;
     this.weaponX = this.realXCenter;
@@ -170,7 +166,6 @@ class Player {
       this.realY += this.speed;
       this.realYCenter += this.speed;
       this.y += this.speed;
-      this.Y_Center += this.speed;
       this.weaponY += this.speed;
       this.sY += this.speed;
 
@@ -188,7 +183,6 @@ class Player {
       this.y -= this.speed;
       this.realY -= this.speed;
       this.realYCenter -= this.speed;
-      this.Y_Center -= this.speed;
       this.weaponY -= this.speed;
       this.sY -= this.speed;
 
@@ -208,7 +202,6 @@ class Player {
       this.x += this.speed;
       this.realX += this.speed;
       this.realXCenter += this.speed;
-      this.X_Center += this.speed;
       this.weaponX += this.speed;
       this.sX += this.speed;
 
@@ -226,7 +219,6 @@ class Player {
       this.x -= this.speed;
       this.realX -= this.speed;
       this.realXCenter -= this.speed;
-      this.X_Center -= this.speed;
       this.weaponX -= this.speed;
       this.sX -= this.speed;
 
