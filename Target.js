@@ -578,7 +578,7 @@ class Target {
 
   subHP(dmg) {
     this.hp -= dmg;
-    if (this.hp <= 0) {
+    if (this.hp <= 0 && this.alive) {
       this.hp = 0;
       this.alive = false;
       targetsCount--;
