@@ -3,7 +3,7 @@
 let lastRed = false;
 let lastWater = false;
 
-let collisionPlayer = (x, y, w, h) => {
+const collisionPlayer = (x, y, w, h) => {
   let xBlock = Math.floor(x / worldTileSize);
   let yBlock = Math.floor(y / worldTileSize);;
   let xBlock1 = Math.ceil((x + w) / worldTileSize);
