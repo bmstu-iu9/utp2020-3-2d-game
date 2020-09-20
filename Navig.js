@@ -214,35 +214,35 @@ const vision = (sx, sy, tx, ty) => {
         blocks.push(mesh[XBlock][YBlock]);
         blocks.push((YBlock + 1 > mesh[0].length - 1 ||
                      mesh[XBlock][YBlock + 1].color === 1) ? {x: mesh[XBlock][YBlock].x,
-                                                              y: (YBlock + 1) * blockSize + blockCenter,
+                                                              y: (YBlock + 1) * worldTileSize + blockCenter,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock][YBlock + 1]);
         blocks.push((XBlock + 1 > mesh.length - 1 ||
-                     mesh[XBlock + 1][YBlock].color === 1) ? {x: (XBlock + 1) * blockSize + blockCenter,
+                     mesh[XBlock + 1][YBlock].color === 1) ? {x: (XBlock + 1) * worldTileSize + blockCenter,
                                                               y: mesh[XBlock][YBlock].y,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock + 1][YBlock]);
         blocks.push((YBlock + 1 > mesh[0].length - 1 ||
                      XBlock + 1 > mesh.length - 1 ||
-                     mesh[XBlock + 1][YBlock + 1].color === 1) ? {x: (XBlock + 1) * blockSize + blockCenter,
-                                                                  y: (YBlock + 1) * blockSize + blockCenter,
+                     mesh[XBlock + 1][YBlock + 1].color === 1) ? {x: (XBlock + 1) * worldTileSize + blockCenter,
+                                                                  y: (YBlock + 1) * worldTileSize + blockCenter,
                                                                   vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock + 1][YBlock + 1]);
       } else {
         blocks.push((YBlock - 1 < 0 ||
                      mesh[XBlock][YBlock - 1].color === 1) ? {x: mesh[XBlock][YBlock].x,
-                                                              y: (YBlock - 1) * blockSize + blockCenter,
+                                                              y: (YBlock - 1) * worldTileSize + blockCenter,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock][YBlock - 1]);
         blocks.push(mesh[XBlock][YBlock]);
         blocks.push((XBlock + 1 > mesh.length - 1 ||
                      YBlock - 1 < 0 ||
-                     mesh[XBlock + 1][YBlock - 1].color === 1) ? {x: (XBlock + 1) * blockSize + blockCenter,
-                                                                  y: (YBlock - 1) * blockSize + blockCenter,
+                     mesh[XBlock + 1][YBlock - 1].color === 1) ? {x: (XBlock + 1) * worldTileSize + blockCenter,
+                                                                  y: (YBlock - 1) * worldTileSize + blockCenter,
                                                                   vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock + 1][YBlock - 1]);
         blocks.push((XBlock + 1 > mesh.length - 1 ||
-                     mesh[XBlock + 1][YBlock].color === 1) ? {x: (XBlock + 1) * blockSize + blockCenter,
+                     mesh[XBlock + 1][YBlock].color === 1) ? {x: (XBlock + 1) * worldTileSize + blockCenter,
                                                               y: mesh[XBlock][YBlock].y,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock + 1][YBlock]);
@@ -250,37 +250,37 @@ const vision = (sx, sy, tx, ty) => {
     } else {
       if (vy > 0) {
         blocks.push((XBlock - 1 < 0 ||
-                     mesh[XBlock - 1][YBlock].color === 1) ? {x: (XBlock - 1) * blockSize + blockCenter,
+                     mesh[XBlock - 1][YBlock].color === 1) ? {x: (XBlock - 1) * worldTileSize + blockCenter,
                                                               y: mesh[XBlock][YBlock].y,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock - 1][YBlock]);
         blocks.push((XBlock - 1 < 0 ||
                      YBlock + 1 > mesh[0].length - 1 ||
-                     mesh[XBlock - 1][YBlock + 1].color === 1) ? {x: (XBlock - 1) * blockSize + blockCenter,
-                                                                  y: (YBlock + 1) * blockSize + blockCenter,
+                     mesh[XBlock - 1][YBlock + 1].color === 1) ? {x: (XBlock - 1) * worldTileSize + blockCenter,
+                                                                  y: (YBlock + 1) * worldTileSize + blockCenter,
                                                                   vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock - 1][YBlock + 1]);
         blocks.push(mesh[XBlock][YBlock]);
         blocks.push((YBlock + 1 > mesh[0].length - 1 ||
                      mesh[XBlock][YBlock + 1].color === 1) ? {x: mesh[XBlock][YBlock].x,
-                                                              y: (YBlock + 1) * blockSize + blockCenter,
+                                                              y: (YBlock + 1) * worldTileSize + blockCenter,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock][YBlock + 1]);
       } else {
         blocks.push((XBlock - 1 < 0 ||
                      YBlock - 1 < 0 ||
-                     mesh[XBlock - 1][YBlock - 1].color === 1) ? {x: (XBlock - 1) * blockSize + blockCenter,
-                                                                  y: (YBlock - 1) * blockSize + blockCenter,
+                     mesh[XBlock - 1][YBlock - 1].color === 1) ? {x: (XBlock - 1) * worldTileSize + blockCenter,
+                                                                  y: (YBlock - 1) * worldTileSize + blockCenter,
                                                                   vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock - 1][YBlock - 1]);
         blocks.push((XBlock - 1 < 0 ||
-                     mesh[XBlock - 1][YBlock].color === 1) ? {x: (XBlock - 1) * blockSize + blockCenter,
+                     mesh[XBlock - 1][YBlock].color === 1) ? {x: (XBlock - 1) * worldTileSize + blockCenter,
                                                               y: mesh[XBlock][YBlock].y,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock - 1][YBlock]);
         blocks.push((YBlock - 1 < 0 ||
                      mesh[XBlock][YBlock - 1].color === 1) ? {x: mesh[XBlock][YBlock].x,
-                                                              y: (YBlock - 1) * blockSize + blockCenter,
+                                                              y: (YBlock - 1) * worldTileSize + blockCenter,
                                                               vision: mesh[XBlock][YBlock].vision} :
                                                                           mesh[XBlock][YBlock - 1]);
         blocks.push(mesh[XBlock][YBlock]);

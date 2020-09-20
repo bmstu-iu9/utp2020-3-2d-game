@@ -195,7 +195,6 @@ class Target {
     } else {
       if (this.weapon !== null) {
         controlPoints[this.point].bots -= 1;
-        //this.weapon.drop(this.x, this.y);
         this.weapon = null;
       }
       let x1 = worldToCanvas(this.rX, 0);
@@ -593,19 +592,10 @@ class Target {
     let visCenterX = this.x + vx;
     let visCenterY = this.y + vy;
 
-    let vx1 = this.sightX - this.x;
-    let vx2 = tx - this.x;
-    let vy1 = this.sightY - this.y;
-    let vy2 = ty - this.y;
-    let dotProduct =  ((vx1) * (vx2) + (vy1) * (vy2)) /
-                       (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                        Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
-    dotProduct = dotProduct > 1 ? 1 : dotProduct;
-    dotProduct = dotProduct < -1 ? -1 : dotProduct;
-    let visAngle = Math.acos(dotProduct);
+    let visAngle = findAngle(this.x, this.y, this.sightX, this.sightY, tx, ty);
     let doorCheck = true;
     for (let door of doors) {
-      doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,
+      doorCheck = doorCheck && !collisionLineRect(this.x, this.y,
                                                   tx, ty,
                                                   door.getX(), door.getY(),
                                                   door.getX() + door.getW(), door.getY() + door.getH());

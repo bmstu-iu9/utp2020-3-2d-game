@@ -11,7 +11,6 @@ const collisionPlayer = (x, y, w, h) => {
   let f = true;
   let nowRed = false;
   let nowWater = false;
-  //console.log(lastRed);
 
   for (let i = xBlock; i != xBlock1; i++) {
     for (let j = yBlock; j != yBlock1; j++) {
@@ -64,7 +63,7 @@ const collisionPlayer = (x, y, w, h) => {
   }
 
   if ((!lastRed) && nowRed) {
-    //player.subHp(barbedWireDmg);
+    player.subHp(barbedWireDmg);
   }
 
   lastRed = nowRed;

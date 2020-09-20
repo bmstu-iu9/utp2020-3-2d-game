@@ -457,16 +457,7 @@ class Player {
     let visCenterX = this.realXCenter + vx;
     let visCenterY = this.realYCenter + vy;
 
-    let vx1 = canvasToWorld(sight.x, 0) - this.realXCenter;
-    let vx2 = tx - this.realXCenter;
-    let vy1 = canvasToWorld(sight.y, 1) - this.realYCenter;
-    let vy2 = ty - this.realYCenter;
-    let dotProduct =  ((vx1) * (vx2) + (vy1) * (vy2)) /
-                       (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                         Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
-    dotProduct = dotProduct > 1 ? 1 : dotProduct;
-    dotProduct = dotProduct < -1 ? -1 : dotProduct;
-    let visAngle = Math.acos(dotProduct);
+    let visAngle = findAngle(this.realXCenter, this.realYCenter, canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), tx, ty);
     let doorCheck = true;
     for (let door of doors) {
       doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,
