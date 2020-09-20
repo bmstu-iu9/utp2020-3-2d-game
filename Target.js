@@ -184,6 +184,10 @@ class Target {
             this.sprite.shoot.update();
           }
       }
+    } else {
+      if (!this.moving && !this.weapon.isReloading()) {
+        this.sprite.bot.update();
+      }
     }
 
     } else {
