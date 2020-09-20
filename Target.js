@@ -21,7 +21,8 @@ class Target {
     this.visible = false;
     this.alive = true;
     this.speed = player.speed;
-    this.turnSpeed = 15;
+    this.turnSpeed = 0;
+    this.turning = false;
     this.dx = 0;
     this.dy = 0;
     this.sx = 0;
@@ -52,6 +53,11 @@ class Target {
     this.onPosition = false;
     this.knowPlPos = false;
     this.underAttack = false;
+    this.updDist = 100;
+    this.updAngle = 1.5;
+    this.shootingDist = 250;
+    this.positionDist = 150;
+    this.shootingAngle = 0.17;
     this.shooting = false;
     this.justShooted = false;
     this.lastTimeSeen = 0;
@@ -193,7 +199,6 @@ class Target {
     } else {
       if (this.weapon !== null) {
         controlPoints[this.point].bots -= 1;
-        //this.weapon.drop(this.x, this.y);
         this.weapon = null;
       }
       let x1 = worldToCanvas(this.rX, 0);
@@ -208,7 +213,7 @@ class Target {
     if (this.seesPlayer) {
       this.lastPlTime = performance.now();
     }
-    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < 200;
+    this.seesPlayer = this.seesPlayer || performance.now() - this.lastPlTime < memoryTime;
     if (this.seesPlayer) {
       this.knowPlPos = true;
       this.plwalkXBlock = player.walkXBlock;
@@ -329,13 +334,13 @@ class Target {
     if (!this.moving) {
       this.expSightX = player.realXCenter;
       this.expSightY = player.realYCenter;
-      if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < 150) {
+      if (dist(this.x, player.realXCenter, this.y, player.realYCenter) < this.positionDist) {
         this.onPosition = true;
       } else {
         this.onPosition = false;
       }
       if (this.onPosition) {
-        if (this.checkSight() < 0.17) {
+        if (this.checkSight() < this.shootingAngle) {
           this.shoot(this.x, this.y, this.sightX, this.sightY);
         }
       } else {
@@ -366,7 +371,7 @@ class Target {
         this.expSightX = player.realXCenter;
         this.expSightY = player.realYCenter;
         let d = dist(this.x, player.realXCenter, this.y, player.realYCenter);
-        if (d < 250) {
+        if (d < this.shootingDist) {
           let koef1 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
           let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
@@ -471,7 +476,7 @@ class Target {
   }
 
   checkPl() {
-    if (dist(player.realXCenter, this.plUpdX, player.realYCenter, this.plUpdY) > 100) {
+    if (dist(player.realXCenter, this.plUpdX, player.realYCenter, this.plUpdY) > this.updDist) {
       this.plUpdX = player.realXCenter;
       this.plUpdY = player.realYCenter;
       this.plUpdSX = canvasToWorld(sight.x, 0);
@@ -480,7 +485,7 @@ class Target {
     }
     if (findAngle(player.realXCenter, player.realYCenter,
                   this.plUpdSX, this.plUpdSY,
-                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1)) > 1.5) {
+                  canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1)) > this.updAngle) {
       this.plUpdX = player.realXCenter;
       this.plUpdY = player.realYCenter;
       this.plUpdSX = canvasToWorld(sight.x, 0);
@@ -563,7 +568,12 @@ class Target {
     if (dist(this.sightX, this.expSightX, this.sightY, this.expSightY) <= this.turnSpeed) {
       this.sightX = this.expSightX;
       this.sightY = this.expSightY;
+      this.turning = false;
     } else {
+      if (!this.turning) {
+        this.turnSpeed = dist(this.sightX, this.expSightX, this.sightY, this.expSightY) / 7;
+        this.turning = true;
+      }
       let tdx = this.turnSpeed * (this.expSightX - this.sightX) / Math.sqrt(Math.pow(this.expSightX - this.sightX, 2) + Math.pow(this.expSightY - this.sightY, 2));
       let tdy = this.turnSpeed * (this.expSightY - this.sightY) / Math.sqrt(Math.pow(this.expSightX - this.sightX, 2) + Math.pow(this.expSightY - this.sightY, 2));
       this.sightX += tdx;
@@ -573,7 +583,7 @@ class Target {
 
   subHP(dmg) {
     this.hp -= dmg;
-    if (this.hp <= 0) {
+    if (this.hp <= 0 && this.alive) {
       this.hp = 0;
       this.alive = false;
       targetsCount--;
@@ -586,19 +596,10 @@ class Target {
     let visCenterX = this.x + vx;
     let visCenterY = this.y + vy;
 
-    let vx1 = this.sightX - this.x;
-    let vx2 = tx - this.x;
-    let vy1 = this.sightY - this.y;
-    let vy2 = ty - this.y;
-    let dotProduct =  ((vx1) * (vx2) + (vy1) * (vy2)) /
-                       (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                        Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
-    dotProduct = dotProduct > 1 ? 1 : dotProduct;
-    dotProduct = dotProduct < -1 ? -1 : dotProduct;
-    let visAngle = Math.acos(dotProduct);
+    let visAngle = findAngle(this.x, this.y, this.sightX, this.sightY, tx, ty);
     let doorCheck = true;
     for (let door of doors) {
-      doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,
+      doorCheck = doorCheck && !collisionLineRect(this.x, this.y,
                                                   tx, ty,
                                                   door.getX(), door.getY(),
                                                   door.getX() + door.getW(), door.getY() + door.getH());

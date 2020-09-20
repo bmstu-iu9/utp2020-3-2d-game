@@ -1,7 +1,7 @@
 'use strict'
 
-let explosionRadius = 160;
-let grenadeCollision = () => {
+const explosionRadius = 160;
+const grenadeCollision = () => {
   let step = 5;
   for (let grenade of grenades) {
     for (let i = 0; i < step; i++) {
@@ -57,7 +57,7 @@ let grenadeCollision = () => {
   }
 }
 
-let grenadeCheckRect = (x, y, h, w, g) => {
+const grenadeCheckRect = (x, y, h, w, g) => {
   let step = 20;
   let pointsX = [];
   let pointsY = [];
@@ -82,7 +82,7 @@ let grenadeCheckRect = (x, y, h, w, g) => {
   pointsY.push(y + h);
   let hit = 0;
 
-  if (collisionCircleRect(g.x, g.y, 120,
+  if (collisionCircleRect(g.x, g.y, explosionRadius,
                           x, y, h, w)) {
     let f = false;
     for (let i = 0; i < pointsX.length; i++) {
@@ -107,7 +107,9 @@ let grenadeCheckRect = (x, y, h, w, g) => {
 
           let xBlock = (x2 - (x2 % worldTileSize)) / worldTileSize;
           let yBlock = (y2 - (y2 % worldTileSize)) / worldTileSize;
-          if (tileMap[yBlock][xBlock] === "black" ||
+          if ((x2 <= 0 || x2 >= images["map"].naturalWidth ||
+              y2 <= 0 || y2 >= images["map"].naturalHeight) ||
+              tileMap[yBlock][xBlock] === "black" ||
               tileMap[yBlock][xBlock] === "cover") {
                 fPoint = false;
                 console.log(tileMap[yBlock][xBlock]);
@@ -131,11 +133,87 @@ let grenadeCheckRect = (x, y, h, w, g) => {
   return hit;
 }
 
-let grenadeHit = (g) => {
-  // player.subHp(grenadeCheckRect(player.realX, player.realY, player.realH, player.realW, g));
+const grenadeCheckCircle = (x, y, r, g) => {
+  let step = 20;
+  let pointsX = [];
+  let pointsY = [];
+  pointsX.push(x);
+  pointsX.push(x);
+  pointsX.push(x + r);
+  pointsX.push(x - r);
+
+  pointsY.push(y + r);
+  pointsY.push(y - r);
+  pointsY.push(y);
+  pointsY.push(y);
+
+  let k = (dist(x, g.x, y, g.y) - r) / dist(x, g.x, y, g.y);
+  pointsX.push((x - g.x) * k);
+  pointsY.push((y - g.y) * k);
+  let hit = 0;
+
+  if (collisionCircle(g.x, g.y, explosionRadius,
+                          x, y, r)) {
+    let f = false;
+    for (let i = 0; i < pointsX.length; i++) {
+      let x1 = pointsX[i];
+      let y1 = pointsY[i];
+      let fPoint = (dist(g.x, x1, g.y, y1) <= explosionRadius);
+      let dx = x1 - g.x;
+      let dy = y1 - g.y;
+      console.log(x1, y1);
+
+      if (fPoint) {
+        for (let j = 0; j < step; j++) {
+          let x2 = x1 + (dx * j) / step;
+          let y2 = y1 + (dy * j) / step;
+
+          for (let d of doors) {
+            if (pointInRect(x2, y2, d.x, d.y, d.h, d.w)) {
+              fPoint = false;
+            }
+            if (!fPoint) break;
+          }
+
+          let xBlock = (x2 - (x2 % worldTileSize)) / worldTileSize;
+          let yBlock = (y2 - (y2 % worldTileSize)) / worldTileSize;
+          if (x2 <= 0 || x2 >= images["map"].naturalWidth ||
+              y2 <= 0 || y2 >= images["map"].naturalHeight ||
+              tileMap[yBlock][xBlock] === "black" ||
+              tileMap[yBlock][xBlock] === "cover") {
+                fPoint = false;
+                console.log(tileMap[yBlock][xBlock]);
+          }
+          if (!fPoint) break;
+        }
+      }
+      f = f || fPoint;
+      if (fPoint) {
+        if ((dist(g.x, x1, g.y, y1) <= explosionRadius) && (dist(g.x, x1, g.y, y1) > explosionRadius / 2) && (hit != 2)) {
+          hit = 1;
+        }
+        else
+        if (dist(g.x, x1, g.y, y1) <= explosionRadius / 2) {
+          hit = 2;
+          break;
+        }
+      }
+    }
+  }
+  return hit;
+}
+
+const grenadeHit = (g) => {
+  player.subHp(grenadeCheckRect(player.realX, player.realY, player.realH, player.realW, g));
   for (let gl of glass) {
     if (!gl.broken && grenadeCheckRect(gl.x, gl.y, gl.h, gl.w, g) > 0) {
       gl.breakGlass();
+    }
+  }
+  for (let t of targets) {
+    let hit = grenadeCheckCircle(t.x, t.y, t.r, g);
+    if (hit > 0) {
+      t.subHP(hit);
     }
   }
 }

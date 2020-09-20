@@ -3,7 +3,7 @@
 let lastRed = false;
 let lastWater = false;
 
-let collisionPlayer = (x, y, w, h) => {
+const collisionPlayer = (x, y, w, h) => {
   let xBlock = Math.floor(x / worldTileSize);
   let yBlock = Math.floor(y / worldTileSize);;
   let xBlock1 = Math.ceil((x + w) / worldTileSize);
@@ -11,7 +11,6 @@ let collisionPlayer = (x, y, w, h) => {
   let f = true;
   let nowRed = false;
   let nowWater = false;
-  //console.log(lastRed);
 
   for (let i = xBlock; i != xBlock1; i++) {
     for (let j = yBlock; j != yBlock1; j++) {
@@ -64,7 +63,7 @@ let collisionPlayer = (x, y, w, h) => {
   }
 
   if ((!lastRed) && nowRed) {
-    //player.subHp(barbedWireDmg);
+    player.subHp(barbedWireDmg);
   }
 
   lastRed = nowRed;

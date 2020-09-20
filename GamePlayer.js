@@ -24,8 +24,6 @@ class Player {
     this.realY = this.y + offsetY; //
     this.realW = rW; // размеры для коллизии
     this.realH = rH; //
-    this.X_Center = this.x + this.w_World/2; // координаты центра в мире
-    this.Y_Center = this.y + this.h_World/2;
     this.realXCenter = this.realX + this.realW/2;
     this.realYCenter = this.realY + this.realH/2;
     this.weaponX = this.realXCenter;
@@ -92,8 +90,6 @@ class Player {
     this.y = y;
     this.realX += dx;
     this.realY += dy;
-    this.X_Center += dx;
-    this.Y_Center += dy;
     this.realXCenter += dx;
     this.realYCenter += dy;
     this.weaponX = this.realXCenter;
@@ -170,7 +166,6 @@ class Player {
       this.realY += this.speed;
       this.realYCenter += this.speed;
       this.y += this.speed;
-      this.Y_Center += this.speed;
       this.weaponY += this.speed;
       this.sY += this.speed;
 
@@ -188,7 +183,6 @@ class Player {
       this.y -= this.speed;
       this.realY -= this.speed;
       this.realYCenter -= this.speed;
-      this.Y_Center -= this.speed;
       this.weaponY -= this.speed;
       this.sY -= this.speed;
 
@@ -208,7 +202,6 @@ class Player {
       this.x += this.speed;
       this.realX += this.speed;
       this.realXCenter += this.speed;
-      this.X_Center += this.speed;
       this.weaponX += this.speed;
       this.sX += this.speed;
 
@@ -226,7 +219,6 @@ class Player {
       this.x -= this.speed;
       this.realX -= this.speed;
       this.realXCenter -= this.speed;
-      this.X_Center -= this.speed;
       this.weaponX -= this.speed;
       this.sX -= this.speed;
 
@@ -248,7 +240,7 @@ class Player {
       this.weapon.drop(this.realXCenter, this.realYCenter);
       this.sprite.death.x = worldToCanvas(this.x, 0);
       this.sprite.death.y = worldToCanvas(this.y, 1);
-      gameOver();
+      gameOver("dead");
       return;
     }
 
@@ -405,8 +397,8 @@ class Player {
       if (this.inCover) {
         this.inCover = false;
         this.coverId = -1;
-        this.sprite.pl.canvasW *= 1.1;
-        this.sprite.pl.canvasH *= 1.1;
+        this.sprite.pl.worldW *= 1.1;
+        this.sprite.pl.worldH *= 1.1;
       } else {
         let blocks = this.getBlocksByRadius();
         for (let block of blocks) {
@@ -417,8 +409,8 @@ class Player {
           }
         }
         if (this.inCover) {
-          this.sprite.pl.canvasW /= 1.1;
-          this.sprite.pl.canvasH /= 1.1;
+          this.sprite.pl.worldW /= 1.1;
+          this.sprite.pl.worldH /= 1.1;
         }
       }
       getInCover = false;
@@ -465,16 +457,7 @@ class Player {
     let visCenterX = this.realXCenter + vx;
     let visCenterY = this.realYCenter + vy;
 
-    let vx1 = canvasToWorld(sight.x, 0) - this.realXCenter;
-    let vx2 = tx - this.realXCenter;
-    let vy1 = canvasToWorld(sight.y, 1) - this.realYCenter;
-    let vy2 = ty - this.realYCenter;
-    let dotProduct =  ((vx1) * (vx2) + (vy1) * (vy2)) /
-                       (Math.sqrt(Math.pow(vx1, 2) + Math.pow(vy1, 2)) *
-                         Math.sqrt(Math.pow(vx2, 2) + Math.pow(vy2, 2)));
-    dotProduct = dotProduct > 1 ? 1 : dotProduct;
-    dotProduct = dotProduct < -1 ? -1 : dotProduct;
-    let visAngle = Math.acos(dotProduct);
+    let visAngle = findAngle(this.realXCenter, this.realYCenter, canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), tx, ty);
     let doorCheck = true;
     for (let door of doors) {
       doorCheck = doorCheck && !collisionLineRect(player.realXCenter, player.realYCenter,

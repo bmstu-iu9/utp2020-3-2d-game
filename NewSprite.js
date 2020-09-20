@@ -37,6 +37,8 @@ class Sprite {
   }
 
   drawSprite() {
+    this.canvasW = this.worldW * (1 / camera.scaleX);
+    this.canvasH = this.worldH * (1 / camera.scaleY);
     ctx.drawImage(
         this.image,
         this.srcX,
@@ -51,6 +53,8 @@ class Sprite {
   }
 
   drawFeet(deg, x, y) {
+    this.canvasW = this.worldW * (1 / camera.scaleX);
+    this.canvasH = this.worldH * (1 / camera.scaleY);
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(deg);
@@ -70,22 +74,24 @@ class Sprite {
   }
 
   drawBodySprite(x, y, deg) {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(deg);
-        ctx.translate(-this.x, -this.y);
-        ctx.drawImage(
-            this.image,
-            this.srcX,
-            this.srcY,
-            this.width,
-            this.height,
-            worldToCanvas(x, 0),
-            worldToCanvas(y, 1),
-            this.canvasW,
-            this.canvasH
+    this.canvasW = this.worldW * (1 / camera.scaleX);
+    this.canvasH = this.worldH * (1 / camera.scaleY);
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(deg);
+    ctx.translate(-this.x, -this.y);
+    ctx.drawImage(
+          this.image,
+          this.srcX,
+          this.srcY,
+          this.width,
+          this.height,
+          worldToCanvas(x, 0),
+          worldToCanvas(y, 1),
+          this.canvasW,
+          this.canvasH
         );
-        ctx.restore();
+    ctx.restore();
   }
 
   setWorldSize(W , H) {

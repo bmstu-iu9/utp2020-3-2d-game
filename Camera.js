@@ -13,11 +13,15 @@ class Camera {
     this.scaleY = visibleHeight / canvas.height;
   }
 
-  init(x, y, speed) {
+  init(x, y, speed, visibleWidth, visibleHeight) {
     this.x = x;
     this.y = y;
     this.dx = speed;
     this.dy = speed;
+    this.visibleWidth = visibleWidth;
+    this.visibleHeight = visibleHeight;
+    this.scaleX = visibleWidth / canvas.width;
+    this.scaleY = visibleHeight / canvas.height;
   }
 
   drawVisibleMap() {
@@ -40,18 +44,6 @@ class Camera {
       this.y -= this.dy;
     }
 
-    /*if (leftPressed && worldToCanvas(player.realXCenter, 0) <= canvas.width / 2) {
-      this.x -= this.dx;
-    } else if (rightPressed && worldToCanvas(player.realXCenter, 0) >= canvas.width / 2) {
-      this.x += this.dx;
-    }
-
-    if (downPressed && worldToCanvas(player.realYCenter, 1) >= canvas.height / 2){
-      this.y += this.dy;
-    } else if (upPressed && worldToCanvas(player.realYCenter, 1) <= canvas.height / 2) {
-      this.y -= this.dy;
-    }*/
-
     if (this.x < 0) {
       this.x = 0;
     } else if (this.x + this.visibleWidth > this.map.naturalWidth) {
@@ -63,5 +55,12 @@ class Camera {
     } else if (this.y + this.visibleHeight > this.map.naturalHeight){
       this.y = this.map.naturalHeight - this.visibleHeight;
     }
+  }
+
+  changeVisiblePart(dt) {
+    this.visibleWidth += dt;
+    this.visibleHeight += dt;
+    this.scaleX = this.visibleWidth / canvas.width;
+    this.scaleY = this.visibleHeight / canvas.height;
   }
 }
