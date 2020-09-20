@@ -397,8 +397,8 @@ class Player {
       if (this.inCover) {
         this.inCover = false;
         this.coverId = -1;
-        this.sprite.pl.canvasW *= 1.1;
-        this.sprite.pl.canvasH *= 1.1;
+        this.sprite.pl.worldW *= 1.1;
+        this.sprite.pl.worldH *= 1.1;
       } else {
         let blocks = this.getBlocksByRadius();
         for (let block of blocks) {
@@ -409,8 +409,8 @@ class Player {
           }
         }
         if (this.inCover) {
-          this.sprite.pl.canvasW /= 1.1;
-          this.sprite.pl.canvasH /= 1.1;
+          this.sprite.pl.worldW /= 1.1;
+          this.sprite.pl.worldH /= 1.1;
         }
       }
       getInCover = false;
