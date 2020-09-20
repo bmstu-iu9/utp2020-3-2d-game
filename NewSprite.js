@@ -1,6 +1,6 @@
 class Sprite {
 
-  constructor (img, srcX, srcY, srcW, srcH, x, y, framesY, koef) {
+  constructor (img, srcX, srcY, srcW, srcH, x, y, framesY) {
     this.image = img;
     this.srcX = srcX;
     this.srcY = srcY;
@@ -8,27 +8,37 @@ class Sprite {
     this.indexFrameY = 0;
     this.x = x;
     this.y = y;
-    this.currentFrame = 0;
+    this.currentFrame = [];
     this.tickCount = img.width / srcW;
     this.countIndexY = img.height / srcH;
     this.width = srcW;
     this.height = srcH;
     this.speed = 5;
     this.counter = 0;
-    this.k = koef;
+    for (let i = 0; i!=framesY.length; i++){
+      this.currentFrame[i] = 0;
+    }
   }
 
   update() {
       if (this.counter === (this.speed - 1)) {
-      this.currentFrame = ++this.currentFrame % this.tickCount;
-      this.srcX = this.currentFrame * this.width;
+      this.currentFrame[this.indexFrameY] = ++this.currentFrame[this.indexFrameY] % this.tickCount;
+      this.srcX = this.currentFrame[this.indexFrameY] * this.width;
       this.srcY = this.framesY[this.indexFrameY] * this.height;
     }
 
       this.counter = (this.counter + 1) % this.speed;
   }
 
+  reverseUpdate() {
+    this.srcX -= this.width;
+    this.srcY = this.framesY[this.indexFrameY] * this.height;
+    if (this.srcX < 0) this.srcX = 0;
+  }
+
   drawSprite() {
+    this.canvasW = this.worldW * (1 / camera.scaleX);
+    this.canvasH = this.worldH * (1 / camera.scaleY);
     ctx.drawImage(
         this.image,
         this.srcX,
@@ -37,38 +47,58 @@ class Sprite {
         this.height,
         this.x,
         this.y,
-        this.width,
-        this.height
+        this.canvasW,
+        this.canvasH
     );
   }
 
-  drawBodySprite() {
+  drawFeet(deg, x, y) {
+    this.canvasW = this.worldW * (1 / camera.scaleX);
+    this.canvasH = this.worldH * (1 / camera.scaleY);
     ctx.save();
-    ctx.translate(this.x, this.y);
-    let deg = 3 * Math.PI / 2 + Math.acos((this.x - sight.x) / Math.sqrt(Math.pow((this.x - sight.x), 2) + Math.pow((this.y - sight.y), 2)));
-    if (sight.y > this.y) {
-      if (sight.x < this.x) {
-        deg = -deg - 3 * Math.PI / 2;
-      } else {
-        deg = -deg + Math.PI / 2;
-      }
-    } else {
-      deg -= Math.PI / 2;
-    }
+    ctx.translate(x, y);
     ctx.rotate(deg);
-
+    ctx.translate(-x, -y);
     ctx.drawImage(
         this.image,
         this.srcX,
         this.srcY,
         this.width,
         this.height,
-        -this.width / 2 + this.k,
-        -this.height / 2,
-        this.width,
-        this.height
+        this.x,
+        this.y,
+        this.canvasW,
+        this.canvasH
     );
-
     ctx.restore();
   }
+
+  drawBodySprite(x, y, deg) {
+    this.canvasW = this.worldW * (1 / camera.scaleX);
+    this.canvasH = this.worldH * (1 / camera.scaleY);
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(deg);
+    ctx.translate(-this.x, -this.y);
+    ctx.drawImage(
+          this.image,
+          this.srcX,
+          this.srcY,
+          this.width,
+          this.height,
+          worldToCanvas(x, 0),
+          worldToCanvas(y, 1),
+          this.canvasW,
+          this.canvasH
+        );
+    ctx.restore();
+  }
+
+  setWorldSize(W , H) {
+    this.worldW = W;
+    this.worldH = H;
+    this.canvasW = W * (1 / camera.scaleX);
+    this.canvasH = H * (1 / camera.scaleY);
+  }
+
 }

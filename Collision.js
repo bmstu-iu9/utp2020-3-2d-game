@@ -19,30 +19,53 @@ const collision = () => {
             y1 <= 0 || y1 >= images["map"].naturalHeight) {
           f = true;
         }
+
         if (!f) {
-          let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
-          let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
-          if ((tileMap[yBlock][xBlock] == "black") || (tileMap[yBlock][xBlock] == "cover")) {
-            f = true;
-          }
-          if (f) {
-            break;
-          }
-        }
-        if (!f) {
-          if (bul.justShooted == false) {
-            if (bul.bulletRadius + player.radius >= dist(bul.x + (bul.dx * i) / step, player.x, bul.y + (bul.dy * i) / step, player.y)) {
-              f = true;
+          for (let g = 0; g < glass.length; g++) {
+            if (!glass[g].broken && collisionCircleRect(x1, y1, bul.bulletRadius,
+                                    glass[g].getX(), glass[g].getY(),
+                                    glass[g].getH(), glass[g].getW()) && bul.active) {
+
+               glass[g].breakGlass();
             }
           }
         }
+
+        if (!f) {
+          let xBlock = (x1 - (x1 % worldTileSize)) / worldTileSize;
+          let yBlock = (y1 - (y1 % worldTileSize)) / worldTileSize;
+          if (tileMap[yBlock][xBlock] === "black") {
+            f = true;
+          }
+          if (tileMap[yBlock][xBlock] === "cover") {
+            bul.coverId = Cover.defineCover(xBlock, yBlock);
+          }
+        }
+
+        if (!f) {
+          if (bul.justShooted == false) {
+            if (collisionCircleRect(x1, y1, bul.bulletRadius, player.realX, player.realY, player.realH, player.realW) &&
+                !(player.coverId !== -1 && bul.coverId !== -1 && player.coverId === bul.coverId)) {
+              console.log("hit");
+              f = true;
+              if (bul.active) {
+                blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
+                player.subHp(bul.damage);
+              }
+            }
+          }
+        }
+
         if (!f) {
           if (bul.justShooted == false) {
             for (let j = 0; j < targets.length; j++) {
               if (bul.bulletRadius + targets[j].r >= dist(x1, targets[j].x, y1, targets[j].y) &&
-                  targets[j].alive == true) {
+                  targets[j].alive === true) {
                 f = true;
-                targets[j].alive = false;
+                if (bul.active) {
+                  targets[j].subHP(bul.damage);
+                  blood.push(new Blood(x1, y1, -bul.dx, -bul.dy, bul.damage, true));
+                }
               }
               if (f) {
                 break;
@@ -50,7 +73,22 @@ const collision = () => {
             }
           }
         }
+
+        if (!f) {
+          for (let j = 0; j < doors.length; j++) {
+            if (collisionCircleRect(x1, y1, bul.bulletRadius,
+                doors[j].getX(), doors[j].getY(), doors[j].getH(), doors[j].getW())) {
+              f = true;
+            }
+          }
+        }
         if (f) {
+          if (i !== 0) {
+            bul.x = x1 - bul.dx;
+            bul.y = y1 - bul.dy;
+            f = false;
+            bul.active = false;
+          }
           break;
         }
       }

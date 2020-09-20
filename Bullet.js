@@ -1,24 +1,27 @@
 'use strict';
 
 class Bullet {
-  constructor(x, y, sightX, sightY, speed) {
+  constructor(x, y, sightX, sightY, speed, damage, drawFire) {
     this.x = x;
     this.y = y;
-    this.flies = false;
-    this.shooted = false;
+    this.damage = damage;
+    this.drawFire = drawFire;
     this.justShooted = true;
-    this.bulletAnimationRadius = 1.2;
+    this.bulletAnimationRadius = 4;
     this.bulletRadius = 0.4;           //нормирование и умножение на скорость \/
     this.dx = speed * (sightX - x) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.dy = speed * (sightY - y) / Math.sqrt(Math.pow(sightX - x, 2) + Math.pow(sightY - y, 2));
     this.speed = speed;
+    this.coverId = -1;
+    this.active = true;
   }
 
   draw() {
-    if (this.justShooted){
+    if (this.justShooted && this.drawFire){
       this.drawRandomFire();
-      this.justShooted = false;
-    } else this.drawRandomTail();
+    } else {
+      this.drawRandomTail();
+    }
   }
 
   drawRandomFire() {
@@ -104,10 +107,8 @@ class Bullet {
   updateCoordinates() {
     this.x += this.dx;
     this.y += this.dy;
-  }
-
-  collide(tX, tY, tR) {
-    const dist = Math.sqrt(Math.pow(this.x - tX, 2) + Math.pow(this.y - tY, 2));
-    return dist < tR;
+    if (this.justShooted) {
+      this.justShooted = false;
+    }
   }
 }

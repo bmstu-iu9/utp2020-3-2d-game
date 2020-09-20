@@ -1,4 +1,4 @@
-canvas{
+canvas {
   cursor: none;
   position: absolute;
   top: 0;
@@ -52,6 +52,7 @@ body {
 }
 
 .btnabout {
+  z-index: 1;
   width: 350px;
   height: 70px;
   background: #003300;
@@ -61,7 +62,7 @@ body {
   text-align: center;
   font-size: 15pt;
   position: absolute;
-  bottom: 40%;
+  bottom: 15%;
   right: 0;
   left: 0;
   margin: auto;
@@ -73,6 +74,7 @@ body {
 }
 
 .btnplay {
+  z-index: 1;
   width: 350px;
   height: 70px;
   background: #003300;
@@ -91,4 +93,139 @@ body {
 
 .btnplay:hover {
   background: #666633;
+}
+
+.btnsettings {
+  z-index: 1;
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 40%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnsettings:hover {
+  background: #666633;
+}
+
+.btnrestart {
+  z-index: 1;
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 15%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnrestart:hover {
+  background: #666633;
+}
+
+.btnmusic {
+  z-index: 1;
+  width: 350px;
+  height: 70px;
+  background: #003300;
+  color: #FFFFCC;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15pt;
+  position: absolute;
+  bottom: 15%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  font-size: 30pt;
+}
+
+.btnmusic:hover {
+  background: #666633;
+}
+
+.slidercontainer {
+  width: 70%;
+  height: 30px;
+  position: absolute;
+  bottom: 30%;
+  margin: auto;
+  text-align: left;
+  left: 15%;
+  font-size: 15pt;
+  font-style: italic;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80%;
+  height: 10px;
+  position: absolute;
+  left: 15%;
+  bottom: 30%;
+  border-radius: 10px;
+  background: #003300;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #003300;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  background: #003300;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-ms-track {
+  width: 100%;
+  height: 12.8px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #003300;;
+  border-color: transparent;
+  border-width: 39px 0;
+  color: transparent;
+}
+
+.slider::-ms-thumb {
+  height: 20px;
+  width: 20px;
+  background: #FFFFCC;
+  border-radius: 50%;
+  cursor: hand;
 }

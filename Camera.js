@@ -13,6 +13,17 @@ class Camera {
     this.scaleY = visibleHeight / canvas.height;
   }
 
+  init(x, y, speed, visibleWidth, visibleHeight) {
+    this.x = x;
+    this.y = y;
+    this.dx = speed;
+    this.dy = speed;
+    this.visibleWidth = visibleWidth;
+    this.visibleHeight = visibleHeight;
+    this.scaleX = visibleWidth / canvas.width;
+    this.scaleY = visibleHeight / canvas.height;
+  }
+
   drawVisibleMap() {
     ctx.drawImage(this.map, this.x, this.y,
                   this.visibleWidth, this.visibleHeight,
@@ -21,15 +32,15 @@ class Camera {
   }
 
   updateCoordinates(){
-    if (leftPressed && worldToCanvas(player.x, 0) <= moveBorder) {
+    if (leftPressed && worldToCanvas(player.realXCenter, 0) <= moveBorder) {
       this.x -= this.dx;
-    } else if (rightPressed && worldToCanvas(player.x, 0) >= canvas.width - moveBorder) {
+    } else if (rightPressed && worldToCanvas(player.realXCenter, 0) >= canvas.width - moveBorder) {
       this.x += this.dx;
     }
 
-    if (downPressed && worldToCanvas(player.y, 1) >= canvas.height - moveBorder){
+    if (downPressed && worldToCanvas(player.realYCenter, 1) >= canvas.height - moveBorder){
       this.y += this.dy;
-    } else if (upPressed && worldToCanvas(player.y, 1) <= moveBorder) {
+    } else if (upPressed && worldToCanvas(player.realYCenter, 1) <= moveBorder) {
       this.y -= this.dy;
     }
 
@@ -44,5 +55,12 @@ class Camera {
     } else if (this.y + this.visibleHeight > this.map.naturalHeight){
       this.y = this.map.naturalHeight - this.visibleHeight;
     }
+  }
+
+  changeVisiblePart(dt) {
+    this.visibleWidth += dt;
+    this.visibleHeight += dt;
+    this.scaleX = this.visibleWidth / canvas.width;
+    this.scaleY = this.visibleHeight / canvas.height;
   }
 }
