@@ -1,3 +1,5 @@
+'use strict';
+
 class Target {
   constructor(X, Y, P, I) {
     this.x = X;
@@ -165,8 +167,8 @@ class Target {
       this.sprite.bot.y = y1;
       this.sprite.shoot.x = x1;
       this.sprite.shoot.y = y1;
-      this.sprite.right.x = worldToCanvas(this.rX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.rY + 10, 1);
+      this.sprite.right.x = worldToCanvas(this.rX + realOffsetX - 3, 0);
+      this.sprite.right.y = worldToCanvas(this.rY + realOffsetY + 10, 1);
 
       if (this.weapon.emptyMagazine() && !this.weapon.isReloading()) {
         this.weapon.reload();

@@ -1,3 +1,5 @@
+'use strict';
+
 class Sprite {
 
   constructor (img, srcX, srcY, srcW, srcH, x, y, framesY) {
@@ -37,8 +39,7 @@ class Sprite {
   }
 
   drawSprite() {
-    this.canvasW = this.worldW * (1 / camera.scaleX);
-    this.canvasH = this.worldH * (1 / camera.scaleY);
+    this.setWorldSize(this.worldW, this.worldH);
     ctx.drawImage(
         this.image,
         this.srcX,
@@ -53,8 +54,7 @@ class Sprite {
   }
 
   drawFeet(deg, x, y) {
-    this.canvasW = this.worldW * (1 / camera.scaleX);
-    this.canvasH = this.worldH * (1 / camera.scaleY);
+    this.setWorldSize(this.worldW, this.worldH);
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(deg);
@@ -74,8 +74,7 @@ class Sprite {
   }
 
   drawBodySprite(x, y, deg) {
-    this.canvasW = this.worldW * (1 / camera.scaleX);
-    this.canvasH = this.worldH * (1 / camera.scaleY);
+    this.setWorldSize(this.worldW, this.worldH);
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(deg);

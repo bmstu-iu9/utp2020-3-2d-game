@@ -120,6 +120,8 @@ class Player {
         break;
     }
     this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
+    this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+    this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
   }
 
   drawDirection() {
@@ -136,7 +138,6 @@ class Player {
         }
       } else {
           this.sprite.pl.drawBodySprite(this.x, this.y, this.angle);
-          //this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
       }
     }
 
@@ -159,6 +160,11 @@ class Player {
       }
     }
   }
+  ctx.beginPath();
+  ctx.arc(worldToCanvas(this.realXCenter, 0), worldToCanvas(this.realYCenter, 1), 10, 0 , 2* Math.PI);
+  ctx.fillStyle="red";
+  ctx.fill();
+  ctx.closePath();
 }
 
   move() {
@@ -169,8 +175,6 @@ class Player {
       this.weaponY += this.speed;
       this.sY += this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
@@ -186,8 +190,6 @@ class Player {
       this.weaponY -= this.speed;
       this.sY -= this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
@@ -205,8 +207,6 @@ class Player {
       this.weaponX += this.speed;
       this.sX += this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
@@ -222,8 +222,6 @@ class Player {
       this.weaponX -= this.speed;
       this.sX -= this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
@@ -306,6 +304,8 @@ class Player {
 
     this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
     this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
+    this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+    this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
     if (this.weapon.isReloading()) {
      noW = performance.now();
       dT += (noW - lTime);
