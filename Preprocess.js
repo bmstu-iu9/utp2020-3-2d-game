@@ -1,5 +1,6 @@
 'use strict';
 
+const audCtx = new AudioContext();
 let imagePromises = [ {"name": "map", "src" : "resources/jungle_map_v1.5.png"}, {"name":"player", "src" : "resources/Player.png"},
                  {"name" : "walk_RL", "src" : "resources/walk_RL.png"},
                  {"name" : "walk_UD", "src" : "resources/walk_UD.png"},  {"name" : "strafe", "src" : "resources/strafe.png"},
@@ -39,13 +40,22 @@ imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
 }) );
 
 soundPromises = soundPromises.map( el => new Promise( (resolve, reject) => {
-  let audio = new Audio(el["src"]);
-  let obj = {};
-  obj[el["name"]] = audio;
-  audio.addEventListener("canplaythrough", event => {
-    resolve(obj);
-  });
-  audio.onerror = () => reject(new Error(`some problems with loading ${el["name"]} sound or other sounds`));
+  let request = new XMLHttpRequest();                     //при сливании поменять на master
+  request.open('GET', "https://raw.githubusercontent.com/bmstu-iu9/utp2020-3-2d-game/beta/" + el["src"], true);
+  request.responseType = 'arraybuffer';
+
+  request.onload = () => {
+    audCtx.decodeAudioData(request.response).then(decodedData => {
+      let obj = {};
+      obj[el["name"]] = decodedData;
+      resolve(obj);
+    }).catch(error => {
+      console.log(error);
+      reject(new Error(`some problems with decoding ${el["name"]} sound or other sounds`));
+    });
+  }
+  request.onerror = () => reject(new Error(`some problems with loading ${el["name"]} sound or other sounds`));
+  request.send();
 }) )
 
 const images = {};
