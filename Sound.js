@@ -1,3 +1,5 @@
+"use strict";
+
 class Sound { //fadeout start in sec
   constructor(audioBuffer, start, end, volume = 1, fadeout = end) {
     this.audioBuffer = audioBuffer;
