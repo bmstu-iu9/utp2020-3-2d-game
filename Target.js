@@ -64,6 +64,7 @@ class Target {
     this.justShooted = false;
     this.lastTimeSeen = 0;
     this.upd = true;
+    this.lastWater = false;
     this.index = I;
     switch (I) {
       case 0:
@@ -400,6 +401,7 @@ class Target {
       this.wY += this.dy;
       this.shootSightX += this.dx;
       this.shootSightY += this.dy;
+      targetWater(this.x, this.y, this.r, this);
 
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1 ||

@@ -70,3 +70,30 @@ const collisionPlayer = (x, y, w, h) => {
   lastWater = nowWater;
   return f;
 }
+
+
+const targetWater = (x, y, r, tar) => {
+  let xBlock = Math.floor((x - r) / worldTileSize);
+  let yBlock = Math.floor((y - r) / worldTileSize);;
+  let xBlock1 = Math.ceil((x + r) / worldTileSize);
+  let yBlock1 = Math.ceil((y + r) / worldTileSize);
+
+  for (let i = xBlock; i != xBlock1; i++) {
+    for (let j = yBlock; j != yBlock1; j++) {
+      if (!((i < 0) || (i >= tileMap[0].length) ||
+          (j < 0) || (j >= tileMap.length)) &&
+          tileMap[j][i] === "water") {
+            if (!tar.lastWater) {
+              tar.lastWater = true;
+              tar.speed = playerSpeed / 2;
+            }
+      }
+      else {
+        if (tar.lastWater) {
+          tar.lastWater = false;
+          tar.speed = playerSpeed;
+        }
+      }
+    }
+  }
+}
