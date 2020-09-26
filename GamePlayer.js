@@ -145,7 +145,7 @@ class Player {
   }
 }
 
-  move() {
+  update() {
     this.updateMove();
     this.checkAngle();
 
@@ -159,48 +159,8 @@ class Player {
 
     this.updateBlock();
     this.setNewCoordinates();
-
-    if (changeShootingMode) {
-      this.weapon.switchShootingMode();
-      changeShootingMode = false;
-    }
-
-    if (this.grenades.length){
-      let grenade = this.grenades[this.grenades.length - 1];
-      if (throwTime && !grenade.isActivated()) {
-        grenade.activate();
-      } else if (throwGrenade) {
-        if (!grenade.exploded()) {
-          grenade.throw(this.realXCenter, this.realYCenter,
-                canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
-        }
-        this.grenades.pop();
-        throwGrenade = false;
-        throwTime = null;
-      }
-    }
-
-    if (reloadPending && !this.weapon.isReloading()) {
-      this.weapon.reload();
-      if (this.weapon.isReloading()) {
-        switch (this.weapon.id) {
-        case 0:
-          this.sprite.pl.indexFrameY = 1;
-          break;
-        case 1:
-          this.sprite.pl.indexFrameY = 5;
-          break;
-        case 2:
-          this.sprite.pl.indexFrameY = 3;
-          break;
-        }
-        this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
-        this.sprite.pl.counter = 0;
-        lTime = this.weapon.lastReloadTime;
-      }
-      reloadPending = false;
-    }
-
+    this.checkGrenade();
+    this.updateReload();
 
     if (this.weapon.isReloading()) {
       noW = performance.now();
@@ -217,101 +177,10 @@ class Player {
         dT = 0;
     }
 
-    if (mouseDown) {
-      switch (this.weapon.id) {
-        case 0:
-          this.sprite.shoot.indexFrameY = 0;
-          break;
-        case 1:
-          this.sprite.shoot.indexFrameY = 2;
-          break;
-        case 2:
-          this.sprite.shoot.indexFrameY = 1;
-          break;
-      }
-
-      this.sprite.shoot.x = this.sprite.pl.x;
-      this.sprite.shoot.y = this.sprite.pl.y;
-      this.sprite.shoot.update();
-      this.shooting = true;
-      let x = worldToCanvas(this.weaponX, 0);
-      let y = worldToCanvas(this.weaponY, 1);
-      let x1 = worldToCanvas(this.realXCenter, 0);
-      let y1 = worldToCanvas(this.realYCenter, 1);
-      let x2 = worldToCanvas(this.sX, 0);
-      let y2 = worldToCanvas(this.sY, 1);
-      let point1 = {
-        "x" : (x - x1)*Math.cos(this.angle) - (y - y1)*Math.sin(this.angle) + x1,
-        "y" : (x - x1)*Math.sin(this.angle) + (y - y1)*Math.cos(this.angle) + y1,
-      }
-      let point2 = {
-        "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
-        "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
-      }
-      this.weapon.shoot(
-                canvasToWorld(point1.x, 0),
-                canvasToWorld(point1.y, 1),
-                canvasToWorld(point2.x, 0),
-                canvasToWorld(point2.y, 1));
-      this.weapon.shotExecuted = true;
-    } else {
-      this.shooting = false;
-      this.weapon.shotExecuted = false;
-    }
-
-    if (pickUp) {
-      for (let item of weapons) {
-        let dv = Math.sqrt(Math.pow(this.realXCenter - (item.x + item.width/2), 2) + Math.pow(this.realYCenter - (item.y + item.height/2), 2));
-        if (dv <= this.actionRadius + item.pickUpRadius) {
-          let gun = item;
-          item.pickUp();
-          this.weapon.drop(gun.x, gun.y);
-          this.changeWeapon(gun);
-          this.sprite.pl.counter = this.sprite.pl.speed - 1;
-          this.sprite.shoot.counter = this.sprite.shoot.speed - 1;
-          this.sprite.pl.update();
-          this.sprite.shoot.update();
-          break;
-        }
-      }
-      pickUp = false;
-    }
-
-    if (openDoor) {
-      for (let i = 0; i < doors.length; i++) {
-        let door = doors[i];
-        if (collisionCircleRect(this.realXCenter, this.realYCenter, this.actionRadius,
-                                door.getX(), door.getY(), door.getH(), door.getW())) {
-          console.log("collision " + i);
-          door.toggle();
-          break;
-        }
-      }
-      openDoor = false;
-    }
-
-    if (getInCover) {
-      if (this.inCover) {
-        this.inCover = false;
-        this.coverId = -1;
-        this.sprite.pl.worldW *= 1.1;
-        this.sprite.pl.worldH *= 1.1;
-      } else {
-        let blocks = this.getBlocksByRadius();
-        for (let block of blocks) {
-          let coverId = Cover.defineCover(block.x, block.y);
-          if (coverId !== -1) {
-            this.inCover = true;
-            this.coverId = coverId;
-          }
-        }
-        if (this.inCover) {
-          this.sprite.pl.worldW /= 1.1;
-          this.sprite.pl.worldH /= 1.1;
-        }
-      }
-      getInCover = false;
-    }
+    this.updateShoot();
+    this.updatePickUp();
+    this.checkDoor();
+    this.updateCover();
 
   }
 
@@ -377,6 +246,155 @@ class Player {
         if (playerSounds[this.sound].onPause()) {
           playerSounds[this.sound].play();
         }
+      }
+    }
+  }
+
+  updateReload() {
+    if (reloadPending && !this.weapon.isReloading()) {
+      this.weapon.reload();
+      if (this.weapon.isReloading()) {
+        switch (this.weapon.id) {
+        case 0:
+          this.sprite.pl.indexFrameY = 1;
+          break;
+        case 1:
+          this.sprite.pl.indexFrameY = 5;
+          break;
+        case 2:
+          this.sprite.pl.indexFrameY = 3;
+          break;
+        }
+        this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
+        this.sprite.pl.counter = 0;
+        lTime = this.weapon.lastReloadTime;
+      }
+      reloadPending = false;
+    }
+  }
+
+  updateShoot() {
+    if (changeShootingMode) {
+      this.weapon.switchShootingMode();
+      changeShootingMode = false;
+    }
+
+    if (mouseDown) {
+      switch (this.weapon.id) {
+        case 0:
+          this.sprite.shoot.indexFrameY = 0;
+          break;
+        case 1:
+          this.sprite.shoot.indexFrameY = 2;
+          break;
+        case 2:
+          this.sprite.shoot.indexFrameY = 1;
+          break;
+      }
+
+      this.sprite.shoot.x = this.sprite.pl.x;
+      this.sprite.shoot.y = this.sprite.pl.y;
+      this.sprite.shoot.update();
+      this.shooting = true;
+      let x = worldToCanvas(this.weaponX, 0);
+      let y = worldToCanvas(this.weaponY, 1);
+      let x1 = worldToCanvas(this.realXCenter, 0);
+      let y1 = worldToCanvas(this.realYCenter, 1);
+      let x2 = worldToCanvas(this.sX, 0);
+      let y2 = worldToCanvas(this.sY, 1);
+      let point1 = {
+        "x" : (x - x1)*Math.cos(this.angle) - (y - y1)*Math.sin(this.angle) + x1,
+        "y" : (x - x1)*Math.sin(this.angle) + (y - y1)*Math.cos(this.angle) + y1,
+      }
+      let point2 = {
+        "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
+        "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
+      }
+      this.weapon.shoot(
+                canvasToWorld(point1.x, 0),
+                canvasToWorld(point1.y, 1),
+                canvasToWorld(point2.x, 0),
+                canvasToWorld(point2.y, 1));
+      this.weapon.shotExecuted = true;
+    } else {
+      this.shooting = false;
+      this.weapon.shotExecuted = false;
+    }
+  }
+
+  updateCover() {
+    if (getInCover) {
+      if (this.inCover) {
+        this.inCover = false;
+        this.coverId = -1;
+        this.sprite.pl.worldW *= 1.1;
+        this.sprite.pl.worldH *= 1.1;
+      } else {
+        let blocks = this.getBlocksByRadius();
+        for (let block of blocks) {
+          let coverId = Cover.defineCover(block.x, block.y);
+          if (coverId !== -1) {
+            this.inCover = true;
+            this.coverId = coverId;
+          }
+        }
+        if (this.inCover) {
+          this.sprite.pl.worldW /= 1.1;
+          this.sprite.pl.worldH /= 1.1;
+        }
+      }
+      getInCover = false;
+    }
+  }
+
+  updatePickUp() {
+    if (pickUp) {
+      for (let item of weapons) {
+        let dv = Math.sqrt(Math.pow(this.realXCenter - (item.x + item.width/2), 2) + Math.pow(this.realYCenter - (item.y + item.height/2), 2));
+        if (dv <= this.actionRadius + item.pickUpRadius) {
+          let gun = item;
+          item.pickUp();
+          this.weapon.drop(gun.x, gun.y);
+          this.changeWeapon(gun);
+          this.sprite.pl.counter = this.sprite.pl.speed - 1;
+          this.sprite.shoot.counter = this.sprite.shoot.speed - 1;
+          this.sprite.pl.update();
+          this.sprite.shoot.update();
+          break;
+        }
+      }
+      pickUp = false;
+    }
+  }
+
+  checkDoor() {
+    if (openDoor) {
+      for (let i = 0; i < doors.length; i++) {
+        let door = doors[i];
+        if (collisionCircleRect(this.realXCenter, this.realYCenter, this.actionRadius,
+                                door.getX(), door.getY(), door.getH(), door.getW())) {
+          console.log("collision " + i);
+          door.toggle();
+          break;
+        }
+      }
+      openDoor = false;
+    }
+  }
+
+  checkGrenade() {
+    if (this.grenades.length){
+      let grenade = this.grenades[this.grenades.length - 1];
+      if (throwTime && !grenade.isActivated()) {
+        grenade.activate();
+      } else if (throwGrenade) {
+        if (!grenade.exploded()) {
+          grenade.throw(this.realXCenter, this.realYCenter,
+                canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
+        }
+        this.grenades.pop();
+        throwGrenade = false;
+        throwTime = null;
       }
     }
   }
