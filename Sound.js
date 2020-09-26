@@ -1,45 +1,79 @@
-class Sound {                                //fadeout start in sec
-  constructor(audio, start, end, volume = 1, fadeout = end) {
-    this.audio = audio;
+"use strict";
+
+class Sound { //fadeout start in sec
+  constructor(audioBuffer, start, end, volume = 1, fadeout = end) {
+    this.audioBuffer = audioBuffer;
+    this.gain = audCtx.createGain();
+    this.gain.gain.value = volume;
+    this.gain.connect(audCtx.destination);
     this.volume = volume;
-    this.audio.volume = volume;
     this.start = start;
     this.end = end;
-    this.fadeout = fadeout - start;  //waiting for fadeout
-    this.fadeoutStep = 0.01;  //sec
+    this.fadeout = fadeout - start; //waiting for fadeout
+    this.fadeoutStep = 0.01; //sec
     this.dt = volume / (end - fadeout) * this.fadeoutStep;
     this.played = false;
+    this.paused = true;
   }
 
   play(start = true) {
-    this.audio.volume = this.volume * Sound.globalVolume / 100;
-    if (!this.audio.paused) this.audio.pause();
-    clearTimeout(this.timeout);
+    this.gain.gain.value = this.volume * Sound.globalVolume / 100;
     clearTimeout(this.fadeoutTimeout);
     clearInterval(this.fadeoutSteps);
-    if (start) {
-      this.audio.currentTime = this.start;
-    }
-    this.audio.play();
 
-    this.timeout = setTimeout(() => {
-      this.audio.pause();
-      clearTimeout(this.timeout);
-    }, (this.end - this.start) * 1000);
+    if (!this.paused) {
+      this.pause();
+    }
+    this.source = audCtx.createBufferSource();
+    this.source.buffer = this.audioBuffer;
+    this.source.connect(this.gain);
+    this.source.onended = () => {
+      this.paused = true;
+    }
+
+    if (start) {
+      this.source.start(0, this.start, this.end - this.start);
+    } else {
+      this.source.start(0, 0, this.end - this.start);
+    }
+    this.paused = false;
 
     this.fadeoutTimeout = setTimeout(() => {
       this.fadeoutSteps = setInterval(() => {
-        if (this.audio.volume - this.dt > 0) this.audio.volume -= this.dt * Sound.globalVolume / 100;
+        if (this.gain.gain.value - this.dt > 0) this.gain.gain.value -= this.dt * Sound.globalVolume / 100;
         else clearInterval(this.fadeoutSteps);
-        }, this.fadeoutStep * 1000)
+      }, this.fadeoutStep * 1000)
     }, this.fadeout * 1000);
   }
 
-  onPause() { return this.audio.paused }
+  onPause() { return this.paused }
 
   pause() {
-    this.audio.pause();
+    if (!this.paused) {
+      this.source.stop();
+      this.paused = true;
+      this.source.disconnect();
+    }
   }
 }
 
 Sound.globalVolume = 100;
+
+function isObject(obj) {
+  var type = typeof obj;
+  return type === 'function' || type === 'object' && !!obj;
+};
+function iterationCopy(src) {
+  let target = {};
+  for (let prop in src) {
+    if (src.hasOwnProperty(prop)) {
+      // if the value is a nested object, recursively copy all it's properties
+      if (isObject(src[prop])) {
+        target[prop] = iterationCopy(src[prop]);
+      } else {
+        target[prop] = src[prop];
+      }
+    }
+  }
+  return target;
+}
