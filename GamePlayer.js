@@ -146,7 +146,7 @@ class Player {
 }
 
   update() {
-    this.updateMove();
+    this.move();
     this.checkAngle();
 
     if (this.dead === true) {
@@ -160,31 +160,16 @@ class Player {
     this.updateBlock();
     this.setNewCoordinates();
     this.checkGrenade();
-    this.updateReload();
-
-    if (this.weapon.isReloading()) {
-      noW = performance.now();
-      dT += (noW - lTime);
-      if (dT > timeForOneBul[this.weapon.id]) {
-        this.sprite.pl.counter = this.sprite.pl.speed - 1;
-        this.sprite.pl.update();
-        lTime = noW - (dT - timeForOneBul[this.weapon.id]);
-        dT = 0;
-        } else {
-          lTime = noW;
-        }
-      } else {
-        dT = 0;
-    }
-
-    this.updateShoot();
-    this.updatePickUp();
+    this.reload();
+    this.updateReloadingTile();
+    this.shoot();
+    this.pickUp();
     this.checkDoor();
     this.updateCover();
 
   }
 
-  updateMove() {
+  move() {
     if (downPressed && !this.inCover && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
       this.realYCenter += this.speed;
@@ -250,7 +235,7 @@ class Player {
     }
   }
 
-  updateReload() {
+  reload() {
     if (reloadPending && !this.weapon.isReloading()) {
       this.weapon.reload();
       if (this.weapon.isReloading()) {
@@ -273,7 +258,24 @@ class Player {
     }
   }
 
-  updateShoot() {
+  updateReloadingTile() {
+    if (this.weapon.isReloading()) {
+      noW = performance.now();
+      dT += (noW - lTime);
+      if (dT > timeForOneBul[this.weapon.id]) {
+        this.sprite.pl.counter = this.sprite.pl.speed - 1;
+        this.sprite.pl.update();
+        lTime = noW - (dT - timeForOneBul[this.weapon.id]);
+        dT = 0;
+        } else {
+          lTime = noW;
+        }
+      } else {
+        dT = 0;
+    }
+  }
+
+  shoot() {
     if (changeShootingMode) {
       this.weapon.switchShootingMode();
       changeShootingMode = false;
@@ -347,7 +349,7 @@ class Player {
     }
   }
 
-  updatePickUp() {
+  pickUp() {
     if (pickUp) {
       for (let item of weapons) {
         let dv = Math.sqrt(Math.pow(this.realXCenter - (item.x + item.width/2), 2) + Math.pow(this.realYCenter - (item.y + item.height/2), 2));
@@ -373,7 +375,6 @@ class Player {
         let door = doors[i];
         if (collisionCircleRect(this.realXCenter, this.realYCenter, this.actionRadius,
                                 door.getX(), door.getY(), door.getH(), door.getW())) {
-          console.log("collision " + i);
           door.toggle();
           break;
         }
