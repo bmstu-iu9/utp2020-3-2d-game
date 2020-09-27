@@ -1,7 +1,7 @@
 'use strict';
 
 class Target {
-  constructor(X, Y, P, I) {
+  constructor(X, Y, SX, SY, P, I) {
     this.x = X;
     this.y = Y;
     this.initialX = X;
@@ -34,10 +34,10 @@ class Target {
     this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
     this.initXBlock = (X - (X % worldTileSize)) / worldTileSize;
     this.initYBlock = (Y - (Y % worldTileSize)) / worldTileSize;
-    this.sightX = 0;
-    this.sightY = 0;
-    this.expSightX = 0;
-    this.expSightY = 0;
+    this.sightX = X + 50 * SX;
+    this.sightY = Y + 50 * SY;
+    this.expSightX = this.sightX;
+    this.expSightY = this.sightY;
     this.plwalkXBlock = 0;
     this.plwalkXBlock = 0;
     this.plUpdX = 0;
@@ -634,7 +634,7 @@ class ControlPoint {
       if (incid === null) {
         break;
       }
-      captureEnable = captureEnable && incid.captured;
+      captureEnable = captureEnable && controlPoints[incid].captured;
     }
     if (!this.captured &&
         this.next !== null &&
