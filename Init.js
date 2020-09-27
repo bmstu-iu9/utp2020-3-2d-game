@@ -55,7 +55,17 @@ const rounds = [];
 const barbedWireDmg = 0.5;
 
 const playerSounds = {
-  water : new Sound(sounds["water"], 0, 0.8, 0.5),
+  water : new Sound(sounds["water"], 0, 0.8, 0.5, 0),
+  dirt : new Sound(sounds["dirt"], 0, 0.2, 0.5, 0),
+  tile : new Sound(sounds["tile"], 0, 0.2, 1.5, 0),
+  ak_reload : new Sound(sounds["ak_reload"], 0, 1.5, 0.5, 0),
+  m16_reload : new Sound(sounds["m16_reload"], 0.4, 1.8, 0.5, 0),
+  shotgun_reload : new Sound(sounds["shotgun_reload"], 0, 0.58, 1, 0),
+  door_open : new Sound(sounds["door"], 0, 1.0, 1.5, 0),
+  door_close : new Sound(sounds["door"], 2.5, 3.0, 1.5, 0),
+  grenade : new Sound(sounds["grenade"], 0, 0.2, 1.5, 0),
+  glass_hit : new Sound(sounds["glass_hit"], 0, 0.8, 0.5, 0),
+  switch_weapon : new Sound(sounds["change_weapon"], 0, 0.2, 0.5, 0)
 };
 const playerStartX = 218;
 const playerStartY = 52;
