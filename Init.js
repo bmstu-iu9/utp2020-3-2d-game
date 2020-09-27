@@ -129,7 +129,7 @@ controlPoints.push(new ControlPoint(2649, 455, 350, 2, [7], 12));
 controlPoints.push(new ControlPoint(2181, 829, 200, 2, [null], 11));
 controlPoints.push(new ControlPoint(2217, 1213, 180, 3, [5, 6], 11));
 controlPoints.push(new ControlPoint(2685, 1113, 220, 2, [9, 10], 12));
-controlPoints.push(new ControlPoint(3705, 745, 200, 1, [8, 11], 13));
+controlPoints.push(new ControlPoint(3403, 884, 200, 1, [8, 11], 13));
 controlPoints.push(new ControlPoint(3541, 281, 300, 2, [12], null));
 
 const targets = [];
@@ -335,7 +335,7 @@ const init = () => {
   controlPoints.push(new ControlPoint(2181, 829, 200, 2, [null], 11));
   controlPoints.push(new ControlPoint(2217, 1213, 180, 3, [5, 6], 11));
   controlPoints.push(new ControlPoint(2685, 1113, 220, 2, [9, 10], 12));
-  controlPoints.push(new ControlPoint(3705, 745, 200, 1, [8, 11], 13));
+  controlPoints.push(new ControlPoint(3403, 884, 200, 1, [8, 11], 13));
   controlPoints.push(new ControlPoint(3541, 281, 300, 2, [12], null));
 
   targets.splice(0, targets.length);

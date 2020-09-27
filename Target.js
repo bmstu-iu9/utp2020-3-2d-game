@@ -127,6 +127,7 @@ class Target {
         if (this.checkPl() && performance.now() - this.lastUpd > 1000) {
           this.lastUpd = performance.now();
           this.moving = false;
+          this.turning = false;
           if (this.route !== null) {
             for (let node of this.route) {
               node.used = false;
@@ -253,7 +254,7 @@ class Target {
       }
       if (this.priority < 2) {
         if (this.seesPlayer && dist(player.realXCenter, controlPoints[this.point].x,
-                                    player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
+                                    player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 2) {
           this.priority = 1
           this.st = 2;
         }
@@ -408,18 +409,20 @@ class Target {
         if (this.routeP - 1 === -1 ||
             (key === 2 && this.seesPlayer &&
              dist(this.x, player.realXCenter, this.y, player.realYCenter) < 120) ||
-            (key === 6 && dist(this.x, controlPoints[this.point].x,
-                               this.y, controlPoints[this.point].y) < controlPoints[this.point].r / 2)) {
+            (key === 6 && heuristic(mesh[this.XBlock][this.YBlock], mesh[controlPoints[this.point].XBlock][controlPoints[this.point].YBlock]) <= controlPoints[this.point].r / 2)) {
           this.moving = false;
+          if (key === 6) {
+            this.priority = 0;
+          }
           if (this.route !== null) {
             for (let node of this.route) {
               node.used = false;
             }
           }
-          if (!(key == 2 || key === 4)) {
-            if (this.routeP + 1 < this.route.length) {
-              this.expSightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
-              this.expSightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
+          if (!(key === 2 || key === 4)) {
+            if (this.routeP + 5 < this.route.length) {
+              this.expSightX = this.x + 5 * (this.route[this.routeP + 5].x - this.x);
+              this.expSightY = this.y + 5 * (this.route[this.routeP + 5].y - this.y);
             }
           }
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
