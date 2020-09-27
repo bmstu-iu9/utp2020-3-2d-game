@@ -41,6 +41,7 @@ class Player {
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
+    this.soundId = null;
     this.weapon = new Weapon(1);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
@@ -185,10 +186,27 @@ class Player {
 
       this.sprite.pl.update();
       this.sprite.right.update();
-
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     } else if (upPressed && !this.inCover && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
@@ -201,9 +219,27 @@ class Player {
       this.sprite.pl.update();
       this.sprite.right.update();
 
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     }
@@ -218,9 +254,27 @@ class Player {
       this.sprite.pl.update();
       this.sprite.right.update();
 
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     } else if (leftPressed && !this.inCover && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
@@ -233,9 +287,27 @@ class Player {
       this.sprite.pl.update();
       this.sprite.right.update();
 
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     }
@@ -248,12 +320,24 @@ class Player {
         switch (this.weapon.id) {
         case 0:
           this.sprite.pl.indexFrameY = 1;
+          this.sound = "ak_reload";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
           break;
         case 1:
           this.sprite.pl.indexFrameY = 5;
+          this.sound = "m16_reload";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
           break;
         case 2:
           this.sprite.pl.indexFrameY = 3;
+          this.sound = "shotgun_reload";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
           break;
         }
         this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
@@ -276,6 +360,12 @@ class Player {
         } else {
           lTime = noW;
         }
+      if (this.weapon.id === 2) {
+        this.sound = "shotgun_reload";
+        if (playerSounds[this.sound].onPause()) {
+          playerSounds[this.sound].play();
+        }
+      }
       } else {
         dT = 0;
     }
@@ -337,6 +427,9 @@ class Player {
         this.coverId = -1;
         this.sprite.pl.worldW *= 1.1;
         this.sprite.pl.worldH *= 1.1;
+        this.sprite.right.worldW *= 1.1;
+        this.sprite.right.worldH *= 1.1;
+
       } else {
         let blocks = this.getBlocksByRadius();
         for (let block of blocks) {
@@ -349,6 +442,8 @@ class Player {
         if (this.inCover) {
           this.sprite.pl.worldW /= 1.1;
           this.sprite.pl.worldH /= 1.1;
+          this.sprite.right.worldW /= 1.1;
+          this.sprite.right.worldH /= 1.1;
         }
       }
       getInCover = false;
@@ -360,6 +455,13 @@ class Player {
       for (let item of weapons) {
         let dv = Math.sqrt(Math.pow(this.realXCenter - (item.x + item.width/2), 2) + Math.pow(this.realYCenter - (item.y + item.height/2), 2));
         if (dv <= this.actionRadius + item.pickUpRadius) {
+          this.sound = "switch_weapon";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          } else {
+            playerSounds[this.sound].pause();
+            playerSounds[this.sound].play();
+          }
           let gun = item;
           item.pickUp();
           this.weapon.drop(gun.x, gun.y);
@@ -382,6 +484,21 @@ class Player {
         if (collisionCircleRect(this.realXCenter, this.realYCenter, this.actionRadius,
                                 door.getX(), door.getY(), door.getH(), door.getW())) {
           door.toggle();
+          if (door.opened) {
+            if (!playerSounds["door_open"].paused) {
+              playerSounds["door_open"].pause();
+            }
+            this.sound = "door_close";
+            playerSounds[this.sound].play();
+            door.opened = false;
+          } else {
+            if (!playerSounds["door_close"].paused) {
+              playerSounds["door_close"].pause();
+            }
+            this.sound = "door_open";
+            playerSounds[this.sound].play();
+            door.opened = true;
+          }
           break;
         }
       }
