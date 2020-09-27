@@ -73,6 +73,6 @@ class Glass {
     this.broken = true;
     this.frame = 1;
     this.lastTime = performance.now();
-    //звук
+    playerSounds["glass_hit"].play(); //звук
   }
 }
