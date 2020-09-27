@@ -22,7 +22,7 @@ class Target {
     // 6 - возвращение в радиус действия
     this.visible = false;
     this.alive = true;
-    this.speed = player.speed;
+    this.speed = player.normSpeed;
     this.turnSpeed = 0;
     this.turning = false;
     this.dx = 0;
@@ -60,6 +60,7 @@ class Target {
     this.shootingDist = 250;
     this.positionDist = 150;
     this.shootingAngle = 0.17;
+    this.dangerAngle = 1.05;
     this.shooting = false;
     this.justShooted = false;
     this.lastTimeSeen = 0;
@@ -224,12 +225,12 @@ class Target {
       let angle = findAngle(player.realXCenter, player.realYCenter,
                             this.x, this.y,
                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
-      this.underAttack = (angle < 1.05 && player.shooting);
+      this.underAttack = (angle < this.dangerAngle && player.shooting);
     } else {
       this.underAttack = false;
     }
     if (!this.seesPlayer && player.shooting &&
-        dist(controlPoints[this.point].x, player.realXCenter, controlPoints[this.point].y, player.realYCenter) < controlPoints[this.point].r * 2) {
+        dist(controlPoints[this.point].x, player.realXCenter, controlPoints[this.point].y, player.realYCenter) < controlPoints[this.point].r * 1.5) {
       this.knowPlPos = true;
       this.plwalkXBlock = player.walkXBlock;
       this.plwalkYBlock = player.walkYBlock;
@@ -245,14 +246,14 @@ class Target {
         } else {
           this.st = 5;
         }
-        if (this.knowPlPos && dist(player.realXCenter, controlPoints[this.point].x,
-                                   player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
+        if (this.knowPlPos &&
+            heuristic(mesh[this.plwalkXBlock][this.plwalkYBlock], mesh[this.XBlock][this.YBlock]) < controlPoints[this.point].r * 1.5) {
           this.st = 4;
         }
       }
       if (this.priority < 2) {
         if (this.seesPlayer && dist(player.realXCenter, controlPoints[this.point].x,
-                                   player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
+                                    player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
           this.priority = 1
           this.st = 2;
         }
@@ -380,7 +381,7 @@ class Target {
           let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
 
-          if (this.checkSight() < 0.17 && player.vis(this.x, this.y, 0)) {
+          if (this.checkSight() < this.shootingAngle && player.vis(this.x, this.y, 0)) {
             this.singleShoot(this.x, this.y, this.sightX + koef1, this.sightY + koef2);
           } else {
             this.shooting = false;

@@ -51,14 +51,12 @@ const collisionPlayer = (x, y, w, h) => {
   }
 
   if ((f) && nowWater && (!lastWater)) {
-    player.speed = playerSpeed/2;
-    camera.dx = cameraSpeed/2;
-    camera.dy = cameraSpeed/2;
+    player.normSpeed = playerSpeed / 2;
+    camera.speed = cameraSpeed / 2;
   }
   else if ((f) && lastWater && !nowWater) {
-    player.speed = playerSpeed;
-    camera.dx = cameraSpeed;
-    camera.dy = cameraSpeed;
+    player.normSpeed = playerSpeed;
+    camera.speed = cameraSpeed;
     player.sound = "nothing";
   }
 

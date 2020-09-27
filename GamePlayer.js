@@ -35,6 +35,7 @@ class Player {
     this.actionRadius = rW;
     this.sprite = sprite;
     this.speed = speed;
+    this.normSpeed = speed;
     this.hp = 2;
     this.dead = false;
     this.shooting = false;
@@ -67,7 +68,7 @@ class Player {
   }
 
   init(x, y, speed) {
-    this.speed = speed;
+    this.normSpeed = speed;
     let dx = x - this.x;
     let dy = y - this.y;
     this.x = x;
@@ -146,6 +147,11 @@ class Player {
 }
 
   update() {
+    if (creeping) {
+      this.speed = this.normSpeed / 2;
+    } else {
+      this.speed = this.normSpeed;
+    }
     this.move();
     this.checkAngle();
 

@@ -300,6 +300,7 @@ covers.push(new Cover(3400, 620, 70, 10, 8));
 
 const init = () => {
   controlInit();
+  creeping = false;
   lastRed = false;
   lastWater = false;
   bullets.clear();
