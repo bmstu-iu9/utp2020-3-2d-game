@@ -56,7 +56,7 @@ const barbedWireDmg = 0.5;
 
 const playerSounds = {
   water : new Sound(sounds["water"], 0, 0.8, 0.5, 0),
-  dirt : new Sound(sounds["dirt"], 0, 0.2, 0.5, 0),
+  dirt : new Sound(sounds["dirt"], 0, 0.6, 0.5, 0),
   tile : new Sound(sounds["tile"], 0, 0.2, 1.5, 0),
   ak_reload : new Sound(sounds["ak_reload"], 0, 1.5, 0.5, 0),
   m16_reload : new Sound(sounds["m16_reload"], 0.4, 1.8, 0.5, 0),

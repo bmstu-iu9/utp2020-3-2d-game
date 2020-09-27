@@ -33,6 +33,8 @@ const collisionPlayer = (x, y, w, h) => {
             player.sound = "water";
           }
         }
+        if (tileMap[j][i] === "tile") player.sound = "tile";
+        if (tileMap[j][i] === "white") player.sound = "dirt";
     }
   }
 

@@ -28,7 +28,16 @@ let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine
                       {"name" : "water", "src" : "resources/stepwater_1.wav"},
                       {"name" : "uh1", "src" : "resources/uh1_huey.mp3"},
                       {"name" : "menu_music", "src" : "resources/The Doors - The End.mp3"},
-                      {"name" : "outro_music", "src" : "resources/CCR - Fortunate Son.mp3"}];
+                      {"name" : "outro_music", "src" : "resources/CCR - Fortunate Son.mp3"},
+                      {"name" : "ak_reload", "src" : "resources/AK47_Reload.wav"},
+                      {"name" : "switch_weapon", "src" : "resources/change-weapon.wav"},
+                      {"name" : "glass_hit", "src" : "resources/glass_hit.wav"},
+                      {"name" : "grenade", "src" : "resources/grenade.wav"},
+                      {"name" : "m16_reload", "src" : "resources/m16_reload.mp3"},
+                      {"name" : "shotgun_reload", "src" : "resources/shotgun_reload.wav"},
+                      {"name" : "door", "src" : "resources/open-close-door.mp3"},
+                      {"name" : "dirt", "src" : "resources/stepdirt_3.wav"},
+                      {"name" : "tile", "src" : "resources/step_tile.wav"}, ];
 
 imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
   let img = new Image();
