@@ -55,14 +55,14 @@ body {
 .about {
   z-index: 2;
   width: 800px;
-  height: 900px;
+  height: 80%;
   background: #ffe066;
   color: #666633;
   border-radius: 10px;
   font-size: 20px;
   font-family: "Californian FB", sans-serif;
   position: absolute;
-  bottom: 10%;
+  top: 5%;
   right: 0;
   left: 0;
   overflow: auto;
@@ -126,7 +126,7 @@ body {
 .btnmenu {
   z-index: 1;
   width: 350px;
-  height: 70px;
+  height: 10%;
   background: #003300;
   color: #FFFFCC;
   text-decoration: none;
