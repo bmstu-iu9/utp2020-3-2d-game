@@ -29,7 +29,7 @@ class Sound { //fadeout start in sec
     this.source.connect(this.gain);
     this.source.onended = () => {
       this.paused = true;
-    }
+    };
 
     if (start) {
       this.source.start(0, this.start, this.end - this.start);

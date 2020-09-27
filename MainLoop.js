@@ -66,7 +66,6 @@ const update = () => {
     point.update();
   });
 
-  //camera.updateCoordinates();
   collision();
   grenadeCollision();
 }
