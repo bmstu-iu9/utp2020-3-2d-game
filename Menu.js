@@ -196,6 +196,7 @@ const closeMenu = () => {
   if (firstStart) {
     play.remove();
     about.remove();
+    divText.remove();
     divMenu.append(resume);
     divMenu.append(restart);
     soundOnBttn.remove();
