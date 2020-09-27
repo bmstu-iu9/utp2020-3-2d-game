@@ -170,7 +170,7 @@ let targetsCount = targets.length;
 const weapons = new Set();
 weapons.add(new Weapon(0, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829)).
         add(new Weapon(1, 1160, 690)).add(new Weapon(2, 2174, 960)).add(new Weapon(1, 2585, 157)).
-        add(new Weapon(0, 3715, 32));
+        add(new Weapon(0, 3715, 32)).add(new Weapon(2, 3320, 300));
 const grenades = new Set();
 const clouds = [];
 
@@ -374,7 +374,7 @@ const init = () => {
   weapons.clear();
   weapons.add(new Weapon(0, 72, 20)).add(new Weapon(2, 660, 188)).add(new Weapon(0, 1222, 829)).
           add(new Weapon(1, 1160, 690)).add(new Weapon(2, 2174, 960)).add(new Weapon(1, 2585, 157)).
-          add(new Weapon(0, 3715, 32));
+          add(new Weapon(0, 3715, 32)).add(new Weapon(2, 3320, 300));
   grenades.clear();
   clouds.splice(0, clouds.length);
 

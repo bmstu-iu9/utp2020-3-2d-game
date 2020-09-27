@@ -263,6 +263,8 @@ const drawUI = () => {
   ctx.strokeRect(mapXY + (camera.x - koef) / 10, mapXY + camera.y / 10, visiblePart / 10, visiblePart / 10);
   ctx.closePath();
 
+  fpsUpdate(now, lastTime);
+
   sight.draw();
 
   if (!throwGrenade && throwTime && player.grenades.length) {
@@ -348,7 +350,6 @@ const loop = () => {
   }
 
   draw();
-  fpsUpdate(now, lastTime);
   lastTime = now;
 }
 

@@ -91,7 +91,6 @@ const grenadeCheckRect = (x, y, h, w, g) => {
       let fPoint = (dist(g.x, x1, g.y, y1) <= explosionRadius);
       let dx = x1 - g.x;
       let dy = y1 - g.y;
-      console.log(x1, y1);
 
       if (fPoint) {
         for (let j = 0; j < step; j++) {
@@ -112,7 +111,6 @@ const grenadeCheckRect = (x, y, h, w, g) => {
               tileMap[yBlock][xBlock] === "black" ||
               tileMap[yBlock][xBlock] === "cover") {
                 fPoint = false;
-                console.log(tileMap[yBlock][xBlock]);
           }
           if (!fPoint) break;
         }
@@ -161,7 +159,6 @@ const grenadeCheckCircle = (x, y, r, g) => {
       let fPoint = (dist(g.x, x1, g.y, y1) <= explosionRadius);
       let dx = x1 - g.x;
       let dy = y1 - g.y;
-      console.log(x1, y1);
 
       if (fPoint) {
         for (let j = 0; j < step; j++) {
@@ -182,7 +179,6 @@ const grenadeCheckCircle = (x, y, r, g) => {
               tileMap[yBlock][xBlock] === "black" ||
               tileMap[yBlock][xBlock] === "cover") {
                 fPoint = false;
-                console.log(tileMap[yBlock][xBlock]);
           }
           if (!fPoint) break;
         }
