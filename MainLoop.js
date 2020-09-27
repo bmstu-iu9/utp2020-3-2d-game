@@ -277,6 +277,7 @@ const drawUI = () => {
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
+
   camera.drawVisibleMap();
 
   glass.forEach(gl => {
@@ -330,6 +331,12 @@ const draw = () => {
   drawUI();
 }
 
+const fpsUpdate = (n, l) => {
+  ctx.font = "25px system-ui";
+  ctx.fillStyle = "green";
+  ctx.fillText("fps: " + Math.round(1000 / (n-l)), canvas.width - 85, 30);
+}
+
 const loop = () => {
   requestId = RAF(loop);
   now = performance.now();
@@ -341,6 +348,7 @@ const loop = () => {
   }
 
   draw();
+  fpsUpdate(now, lastTime);
   lastTime = now;
 }
 
