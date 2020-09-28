@@ -49,8 +49,8 @@ imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
 }) );
 
 soundPromises = soundPromises.map( el => new Promise( (resolve, reject) => {
-  let request = new XMLHttpRequest();                     //при сливании поменять на master
-  request.open('GET', "https://raw.githubusercontent.com/bmstu-iu9/utp2020-3-2d-game/beta/" + el["src"], true);
+  let request = new XMLHttpRequest();
+  request.open('GET', "https://raw.githubusercontent.com/bmstu-iu9/utp2020-3-2d-game/master/" + el["src"], true);
   request.responseType = 'arraybuffer';
 
   request.onload = () => {
