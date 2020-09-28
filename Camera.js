@@ -5,6 +5,7 @@ class Camera {
     this.x = initX;
     this.y = initY;
     this.map = img;
+    this.speed = speed;
     this.dx = speed;
     this.dy = speed;
     this.visibleWidth = visibleWidth;
@@ -16,6 +17,7 @@ class Camera {
   init(x, y, speed, visibleWidth, visibleHeight) {
     this.x = x;
     this.y = y;
+    this.speed = speed;
     this.dx = speed;
     this.dy = speed;
     this.visibleWidth = visibleWidth;
@@ -32,6 +34,13 @@ class Camera {
   }
 
   updateCoordinates(){
+    if (creeping) {
+      this.dx = this.speed / 2;
+      this.dy = this.speed / 2;
+    } else {
+      this.dx = this.speed;
+      this.dy = this.speed;
+    }
     if (leftPressed && worldToCanvas(player.realXCenter, 0) <= moveBorder) {
       this.x -= this.dx;
     } else if (rightPressed && worldToCanvas(player.realXCenter, 0) >= canvas.width - moveBorder) {

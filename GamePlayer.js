@@ -35,12 +35,13 @@ class Player {
     this.actionRadius = rW;
     this.sprite = sprite;
     this.speed = speed;
+    this.normSpeed = speed;
     this.hp = 2;
     this.dead = false;
-    this.fire = false;
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
+    this.soundId = null;
     this.weapon = new Weapon(1);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.sound = "nothing";
@@ -62,28 +63,13 @@ class Player {
     this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
     this.sprite.shoot.srcY = this.sprite.shoot.height * this.sprite.shoot.indexFrameY;
     this.sprite.shoot.speed = 10;
-    this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
-    this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
-    this.walkXBlock = this.XBlock;
-    this.walkYBlock = this.YBlock;
-    if (!mesh[this.XBlock][this.YBlock].walk) {
-      for (let i = -1; i < 2; i++) {
-        for (let j = -1; j < 2; j++) {
-          if (mesh[this.XBlock + i][this.YBlock + j].walk) {
-            this.walkXBlock = this.XBlock + i;
-            this.walkYBlock = this.YBlock + j;
-            break;
-          }
-        }
-        if (mesh[this.walkXBlock][this.walkYBlock].walk) {
-          break;
-        }
-      }
-    }
+
+    this.updateBlock();
+
   }
 
   init(x, y, speed) {
-    this.speed = speed;
+    this.normSpeed = speed;
     let dx = x - this.x;
     let dy = y - this.y;
     this.x = x;
@@ -100,7 +86,6 @@ class Player {
     this.hp = 2;
     this.angle = 0;
     this.dead = false;
-    this.fire = false;
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
@@ -120,6 +105,8 @@ class Player {
         break;
     }
     this.sprite.pl.srcY = this.sprite.pl.height * this.sprite.pl.indexFrameY;
+    this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+    this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
   }
 
   drawDirection() {
@@ -136,7 +123,6 @@ class Player {
         }
       } else {
           this.sprite.pl.drawBodySprite(this.x, this.y, this.angle);
-          //this.weapon.drawReload(sight.x, sight.y, sight.width + sight.dotSize / 2 + sight.offset);
       }
     }
 
@@ -161,6 +147,35 @@ class Player {
   }
 }
 
+  update() {
+    if (creeping) {
+      this.speed = this.normSpeed / 2;
+    } else {
+      this.speed = this.normSpeed;
+    }
+    this.move();
+    this.checkAngle();
+
+    if (this.dead === true) {
+      this.weapon.drop(this.realXCenter, this.realYCenter);
+      this.sprite.death.x = worldToCanvas(this.x, 0);
+      this.sprite.death.y = worldToCanvas(this.y, 1);
+      gameOver("dead");
+      return;
+    }
+
+    this.updateBlock();
+    this.setNewCoordinates();
+    this.checkGrenade();
+    this.reload();
+    this.updateReloadingTile();
+    this.shoot();
+    this.pickUp();
+    this.checkDoor();
+    this.updateCover();
+
+  }
+
   move() {
     if (downPressed && !this.inCover && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
@@ -169,14 +184,29 @@ class Player {
       this.weaponY += this.speed;
       this.sY += this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
-
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     } else if (upPressed && !this.inCover && collisionPlayer(this.realX, this.realY - this.speed, this.realW, this.realH)) {
@@ -186,14 +216,30 @@ class Player {
       this.weaponY -= this.speed;
       this.sY -= this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     }
@@ -205,14 +251,30 @@ class Player {
       this.weaponX += this.speed;
       this.sX += this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
+        }
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
         }
       }
     } else if (leftPressed && !this.inCover && collisionPlayer(this.realX - this.speed, this.realY, this.realW, this.realH)) {
@@ -222,79 +284,60 @@ class Player {
       this.weaponX -= this.speed;
       this.sX -= this.speed;
 
-      this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
       this.sprite.pl.update();
       this.sprite.right.update();
 
-      if (this.sound === "water") {
-        if (playerSounds[this.sound].onPause()) {
-          playerSounds[this.sound].play();
+      if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+        if (creeping) {
+          if (this.soundId == null) {
+          this.soundId = setTimeout (() => {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+              if (playerSounds[this.sound].onPause()) {
+                playerSounds[this.sound].play();
+              }
+            }
+          }, 0.7*1000);
         }
-      }
-    }
-
-    this.checkAngle();
-
-    if (this.dead === true) {
-      this.weapon.drop(this.realXCenter, this.realYCenter);
-      this.sprite.death.x = worldToCanvas(this.x, 0);
-      this.sprite.death.y = worldToCanvas(this.y, 1);
-      gameOver("dead");
-      return;
-    }
-
-    this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
-    this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
-    this.walkXBlock = this.XBlock;
-    this.walkYBlock = this.YBlock;
-    if (!mesh[this.XBlock][this.YBlock].walk) {
-      for (let i = -1; i < 2; i++) {
-        for (let j = -1; j < 2; j++) {
-          if (mesh[this.XBlock + i][this.YBlock + j].walk) {
-            this.walkXBlock = this.XBlock + i;
-            this.walkYBlock = this.YBlock + j;
-            break;
+        } else {
+          if (this.soundId != null) {
+            clearTimeout(this.soundId);
+            this.soundId = null;
+          }
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
           }
         }
-        if (mesh[this.walkXBlock][this.walkYBlock].walk) {
-          break;
-        }
       }
     }
+  }
 
-    if (changeShootingMode) {
-      this.weapon.switchShootingMode();
-      changeShootingMode = false;
-    }
-
-    if (this.grenades.length){
-      let grenade = this.grenades[this.grenades.length - 1];
-      if (throwTime && !grenade.isActivated()) {
-        grenade.activate();
-      } else if (throwGrenade) {
-        if (!grenade.exploded()) {
-          grenade.throw(this.realXCenter, this.realYCenter,
-                canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
-        }
-        this.grenades.pop();
-        throwGrenade = false;
-        throwTime = null;
-      }
-    }
-
+  reload() {
     if (reloadPending && !this.weapon.isReloading()) {
       this.weapon.reload();
       if (this.weapon.isReloading()) {
         switch (this.weapon.id) {
         case 0:
           this.sprite.pl.indexFrameY = 1;
+          this.sound = "ak_reload";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
           break;
         case 1:
           this.sprite.pl.indexFrameY = 5;
+          this.sound = "m16_reload";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
           break;
         case 2:
           this.sprite.pl.indexFrameY = 3;
+          this.sound = "shotgun_reload";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          }
           break;
         }
         this.sprite.pl.currentFrame[this.sprite.pl.indexFrameY] = 0;
@@ -303,23 +346,36 @@ class Player {
       }
       reloadPending = false;
     }
+  }
 
-    this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
-    this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
+  updateReloadingTile() {
     if (this.weapon.isReloading()) {
-     noW = performance.now();
+      noW = performance.now();
       dT += (noW - lTime);
       if (dT > timeForOneBul[this.weapon.id]) {
         this.sprite.pl.counter = this.sprite.pl.speed - 1;
         this.sprite.pl.update();
         lTime = noW - (dT - timeForOneBul[this.weapon.id]);
         dT = 0;
-      } else {
-        lTime = noW;
+        } else {
+          lTime = noW;
+        }
+      if (this.weapon.id === 2) {
+        this.sound = "shotgun_reload";
+        if (playerSounds[this.sound].onPause()) {
+          playerSounds[this.sound].play();
+        }
       }
-  } else {
-    dT = 0;
+      } else {
+        dT = 0;
+    }
   }
+
+  shoot() {
+    if (changeShootingMode) {
+      this.weapon.switchShootingMode();
+      changeShootingMode = false;
+    }
 
     if (mouseDown) {
       switch (this.weapon.id) {
@@ -333,6 +389,7 @@ class Player {
           this.sprite.shoot.indexFrameY = 1;
           break;
       }
+
       this.sprite.shoot.x = this.sprite.pl.x;
       this.sprite.shoot.y = this.sprite.pl.y;
       this.sprite.shoot.update();
@@ -351,21 +408,60 @@ class Player {
         "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
         "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
       }
-      this.fire = this.weapon.shoot(
-                  canvasToWorld(point1.x, 0),
-                  canvasToWorld(point1.y, 1),
-                  canvasToWorld(point2.x, 0),
-                  canvasToWorld(point2.y, 1));
+      this.weapon.shoot(
+                canvasToWorld(point1.x, 0),
+                canvasToWorld(point1.y, 1),
+                canvasToWorld(point2.x, 0),
+                canvasToWorld(point2.y, 1));
       this.weapon.shotExecuted = true;
     } else {
       this.shooting = false;
       this.weapon.shotExecuted = false;
     }
+  }
 
+  updateCover() {
+    if (getInCover) {
+      if (this.inCover) {
+        this.inCover = false;
+        this.coverId = -1;
+        this.sprite.pl.worldW *= 1.1;
+        this.sprite.pl.worldH *= 1.1;
+        this.sprite.right.worldW *= 1.1;
+        this.sprite.right.worldH *= 1.1;
+
+      } else {
+        let blocks = this.getBlocksByRadius();
+        for (let block of blocks) {
+          let coverId = Cover.defineCover(block.x, block.y);
+          if (coverId !== -1) {
+            this.inCover = true;
+            this.coverId = coverId;
+          }
+        }
+        if (this.inCover) {
+          this.sprite.pl.worldW /= 1.1;
+          this.sprite.pl.worldH /= 1.1;
+          this.sprite.right.worldW /= 1.1;
+          this.sprite.right.worldH /= 1.1;
+        }
+      }
+      getInCover = false;
+    }
+  }
+
+  pickUp() {
     if (pickUp) {
       for (let item of weapons) {
         let dv = Math.sqrt(Math.pow(this.realXCenter - (item.x + item.width/2), 2) + Math.pow(this.realYCenter - (item.y + item.height/2), 2));
         if (dv <= this.actionRadius + item.pickUpRadius) {
+          this.sound = "switch_weapon";
+          if (playerSounds[this.sound].onPause()) {
+            playerSounds[this.sound].play();
+          } else {
+            playerSounds[this.sound].pause();
+            playerSounds[this.sound].play();
+          }
           let gun = item;
           item.pickUp();
           this.weapon.drop(gun.x, gun.y);
@@ -379,43 +475,73 @@ class Player {
       }
       pickUp = false;
     }
+  }
 
+  checkDoor() {
     if (openDoor) {
       for (let i = 0; i < doors.length; i++) {
         let door = doors[i];
         if (collisionCircleRect(this.realXCenter, this.realYCenter, this.actionRadius,
                                 door.getX(), door.getY(), door.getH(), door.getW())) {
-          console.log("collision " + i);
           door.toggle();
+          if (door.opened) {
+            if (!playerSounds["door_open"].paused) {
+              playerSounds["door_open"].pause();
+            }
+            this.sound = "door_close";
+            playerSounds[this.sound].play();
+            door.opened = false;
+          } else {
+            if (!playerSounds["door_close"].paused) {
+              playerSounds["door_close"].pause();
+            }
+            this.sound = "door_open";
+            playerSounds[this.sound].play();
+            door.opened = true;
+          }
           break;
         }
       }
       openDoor = false;
     }
+  }
 
-    if (getInCover) {
-      if (this.inCover) {
-        this.inCover = false;
-        this.coverId = -1;
-        this.sprite.pl.worldW *= 1.1;
-        this.sprite.pl.worldH *= 1.1;
-      } else {
-        let blocks = this.getBlocksByRadius();
-        for (let block of blocks) {
-          let coverId = Cover.defineCover(block.x, block.y);
-          if (coverId !== -1) {
-            this.inCover = true;
-            this.coverId = coverId;
+  checkGrenade() {
+    if (this.grenades.length){
+      let grenade = this.grenades[this.grenades.length - 1];
+      if (throwTime && !grenade.isActivated()) {
+        grenade.activate();
+      } else if (throwGrenade) {
+        if (!grenade.exploded()) {
+          grenade.throw(this.realXCenter, this.realYCenter,
+                canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1), throwTime / 1000);
+        }
+        this.grenades.pop();
+        throwGrenade = false;
+        throwTime = null;
+      }
+    }
+  }
+
+  updateBlock() {
+    this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
+    this.YBlock = (this.realYCenter - (this.realYCenter % worldTileSize)) / worldTileSize;
+    this.walkXBlock = this.XBlock;
+    this.walkYBlock = this.YBlock;
+    if (!mesh[this.XBlock][this.YBlock].walk) {
+      for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+          if (mesh[this.XBlock + i][this.YBlock + j].walk) {
+            this.walkXBlock = this.XBlock + i;
+            this.walkYBlock = this.YBlock + j;
+            break;
           }
         }
-        if (this.inCover) {
-          this.sprite.pl.worldW /= 1.1;
-          this.sprite.pl.worldH /= 1.1;
+        if (mesh[this.walkXBlock][this.walkYBlock].walk) {
+          break;
         }
       }
-      getInCover = false;
     }
-
   }
 
   getBlocksByRadius() {
@@ -431,6 +557,13 @@ class Player {
       }
     }
     return blocks;
+  }
+
+  setNewCoordinates() {
+    this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
+    this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
+    this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
+    this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
   }
 
   changeWeapon(gun) {

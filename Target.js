@@ -1,5 +1,7 @@
+'use strict';
+
 class Target {
-  constructor(X, Y, P, I) {
+  constructor(X, Y, SX, SY, P, I) {
     this.x = X;
     this.y = Y;
     this.initialX = X;
@@ -20,7 +22,7 @@ class Target {
     // 6 - возвращение в радиус действия
     this.visible = false;
     this.alive = true;
-    this.speed = player.speed;
+    this.speed = player.normSpeed;
     this.turnSpeed = 0;
     this.turning = false;
     this.dx = 0;
@@ -32,10 +34,10 @@ class Target {
     this.YBlock = (this.y - (this.y % worldTileSize)) / worldTileSize;
     this.initXBlock = (X - (X % worldTileSize)) / worldTileSize;
     this.initYBlock = (Y - (Y % worldTileSize)) / worldTileSize;
-    this.sightX = 0;
-    this.sightY = 0;
-    this.expSightX = 0;
-    this.expSightY = 0;
+    this.sightX = X + 50 * SX;
+    this.sightY = Y + 50 * SY;
+    this.expSightX = this.sightX;
+    this.expSightY = this.sightY;
     this.plwalkXBlock = 0;
     this.plwalkXBlock = 0;
     this.plUpdX = 0;
@@ -58,10 +60,12 @@ class Target {
     this.shootingDist = 250;
     this.positionDist = 150;
     this.shootingAngle = 0.17;
+    this.dangerAngle = 1.05;
     this.shooting = false;
     this.justShooted = false;
     this.lastTimeSeen = 0;
     this.upd = true;
+    this.lastWater = false;
     this.index = I;
     switch (I) {
       case 0:
@@ -123,6 +127,7 @@ class Target {
         if (this.checkPl() && performance.now() - this.lastUpd > 1000) {
           this.lastUpd = performance.now();
           this.moving = false;
+          this.turning = false;
           if (this.route !== null) {
             for (let node of this.route) {
               node.used = false;
@@ -165,8 +170,8 @@ class Target {
       this.sprite.bot.y = y1;
       this.sprite.shoot.x = x1;
       this.sprite.shoot.y = y1;
-      this.sprite.right.x = worldToCanvas(this.rX - 3, 0);
-      this.sprite.right.y = worldToCanvas(this.rY + 10, 1);
+      this.sprite.right.x = worldToCanvas(this.rX + realOffsetX - 3, 0);
+      this.sprite.right.y = worldToCanvas(this.rY + realOffsetY + 10, 1);
 
       if (this.weapon.emptyMagazine() && !this.weapon.isReloading()) {
         this.weapon.reload();
@@ -189,6 +194,10 @@ class Target {
           if (!this.weapon.emptyMagazine()) {
             this.sprite.shoot.update();
           }
+      }
+    } else {
+      if (!this.moving && !this.weapon.isReloading()) {
+        this.sprite.bot.update();
       }
     }
 
@@ -217,12 +226,12 @@ class Target {
       let angle = findAngle(player.realXCenter, player.realYCenter,
                             this.x, this.y,
                             canvasToWorld(sight.x, 0), canvasToWorld(sight.y, 1));
-      this.underAttack = (angle < 1.05 && player.shooting);
+      this.underAttack = (angle < this.dangerAngle && player.shooting);
     } else {
       this.underAttack = false;
     }
     if (!this.seesPlayer && player.shooting &&
-        dist(controlPoints[this.point].x, player.realXCenter, controlPoints[this.point].y, player.realYCenter) < controlPoints[this.point].r * 2) {
+        dist(controlPoints[this.point].x, player.realXCenter, controlPoints[this.point].y, player.realYCenter) < controlPoints[this.point].r * 1.5) {
       this.knowPlPos = true;
       this.plwalkXBlock = player.walkXBlock;
       this.plwalkYBlock = player.walkYBlock;
@@ -238,14 +247,14 @@ class Target {
         } else {
           this.st = 5;
         }
-        if (this.knowPlPos && dist(player.realXCenter, controlPoints[this.point].x,
-                                   player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
+        if (this.knowPlPos &&
+            heuristic(mesh[this.plwalkXBlock][this.plwalkYBlock], mesh[this.XBlock][this.YBlock]) < controlPoints[this.point].r * 1.5) {
           this.st = 4;
         }
       }
       if (this.priority < 2) {
         if (this.seesPlayer && dist(player.realXCenter, controlPoints[this.point].x,
-                                   player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 1.5) {
+                                    player.realYCenter, controlPoints[this.point].y) < controlPoints[this.point].r * 2) {
           this.priority = 1
           this.st = 2;
         }
@@ -373,7 +382,7 @@ class Target {
           let koef2 = Math.random() > 0.5 ? (Math.random() > 0.1 ? Math.random() * 15 + 40 : Math.random() * 40) :
                                             (Math.random() > 0.1 ? (Math.random() * 15 + 40) * -1 : Math.random() * -40);
 
-          if (this.checkSight() < 0.17 && player.vis(this.x, this.y, 0)) {
+          if (this.checkSight() < this.shootingAngle && player.vis(this.x, this.y, 0)) {
             this.singleShoot(this.x, this.y, this.sightX + koef1, this.sightY + koef2);
           } else {
             this.shooting = false;
@@ -394,23 +403,26 @@ class Target {
       this.wY += this.dy;
       this.shootSightX += this.dx;
       this.shootSightY += this.dy;
+      targetWater(this.x, this.y, this.r, this);
 
       if (Math.sqrt(Math.pow(this.x - this.route[this.routeP].x, 2) + Math.pow(this.y - this.route[this.routeP].y, 2)) <= 4) {
         if (this.routeP - 1 === -1 ||
             (key === 2 && this.seesPlayer &&
              dist(this.x, player.realXCenter, this.y, player.realYCenter) < 120) ||
-            (key === 6 && dist(this.x, controlPoints[this.point].x,
-                               this.y, controlPoints[this.point].y) < controlPoints[this.point].r / 2)) {
+            (key === 6 && heuristic(mesh[this.XBlock][this.YBlock], mesh[controlPoints[this.point].XBlock][controlPoints[this.point].YBlock]) <= controlPoints[this.point].r / 2)) {
           this.moving = false;
+          if (key === 6) {
+            this.priority = 0;
+          }
           if (this.route !== null) {
             for (let node of this.route) {
               node.used = false;
             }
           }
-          if (!(key == 2 || key === 4)) {
-            if (this.routeP + 1 < this.route.length) {
-              this.expSightX = this.x + 5 * (this.route[this.routeP + 1].x - this.x);
-              this.expSightY = this.y + 5 * (this.route[this.routeP + 1].y - this.y);
+          if (!(key === 2 || key === 4)) {
+            if (this.routeP + 5 < this.route.length) {
+              this.expSightX = this.x + 5 * (this.route[this.routeP + 5].x - this.x);
+              this.expSightY = this.y + 5 * (this.route[this.routeP + 5].y - this.y);
             }
           }
           this.XBlock = (this.route[this.routeP].x - (this.route[this.routeP].x % worldTileSize)) / worldTileSize;
@@ -625,7 +637,7 @@ class ControlPoint {
       if (incid === null) {
         break;
       }
-      captureEnable = captureEnable && incid.captured;
+      captureEnable = captureEnable && controlPoints[incid].captured;
     }
     if (!this.captured &&
         this.next !== null &&

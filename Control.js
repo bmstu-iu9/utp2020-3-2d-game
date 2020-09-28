@@ -15,6 +15,7 @@ let dead = false;
 let win = false;
 let openDoor = false;
 let getInCover = false;
+let creeping = false;
 
 const controlInit = () => {
   rightPressed = false;
@@ -49,6 +50,8 @@ const keyUpHandler = (e) => {
       openDoor = true;
     } else if (e.keyCode === 81) { //q
       getInCover = true;
+    } else if (e.keyCode === 16) { //shift
+      creeping = false;
     }
   }
   if (e.keyCode === 27 && intro.playing) {
@@ -80,6 +83,8 @@ const keyDownHandler = (e) => {
       reloadPending = true;
     } else if (e.keyCode === 71 && !throwTime) { //g
       throwTime = performance.now();
+    } else if (e.keyCode === 16) { //shift
+      creeping = true;
     }
   }
 }

@@ -33,7 +33,7 @@ const update = () => {
     grenade.update();
   });
 
-  player.move();
+  player.update();
 
   for (let i = 0; i < rounds.length; i++) {
     let round = rounds[i];
@@ -66,7 +66,6 @@ const update = () => {
     point.update();
   });
 
-  //camera.updateCoordinates();
   collision();
   grenadeCollision();
 }
@@ -264,6 +263,8 @@ const drawUI = () => {
   ctx.strokeRect(mapXY + (camera.x - koef) / 10, mapXY + camera.y / 10, visiblePart / 10, visiblePart / 10);
   ctx.closePath();
 
+  fpsUpdate(now, lastTime);
+
   sight.draw();
 
   if (!throwGrenade && throwTime && player.grenades.length) {
@@ -278,6 +279,7 @@ const drawUI = () => {
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.imageSmoothingEnabled = false;
+
   camera.drawVisibleMap();
 
   glass.forEach(gl => {
@@ -329,6 +331,12 @@ const draw = () => {
   });
 
   drawUI();
+}
+
+const fpsUpdate = (n, l) => {
+  ctx.font = "25px system-ui";
+  ctx.fillStyle = "green";
+  ctx.fillText("fps: " + Math.round(1000 / (n-l)), canvas.width - 85, 30);
 }
 
 const loop = () => {

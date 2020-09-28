@@ -1,5 +1,6 @@
 'use strict';
 
+const audCtx = new AudioContext();
 let imagePromises = [ {"name": "map", "src" : "resources/jungle_map_v1.5.png"}, {"name":"player", "src" : "resources/Player.png"},
                  {"name" : "walk_RL", "src" : "resources/walk_RL.png"},
                  {"name" : "walk_UD", "src" : "resources/walk_UD.png"},  {"name" : "strafe", "src" : "resources/strafe.png"},
@@ -27,7 +28,16 @@ let soundPromises = [ {"name" : "empty", "src" : "resources/shoot_empty_magazine
                       {"name" : "water", "src" : "resources/stepwater_1.wav"},
                       {"name" : "uh1", "src" : "resources/uh1_huey.mp3"},
                       {"name" : "menu_music", "src" : "resources/The Doors - The End.mp3"},
-                      {"name" : "outro_music", "src" : "resources/CCR - Fortunate Son.mp3"}];
+                      {"name" : "outro_music", "src" : "resources/CCR - Fortunate Son.mp3"},
+                      {"name" : "ak_reload", "src" : "resources/AK47_Reload.wav"},
+                      {"name" : "switch_weapon", "src" : "resources/change-weapon.wav"},
+                      {"name" : "glass_hit", "src" : "resources/glass_hit.wav"},
+                      {"name" : "grenade", "src" : "resources/grenade.wav"},
+                      {"name" : "m16_reload", "src" : "resources/m16_reload.mp3"},
+                      {"name" : "shotgun_reload", "src" : "resources/shotgun_reload.wav"},
+                      {"name" : "door", "src" : "resources/open-close-door.mp3"},
+                      {"name" : "dirt", "src" : "resources/stepdirt_3.wav"},
+                      {"name" : "tile", "src" : "resources/step_tile.wav"}, ];
 
 imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
   let img = new Image();
@@ -39,13 +49,22 @@ imagePromises = imagePromises.map( el => new Promise( (resolve, reject) => {
 }) );
 
 soundPromises = soundPromises.map( el => new Promise( (resolve, reject) => {
-  let audio = new Audio(el["src"]);
-  let obj = {};
-  obj[el["name"]] = audio;
-  audio.addEventListener("canplaythrough", event => {
-    resolve(obj);
-  });
-  audio.onerror = () => reject(new Error(`some problems with loading ${el["name"]} sound or other sounds`));
+  let request = new XMLHttpRequest();
+  request.open('GET', "https://raw.githubusercontent.com/bmstu-iu9/utp2020-3-2d-game/master/" + el["src"], true);
+  request.responseType = 'arraybuffer';
+
+  request.onload = () => {
+    audCtx.decodeAudioData(request.response).then(decodedData => {
+      let obj = {};
+      obj[el["name"]] = decodedData;
+      resolve(obj);
+    }).catch(error => {
+      console.log(error);
+      reject(new Error(`some problems with decoding ${el["name"]} sound or other sounds`));
+    });
+  }
+  request.onerror = () => reject(new Error(`some problems with loading ${el["name"]} sound or other sounds`));
+  request.send();
 }) )
 
 const images = {};
