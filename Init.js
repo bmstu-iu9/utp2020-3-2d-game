@@ -63,7 +63,7 @@ const playerSounds = {
   shotgun_reload : new Sound(sounds["shotgun_reload"], 0, 0.58, 1, 0),
   door_open : new Sound(sounds["door"], 0, 1.0, 1.5, 0),
   door_close : new Sound(sounds["door"], 2.5, 3.5, 1.5, 0),
-  grenade : new Sound(sounds["grenade"], 0, 0.2, 1.5, 0),
+  grenade : new Sound(sounds["grenade"], 0, 0.2, 0.8, 0),
   glass_hit : new Sound(sounds["glass_hit"], 0, 0.8, 0.5, 0),
   switch_weapon : new Sound(sounds["switch_weapon"], 0, 0.2, 0.5, 0)
 };

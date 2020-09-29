@@ -58,7 +58,7 @@ class Grenade {
     }
     grenadeHit(this);
     this.explode = true;
-    playerSounds["grenade"].play();
+    playerSounds["grenade"].play(true, {"x" : this.x, "y" : this.y});
     clouds.push(new Cloud(this.x + 10, this.y + 5, Math.cos(-Math.PI / 4), Math.sin(-Math.PI / 4),
                                0.15, 16, "49, 49, 49", 1, 5));
     clouds.push(new Cloud(this.x + 5, this.y + 10, Math.cos(Math.PI / 6), Math.sin(Math.PI / 6),
