@@ -56,8 +56,8 @@ const barbedWireDmg = 0.5;
 
 const playerSounds = {
   water : new Sound(sounds["water"], 0, 0.8, 0.5, 0),
-  dirt : new Sound(sounds["dirt"], 0, 0.8, 0.5, 0),
-  tile : new Sound(sounds["tile"], 0, 0.6, 1.5, 0),
+  dirt : new Sound(sounds["dirt"], 0, 0.8, 0.2, 0),
+  tile : new Sound(sounds["tile"], 0, 0.6, 1, 0),
   ak_reload : new Sound(sounds["ak_reload"], 0, 1.5, 0.5, 0),
   m16_reload : new Sound(sounds["m16_reload"], 0.4, 1.8, 0.5, 0),
   shotgun_reload : new Sound(sounds["shotgun_reload"], 0, 0.58, 1, 0),
@@ -112,6 +112,7 @@ spritePl.up.setWorldSize(FeetH, FeetW);
 spritePl.down.setWorldSize(FeetH, FeetW);
 spritePl.left.setWorldSize(FeetW, FeetH);
 spritePl.right.setWorldSize(FeetW, FeetH);
+spritePl.right.speed = 3;
 
 const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
                           realOffsetX, realOffsetY, realW, realH, playerSpeed, spritePl);

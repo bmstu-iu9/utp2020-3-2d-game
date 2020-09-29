@@ -89,6 +89,7 @@ class Player {
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
+    this.soundId = null;
     this.weapon = new Weapon(1);
     this.grenades = new Array(new Grenade(0, 0), new Grenade(0, 0));
     this.XBlock = (this.realXCenter - (this.realXCenter % worldTileSize)) / worldTileSize;
@@ -150,8 +151,14 @@ class Player {
   update() {
     if (creeping) {
       this.speed = this.normSpeed / 2;
+      this.sprite.right.speed = 5;
     } else {
       this.speed = this.normSpeed;
+      this.sprite.right.speed = 3;
+      if (this.soundId != null) {
+        clearInterval(this.soundId);
+        this.soundId = null;
+      }
     }
     this.move();
     this.checkAngle();
@@ -189,21 +196,13 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
-          this.soundId = setTimeout (() => {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+          this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
               }
-            }
           }, 0.7*1000);
         }
         } else {
-          if (this.soundId != null) {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-          }
           if (playerSounds[this.sound].onPause()) {
             playerSounds[this.sound].play();
           }
@@ -222,21 +221,13 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
-          this.soundId = setTimeout (() => {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+          this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
               }
-            }
           }, 0.7*1000);
         }
         } else {
-          if (this.soundId != null) {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-          }
           if (playerSounds[this.sound].onPause()) {
             playerSounds[this.sound].play();
           }
@@ -257,21 +248,13 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
-          this.soundId = setTimeout (() => {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+          this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
               }
-            }
           }, 0.7*1000);
         }
         } else {
-          if (this.soundId != null) {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-          }
           if (playerSounds[this.sound].onPause()) {
             playerSounds[this.sound].play();
           }
@@ -290,21 +273,13 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
-          this.soundId = setTimeout (() => {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-            if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
+          this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
               }
-            }
           }, 0.7*1000);
         }
         } else {
-          if (this.soundId != null) {
-            clearTimeout(this.soundId);
-            this.soundId = null;
-          }
           if (playerSounds[this.sound].onPause()) {
             playerSounds[this.sound].play();
           }
