@@ -120,11 +120,11 @@ class Weapon {
 
       this.dropRound(x, y, targetX, targetY);
       this.lastBulletTime = now;
-      this.shotSound.play();
+      this.shotSound.play(true, {"x" : x, "y" : y});
 
       return true;
     } else if (this.bullets <= 0 && !this.shotExecuted) {
-      this.emptyMagazineSound.play();
+      this.emptyMagazineSound.play(true, {"x" : x, "y" : y});
     }
 
     return false;
