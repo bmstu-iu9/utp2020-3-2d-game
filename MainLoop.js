@@ -44,13 +44,15 @@ const update = () => {
     }
   }
 
-  targetOnCanvas = false;
+  targetTooClose = false;
   distCT = 5000;
   targets.forEach(target => {
-    target.update();
+    if (dist(player.realXCenter, target.x, player.realYCenter, target.y) < 1000 || target.st !== 0) {
+      target.update();
+    }
     if (target.alive) {
-      if (pointInRect(worldToCanvas(target.x, 0), worldToCanvas(target.y, 1), 0, 0, canvas.width, canvas.height)) {
-        targetOnCanvas = true;
+      if (dist(player.realXCenter, target.x, player.realYCenter, target.y) < 1000) {
+        targetTooClose = true;
       } else if (dist(player.realXCenter, target.x, player.realYCenter, target.y) < distCT) {
         distCT = dist(player.realXCenter, target.x, player.realYCenter, target.y);
         closestTarget = target;
@@ -73,7 +75,7 @@ const update = () => {
 const drawUI = () => {
   let Px = 0;
   let Py = 0;
-  if (!targetOnCanvas) {
+  if (!targetTooClose) {
     if (collisionSegment(player.realXCenter, player.realYCenter, closestTarget.x, closestTarget.y,
                          canvasToWorld(0, 0), canvasToWorld(0, 1), canvasToWorld(canvas.width, 0), canvasToWorld(0, 1))) {
       Px = canvasToWorld(0, 0) + (canvasToWorld(canvas.width, 0) - canvasToWorld(0, 0)) *
