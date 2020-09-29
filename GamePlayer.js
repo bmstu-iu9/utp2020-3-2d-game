@@ -30,7 +30,9 @@ class Player {
     this.weaponY = this.realYCenter + 9;
     this.sX = this.realXCenter + 30; //координаты реального прицела(дуло оружия)
     this.sY = this.realYCenter + 9;
-    this.action = false;
+    this.prevX = this.realXCenter;
+    this.prevY = this.realYCenter;
+    this.moving = false;
     this.angle = 0;
     this.actionRadius = rW;
     this.sprite = sprite;
@@ -82,10 +84,13 @@ class Player {
     this.weaponY = this.realYCenter + 9;
     this.sX = this.realXCenter + 30;
     this.sY = this.realYCenter + 9;
+    this.prevX = this.realXCenter;
+    this.prevY = this.realYCenter;
     this.sound = "nothing";
     this.hp = 2;
     this.angle = 0;
     this.dead = false;
+    this.moving = false;
     this.shooting = false;
     this.inCover = false;
     this.coverId = -1;
@@ -149,41 +154,47 @@ class Player {
 }
 
   update() {
-    if (creeping) {
-      this.speed = this.normSpeed / 2;
-      this.sprite.right.speed = 5;
+    if (!this.dead) {
+      if (creeping) {
+        this.speed = this.normSpeed / 2;
+        this.sprite.right.speed = 5;
+      } else {
+        this.speed = this.normSpeed;
+        this.sprite.right.speed = 3;
+      }
+
+      this.move();
+      if ((!this.moving && creeping) || (!creeping)) {
+        if (this.soundId != null) {
+          clearInterval(this.soundId);
+          this.soundId = null;
+        }
+      }
+      this.checkAngle();
+
+      this.updateBlock();
+      this.setNewCoordinates();
+      this.checkGrenade();
+      this.reload();
+      this.updateReloadingTile();
+      this.shoot();
+      this.pickUp();
+      this.checkDoor();
+      this.updateCover();
     } else {
-      this.speed = this.normSpeed;
-      this.sprite.right.speed = 3;
       if (this.soundId != null) {
         clearInterval(this.soundId);
         this.soundId = null;
       }
-    }
-    this.move();
-    this.checkAngle();
-
-    if (this.dead === true) {
       this.weapon.drop(this.realXCenter, this.realYCenter);
-      this.sprite.death.x = worldToCanvas(this.x, 0);
-      this.sprite.death.y = worldToCanvas(this.y, 1);
       gameOver("dead");
       return;
     }
-
-    this.updateBlock();
-    this.setNewCoordinates();
-    this.checkGrenade();
-    this.reload();
-    this.updateReloadingTile();
-    this.shoot();
-    this.pickUp();
-    this.checkDoor();
-    this.updateCover();
-
   }
 
   move() {
+    this.prevX = this.realXCenter;
+    this.prevY = this.realYCenter;
     if (downPressed && !this.inCover && collisionPlayer(this.realX, this.realY + this.speed, this.realW, this.realH)) {
       this.realY += this.speed;
       this.realYCenter += this.speed;
@@ -196,6 +207,9 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
+            if (playerSounds[this.sound].onPause()) {
+              playerSounds[this.sound].play();
+            }
           this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
@@ -221,6 +235,9 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
+            if (playerSounds[this.sound].onPause()) {
+              playerSounds[this.sound].play();
+            }
           this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
@@ -248,6 +265,9 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
+            if (playerSounds[this.sound].onPause()) {
+              playerSounds[this.sound].play();
+            }
           this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
@@ -273,6 +293,9 @@ class Player {
       if (this.sound === "water" || this.sound === "dirt" || this.sound === "tile") {
         if (creeping) {
           if (this.soundId == null) {
+            if (playerSounds[this.sound].onPause()) {
+              playerSounds[this.sound].play();
+            }
           this.soundId = setInterval (() => {
               if (playerSounds[this.sound].onPause()) {
                 playerSounds[this.sound].play();
@@ -285,6 +308,12 @@ class Player {
           }
         }
       }
+    }
+
+    if (this.prevX == this.realXCenter && this.prevY == this.realYCenter) {
+      this.moving = false;
+    } else {
+      this.moving = true;
     }
   }
 
@@ -365,8 +394,6 @@ class Player {
           break;
       }
 
-      this.sprite.shoot.x = this.sprite.pl.x;
-      this.sprite.shoot.y = this.sprite.pl.y;
       this.sprite.shoot.update();
       this.shooting = true;
       let x = worldToCanvas(this.weaponX, 0);
@@ -537,6 +564,10 @@ class Player {
   setNewCoordinates() {
     this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
     this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
+    this.sprite.death.x = this.sprite.pl.x;
+    this.sprite.death.y = this.sprite.pl.y;
+    this.sprite.shoot.x = this.sprite.pl.x;
+    this.sprite.shoot.y = this.sprite.pl.y;
     this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
     this.sprite.right.y = worldToCanvas(this.realY + 10, 1);
   }
