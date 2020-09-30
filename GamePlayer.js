@@ -564,8 +564,8 @@ class Player {
   setNewCoordinates() {
     this.sprite.pl.x = worldToCanvas(this.realXCenter, 0);
     this.sprite.pl.y = worldToCanvas(this.realYCenter, 1);
-    this.sprite.death.x = this.sprite.pl.x;
-    this.sprite.death.y = this.sprite.pl.y;
+    this.sprite.death.x = worldToCanvas(this.x, 0);
+    this.sprite.death.y = worldToCanvas(this.y, 1);
     this.sprite.shoot.x = this.sprite.pl.x;
     this.sprite.shoot.y = this.sprite.pl.y;
     this.sprite.right.x = worldToCanvas(this.realX - 3, 0);
