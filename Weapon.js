@@ -266,7 +266,7 @@ class Weapon {
     let k1 = tX - x;
     let k2 = tY - y;
     let len = Math.sqrt(k1 * k1 + k2 * k2);
-    let offsetLen = -1/4 * this.width;
+    let offsetLen = 1/2 * this.width;
     rounds.push(new Round(x - k1 / len * offsetLen, y - k2 / len * offsetLen,
                           tX, tY, this.roundImage));
   }

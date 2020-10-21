@@ -29,7 +29,7 @@ class Round {
     this.dxAngled = v.x;
     this.dyAngled = v.y;
 
-    this.len = 10;
+    this.len = 15;
   }
   update() {
     if (this.len >= 0){
