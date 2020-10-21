@@ -40,9 +40,14 @@ class Sound { //fadeout start in sec
     };
 
     if (src) {
-      let v = rotate(src.x - player.realXCenter, src.y - player.realYCenter, player.angle - Math.PI / 2);
-      this.panner.positionZ.setValueAtTime(v.x, audCtx.currentTime);
-      this.panner.positionX.setValueAtTime(v.y, audCtx.currentTime);
+      let dx = src.x - player.realXCenter;
+      let dy = src.y - player.realYCenter;
+      let deg = player.angle;
+      let v = rotate(src.x - player.realXCenter, src.y - player.realYCenter, 3 * Math.PI / 2 - player.angle);
+      this.panner.positionZ.setValueAtTime(-dy, audCtx.currentTime);
+      this.panner.positionX.setValueAtTime(dx, audCtx.currentTime);
+      // this.panner.setPosition(dy, -dx, 0);
+      console.log(dx + " " + dy);
     }
 
     if (start) {
