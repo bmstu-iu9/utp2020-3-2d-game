@@ -548,10 +548,11 @@ class Target {
         "x" : (x2 - x1)*Math.cos(this.angle) - (y2 - y1)*Math.sin(this.angle) + x1,
         "y" : (x2 - x1)*Math.sin(this.angle) + (y2 - y1)*Math.cos(this.angle) + y1,
       }
-      this.weapon.shoot(canvasToWorld(point1.x, 0),
-                        canvasToWorld(point1.y, 1),
-                        canvasToWorld(point2.x, 0),
-                        canvasToWorld(point2.y, 1));
+      this.weapon.shoot(
+                canvasToWorld(point2.x, 0),
+                canvasToWorld(point2.y, 1),
+                canvasToWorld(point2.x + (point2.x - point1.x), 0),
+                canvasToWorld(point2.y + (point2.y - point1.y), 1));
       //this.weapon.shoot(x, y, tx, ty);
       this.shooting = true;
       this.lastShoot = performance.now()

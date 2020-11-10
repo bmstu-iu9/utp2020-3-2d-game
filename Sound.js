@@ -40,9 +40,6 @@ class Sound { //fadeout start in sec
     };
 
     if (src) {
-      let dx = src.x - player.realXCenter;
-      let dy = src.y - player.realYCenter;
-      let deg = player.angle;
       let v = rotate(src.x - player.realXCenter, src.y - player.realYCenter, 3 * Math.PI / 2 - player.angle);
       this.panner.positionZ.setValueAtTime(-v.y, audCtx.currentTime);
       this.panner.positionX.setValueAtTime(v.x, audCtx.currentTime);
