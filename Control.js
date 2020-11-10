@@ -31,6 +31,7 @@ const controlInit = () => {
   paused = true;
   openDoor = false;
   getInCover = false;
+  creeping = false;
 }
 
 const keyUpHandler = (e) => {

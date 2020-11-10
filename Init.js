@@ -56,14 +56,14 @@ const barbedWireDmg = 0.5;
 
 const playerSounds = {
   water : new Sound(sounds["water"], 0, 0.8, 0.5, 0),
-  dirt : new Sound(sounds["dirt"], 0, 0.8, 0.5, 0),
-  tile : new Sound(sounds["tile"], 0, 0.6, 1.5, 0),
+  dirt : new Sound(sounds["dirt"], 0, 0.8, 0.2, 0),
+  tile : new Sound(sounds["tile"], 0, 0.6, 1, 0),
   ak_reload : new Sound(sounds["ak_reload"], 0, 1.5, 0.5, 0),
   m16_reload : new Sound(sounds["m16_reload"], 0.4, 1.8, 0.5, 0),
   shotgun_reload : new Sound(sounds["shotgun_reload"], 0, 0.58, 1, 0),
   door_open : new Sound(sounds["door"], 0, 1.0, 1.5, 0),
   door_close : new Sound(sounds["door"], 2.5, 3.5, 1.5, 0),
-  grenade : new Sound(sounds["grenade"], 0, 0.2, 1.5, 0),
+  grenade : new Sound(sounds["grenade"], 0, 0.2, 0.8, 0),
   glass_hit : new Sound(sounds["glass_hit"], 0, 0.8, 0.5, 0),
   switch_weapon : new Sound(sounds["switch_weapon"], 0, 0.2, 0.5, 0)
 };
@@ -112,6 +112,7 @@ spritePl.up.setWorldSize(FeetH, FeetW);
 spritePl.down.setWorldSize(FeetH, FeetW);
 spritePl.left.setWorldSize(FeetW, FeetH);
 spritePl.right.setWorldSize(FeetW, FeetH);
+spritePl.right.speed = 3;
 
 const player = new Player(playerStartX, playerStartY, playerWidth, playerHeight,
                           realOffsetX, realOffsetY, realW, realH, playerSpeed, spritePl);
@@ -144,14 +145,14 @@ targets.push(new Target(949, 1060, -1, 0, 3, getRandom()));
 targets.push(new Target(1309, 726, -1, 1, 4, getRandom()));
 targets.push(new Target(1420, 940, 0, 1, 4, getRandom()));
 targets.push(new Target(1523, 584, 0, 1, 7, getRandom()));
-targets.push(new Target(2385, 300, -1, 1, 8, getRandom()));
+targets.push(new Target(2384, 300, -1, 1, 8, getRandom()));
 targets.push(new Target(2900, 481, -1, 0, 8, getRandom()));
-targets.push(new Target(1905, 1204, 0, -1, 5, getRandom()));
-targets.push(new Target(1663, 1205, -1, 0, 5, getRandom()));
+targets.push(new Target(1904, 1204, 0, -1, 5, getRandom()));
+targets.push(new Target(1663, 1204, -1, 0, 5, getRandom()));
 targets.push(new Target(1843, 723, -1, 1, 6, getRandom()));
 targets.push(new Target(1689, 921, 0, 1, 6, getRandom()));
-targets.push(new Target(2065, 760, 1, 0, 9, getRandom()));
-targets.push(new Target(2069, 885, 1, 0, 9, getRandom()));
+targets.push(new Target(2064, 760, 1, 0, 9, getRandom()));
+targets.push(new Target(2069, 884, 1, 0, 9, getRandom()));
 targets.push(new Target(2423, 960, 0, 1, 10, getRandom()));
 targets.push(new Target(2061, 1049, 0, 1, 10, getRandom()));
 targets.push(new Target(2140, 1289, 0, -1, 10, getRandom()));
@@ -164,7 +165,7 @@ targets.push(new Target(3789, 107, -1, 1, 13, getRandom()));
 
 let closestTarget = targets[0];
 let distCT = 5000;
-let targetOnCanvas = false;
+let targetTooClose = false;
 let targetsCount = targets.length;
 
 const weapons = new Set();

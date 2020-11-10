@@ -120,11 +120,11 @@ class Weapon {
 
       this.dropRound(x, y, targetX, targetY);
       this.lastBulletTime = now;
-      this.shotSound.play();
+      this.shotSound.play(true, {"x" : x, "y" : y});
 
       return true;
     } else if (this.bullets <= 0 && !this.shotExecuted) {
-      this.emptyMagazineSound.play();
+      this.emptyMagazineSound.play(true, {"x" : x, "y" : y});
     }
 
     return false;
@@ -266,7 +266,7 @@ class Weapon {
     let k1 = tX - x;
     let k2 = tY - y;
     let len = Math.sqrt(k1 * k1 + k2 * k2);
-    let offsetLen = -1/4 * this.width;
+    let offsetLen = 1/2 * this.width;
     rounds.push(new Round(x - k1 / len * offsetLen, y - k2 / len * offsetLen,
                           tX, tY, this.roundImage));
   }
